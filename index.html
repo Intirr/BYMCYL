@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hábitos Atómicos — Guía Didáctica Interactiva</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --surface: #181b22;
+    --surface-2: #1f232d;
+    --border: #2c3140;
+    --text: #e8eaf0;
+    --muted: #9aa3b5;
+    --accent: #f5b942;
+    --accent-2: #4fc08d;
+    --accent-3: #5b8def;
+    --danger: #e0606a;
+    --radius: 14px;
+    font-size: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+  }
+  /* ---------- Layout ---------- */
+  .layout { display: flex; min-height: 100vh; }
+  nav.sidebar {
+    width: 290px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  nav.sidebar h1 {
+    font-size: 1.05rem;
+    color: var(--accent);
+    margin-bottom: .25rem;
+    letter-spacing: .5px;
+  }
+  nav.sidebar .subtitle { font-size: .78rem; color: var(--muted); margin-bottom: 1.2rem; }
+  nav.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: .5rem .7rem;
+    border-radius: 8px;
+    font-size: .88rem;
+    margin-bottom: 2px;
+    transition: background .15s, color .15s;
+  }
+  nav.sidebar a:hover { background: var(--surface-2); color: var(--text); }
+  nav.sidebar a.active { background: var(--surface-2); color: var(--accent); font-weight: 600; }
+  nav.sidebar a .check { margin-left: auto; font-size: .8rem; color: var(--accent-2); visibility: hidden; }
+  nav.sidebar a.done .check { visibility: visible; }
+  .progress-wrap { margin: 1rem 0 1.4rem; }
+  .progress-bar-bg {
+    background: var(--surface-2);
+    border-radius: 99px;
+    height: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-bar-fill {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    height: 100%;
+    width: 0%;
+    transition: width .4s ease;
+  }
+  .progress-label { font-size: .72rem; color: var(--muted); margin-top: .35rem; text-align: right; }
+
+  main { flex: 1; max-width: 880px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+
+  /* ---------- Sections ---------- */
+  section.module { display: none; animation: fadeIn .35s ease; }
+  section.module.visible { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .kicker {
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  h2 { font-size: 1.9rem; margin: .3rem 0 1rem; line-height: 1.25; }
+  h3 { font-size: 1.25rem; margin: 2rem 0 .8rem; color: var(--accent); }
+  h4 { font-size: 1.02rem; margin: 1.4rem 0 .5rem; }
+  p { margin-bottom: 1rem; color: #cdd3e0; }
+  strong { color: var(--text); }
+  ul, ol { margin: 0 0 1rem 1.4rem; color: #cdd3e0; }
+  li { margin-bottom: .45rem; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.3rem 1.5rem;
+    margin: 1.2rem 0;
+  }
+  .quote {
+    border-left: 4px solid var(--accent);
+    background: var(--surface);
+    padding: 1rem 1.3rem;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-style: italic;
+    color: var(--text);
+    margin: 1.4rem 0;
+  }
+  .quote .author { display: block; margin-top: .5rem; font-style: normal; font-size: .8rem; color: var(--muted); }
+
+  .key-idea {
+    background: linear-gradient(135deg, rgba(245,185,66,.10), rgba(79,192,141,.08));
+    border: 1px solid rgba(245,185,66,.35);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.4rem;
+    margin: 1.4rem 0;
+  }
+  .key-idea .tag { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: .9rem; }
+  th, td { border: 1px solid var(--border); padding: .65rem .8rem; text-align: left; vertical-align: top; }
+  th { background: var(--surface-2); color: var(--accent); }
+  td { color: #cdd3e0; }
+
+  /* ---------- Accordion ---------- */
+  .accordion { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin: 1rem 0; }
+  .accordion-item + .accordion-item { border-top: 1px solid var(--border); }
+  .accordion-header {
+    width: 100%;
+    background: var(--surface);
+    color: var(--text);
+    border: none;
+    padding: 1rem 1.3rem;
+    font-size: .95rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    font-family: inherit;
+  }
+  .accordion-header:hover { background: var(--surface-2); }
+  .accordion-header .chevron { transition: transform .25s; color: var(--accent); flex-shrink: 0; }
+  .accordion-item.open .accordion-header .chevron { transform: rotate(90deg); }
+  .accordion-body { display: none; padding: .2rem 1.3rem 1.2rem; background: var(--surface); }
+  .accordion-item.open .accordion-body { display: block; }
+
+  /* ---------- Flip cards ---------- */
+  .flip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; margin: 1.2rem 0; }
+  .flip-card { perspective: 900px; height: 175px; cursor: pointer; }
+  .flip-inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform .55s; transform-style: preserve-3d;
+  }
+  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    border-radius: var(--radius);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 1rem; text-align: center;
+  }
+  .flip-front { background: var(--surface-2); border: 1px solid var(--border); font-weight: 700; gap: .4rem; }
+  .flip-front .hint { font-size: .7rem; color: var(--muted); font-weight: 400; }
+  .flip-back {
+    background: linear-gradient(135deg, #23304a, #1d2b3a);
+    border: 1px solid var(--accent-3);
+    transform: rotateY(180deg);
+    font-size: .82rem; color: #dfe6f5;
+  }
+
+  /* ---------- Quiz ---------- */
+  .quiz-q { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.4rem; margin: 1.1rem 0; }
+  .quiz-q p.question { font-weight: 600; color: var(--text); }
+  .quiz-options { display: flex; flex-direction: column; gap: .5rem; margin-top: .6rem; }
+  .quiz-option {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 9px;
+    padding: .65rem .9rem;
+    text-align: left;
+    cursor: pointer;
+    font-size: .88rem;
+    font-family: inherit;
+    transition: border-color .15s, background .15s;
+  }
+  .quiz-option:hover:not(:disabled) { border-color: var(--accent-3); }
+  .quiz-option.correct { border-color: var(--accent-2); background: rgba(79,192,141,.12); }
+  .quiz-option.incorrect { border-color: var(--danger); background: rgba(224,96,106,.12); }
+  .quiz-option:disabled { cursor: default; opacity: .85; }
+  .quiz-feedback { font-size: .83rem; margin-top: .7rem; display: none; padding: .6rem .8rem; border-radius: 8px; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: rgba(79,192,141,.12); color: #9ce0bf; }
+  .quiz-feedback.bad { background: rgba(224,96,106,.12); color: #f0a9af; }
+  .quiz-score { font-size: 1.05rem; font-weight: 700; margin-top: 1rem; color: var(--accent); }
+
+  /* ---------- Inputs / tools ---------- */
+  input[type="text"], input[type="number"], select, textarea {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: .55rem .75rem;
+    font-size: .9rem;
+    font-family: inherit;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent-3); border-color: transparent; }
+  label.field-label { display: block; font-size: .78rem; color: var(--muted); margin: .8rem 0 .3rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+  .btn {
+    background: var(--accent);
+    color: #1a1405;
+    border: none;
+    border-radius: 9px;
+    padding: .6rem 1.2rem;
+    font-weight: 700;
+    font-size: .88rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: filter .15s;
+  }
+  .btn:hover { filter: brightness(1.1); }
+  .btn.secondary { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+  .btn-row { display: flex; gap: .7rem; flex-wrap: wrap; margin-top: 1rem; }
+
+  .stack-output {
+    background: var(--surface-2);
+    border: 1px dashed var(--accent-3);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    margin-top: 1rem;
+    font-size: .95rem;
+    display: none;
+  }
+  .stack-output.show { display: block; }
+
+  /* ---------- Compound calculator ---------- */
+  .compound-result { display: flex; gap: 1rem; margin-top: 1.2rem; flex-wrap: wrap; }
+  .compound-box {
+    flex: 1; min-width: 200px;
+    border-radius: var(--radius);
+    padding: 1.1rem 1.2rem;
+    text-align: center;
+  }
+  .compound-box .big { font-size: 1.9rem; font-weight: 800; display: block; }
+  .compound-box .small { font-size: .78rem; color: var(--muted); }
+  .compound-up { background: rgba(79,192,141,.1); border: 1px solid var(--accent-2); }
+  .compound-up .big { color: var(--accent-2); }
+  .compound-down { background: rgba(224,96,106,.1); border: 1px solid var(--danger); }
+  .compound-down .big { color: var(--danger); }
+
+  /* ---------- Habit tracker ---------- */
+  .tracker-grid { display: grid; grid-template-columns: minmax(140px, 1fr) repeat(7, 38px); gap: 6px; align-items: center; margin-top: 1rem; overflow-x: auto; }
+  .tracker-grid .head { font-size: .7rem; color: var(--muted); text-align: center; font-weight: 700; }
+  .tracker-grid .habit-name { font-size: .85rem; padding-right: .5rem; }
+  .tracker-cell {
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: background .15s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .tracker-cell.done { background: rgba(79,192,141,.25); border-color: var(--accent-2); }
+  .tracker-del { background: none; border: none; color: var(--danger); cursor: pointer; font-size: .9rem; padding: 0 .3rem; }
+
+  /* ---------- Scorecard ---------- */
+  .scorecard-row { display: flex; gap: .6rem; margin-bottom: .6rem; align-items: center; }
+  .scorecard-row input { flex: 1; }
+  .scorecard-row select { width: 130px; flex-shrink: 0; }
+  .sc-pos { color: var(--accent-2); } .sc-neg { color: var(--danger); } .sc-neu { color: var(--muted); }
+
+  /* ---------- Laws pills ---------- */
+  .law-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.4rem 0; }
+  .law-pill {
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: transform .15s, border-color .15s;
+    text-align: left;
+    color: var(--text);
+    font-family: inherit;
+  }
+  .law-pill:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .law-pill .num { font-size: 1.7rem; font-weight: 800; color: var(--accent); display: block; }
+  .law-pill .name { font-weight: 700; font-size: 1rem; }
+  .law-pill .stage { font-size: .75rem; color: var(--muted); }
+
+  .next-prev { display: flex; justify-content: space-between; margin-top: 3rem; gap: 1rem; }
+
+  .badge { display: inline-block; background: var(--surface-2); border: 1px solid var(--border); color: var(--accent-2); border-radius: 99px; font-size: .7rem; padding: .15rem .7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: .8rem; }
+
+  .identity-output { margin-top: 1rem; }
+
+  @media (max-width: 820px) {
+    .layout { flex-direction: column; }
+    nav.sidebar { width: 100%; height: auto; position: static; display: flex; flex-wrap: wrap; gap: .2rem; }
+    nav.sidebar h1, nav.sidebar .subtitle, .progress-wrap { width: 100%; }
+    main { padding: 1.5rem 1.1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ====================== SIDEBAR ====================== -->
+<nav class="sidebar" id="sidebar">
+  <h1>⚛️ Hábitos Atómicos</h1>
+  <div class="subtitle">Guía didáctica interactiva · basada en el libro de James Clear</div>
+  <div class="progress-wrap">
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0% completado</div>
+  </div>
+  <a href="#intro" data-target="intro">🏠 Introducción <span class="check">✔</span></a>
+  <a href="#fundamentos" data-target="fundamentos">📐 1 · Fundamentos: el 1% <span class="check">✔</span></a>
+  <a href="#identidad" data-target="identidad">🪞 2 · Identidad y hábitos <span class="check">✔</span></a>
+  <a href="#bucle" data-target="bucle">🔄 3 · El bucle del hábito <span class="check">✔</span></a>
+  <a href="#ley1" data-target="ley1">👁️ 4 · 1ª Ley: Hazlo obvio <span class="check">✔</span></a>
+  <a href="#ley2" data-target="ley2">✨ 5 · 2ª Ley: Hazlo atractivo <span class="check">✔</span></a>
+  <a href="#ley3" data-target="ley3">🎯 6 · 3ª Ley: Hazlo sencillo <span class="check">✔</span></a>
+  <a href="#ley4" data-target="ley4">🏆 7 · 4ª Ley: Hazlo satisfactorio <span class="check">✔</span></a>
+  <a href="#romper" data-target="romper">🚫 8 · Romper malos hábitos <span class="check">✔</span></a>
+  <a href="#avanzado" data-target="avanzado">🚀 9 · Temas avanzados <span class="check">✔</span></a>
+  <a href="#herramientas" data-target="herramientas">🧰 10 · Herramientas prácticas <span class="check">✔</span></a>
+  <a href="#quiz" data-target="quiz">🧠 11 · Quiz final <span class="check">✔</span></a>
+</nav>
+
+<!-- ====================== MAIN ====================== -->
+<main>
+
+<!-- ============ INTRO ============ -->
+<section class="module" id="intro">
+  <span class="kicker">Bienvenida</span>
+  <h2>Guía interactiva de <em>Hábitos Atómicos</em></h2>
+  <p><strong>Hábitos Atómicos</strong> (<em>Atomic Habits</em>, 2018) de <strong>James Clear</strong> es uno de los libros de desarrollo personal más influyentes de la última década. Su tesis central es simple pero poderosa: <strong>los cambios pequeños y constantes producen resultados extraordinarios con el tiempo</strong>.</p>
+
+  <div class="quote">
+    "Los hábitos son el interés compuesto de la superación personal."
+    <span class="author">— James Clear</span>
+  </div>
+
+  <h3>¿Por qué "atómicos"?</h3>
+  <p>La palabra <em>atómico</em> tiene un doble significado intencional:</p>
+  <ul>
+    <li><strong>Pequeño:</strong> como un átomo, cada hábito es una unidad diminuta de un sistema mayor.</li>
+    <li><strong>Poderoso:</strong> como la energía atómica, su acumulación libera un poder enorme.</li>
+  </ul>
+
+  <h3>Cómo usar esta guía</h3>
+  <div class="card">
+    <ul>
+      <li>📚 <strong>Navega por los módulos</strong> usando el menú lateral. Tu progreso se guarda automáticamente en este navegador.</li>
+      <li>🃏 <strong>Haz clic en las tarjetas</strong> para voltearlas y revelar conceptos clave.</li>
+      <li>🧪 <strong>Completa los ejercicios interactivos</strong>: calculadora del 1%, constructor de identidad, apilador de hábitos, rastreador semanal y más.</li>
+      <li>🧠 <strong>Pon a prueba lo aprendido</strong> con el quiz final de 10 preguntas.</li>
+      <li>✅ Al final de cada módulo, marca <strong>"Completar módulo"</strong> para registrar tu avance.</li>
+    </ul>
+  </div>
+
+  <h3>Mapa del libro en 30 segundos</h3>
+  <table>
+    <tr><th>Bloque</th><th>Idea central</th></tr>
+    <tr><td><strong>Fundamentos</strong></td><td>Mejorar 1% al día se acumula; enfócate en sistemas, no en metas; el cambio real es de identidad.</td></tr>
+    <tr><td><strong>Las 4 leyes</strong></td><td>Hazlo obvio · Hazlo atractivo · Hazlo sencillo · Hazlo satisfactorio.</td></tr>
+    <tr><td><strong>Inversión de las leyes</strong></td><td>Para romper malos hábitos: invisible · poco atractivo · difícil · insatisfactorio.</td></tr>
+    <tr><td><strong>Tácticas avanzadas</strong></td><td>Regla Ricitos de Oro, gestión del aburrimiento, revisión y ajuste continuo.</td></tr>
+  </table>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="intro">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <span></span>
+    <button class="btn secondary nav-next" data-go="fundamentos">Siguiente: Fundamentos →</button>
+  </div>
+</section>
+
+<!-- ============ 1. FUNDAMENTOS ============ -->
+<section class="module" id="fundamentos">
+  <span class="kicker">Módulo 1</span>
+  <h2>El sorprendente poder del 1%</h2>
+
+  <p>Tendemos a sobrevalorar los grandes momentos y a subestimar las pequeñas mejoras diarias. Clear lo demuestra con matemáticas simples: si mejoras un <strong>1% cada día durante un año</strong>, terminarás siendo <strong>37 veces mejor</strong>. Si empeoras un 1% diario, caerás prácticamente a cero.</p>
+
+  <div class="key-idea">
+    <span class="tag">Idea clave</span>
+    <p style="margin:0.4rem 0 0">Los hábitos son un arma de doble filo: el interés compuesto trabaja a tu favor… o en tu contra. La pregunta no es "¿qué logro hoy?", sino "¿en qué dirección apunta mi trayectoria?"</p>
+  </div>
+
+  <h3>🧮 Calculadora del interés compuesto de los hábitos</h3>
+  <div class="card">
+    <p>Experimenta con la fórmula del libro: <code>(1 ± 0.01)^días</code></p>
+    <label class="field-label" for="daysInput">Número de días</label>
+    <input type="number" id="daysInput" value="365" min="1" max="3650">
+    <div class="btn-row"><button class="btn" id="calcCompound">Calcular</button></div>
+    <div class="compound-result" id="compoundResult" style="display:none">
+      <div class="compound-box compound-up">
+        <span class="small">Mejorando 1% al día</span>
+        <span class="big" id="upResult">—</span>
+        <span class="small">veces mejor</span>
+      </div>
+      <div class="compound-box compound-down">
+        <span class="small">Empeorando 1% al día</span>
+        <span class="big" id="downResult">—</span>
+        <span class="small">de tu nivel inicial</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>La meseta del potencial latente</h3>
+  <p>Los hábitos parecen no funcionar al principio porque sus resultados se acumulan en silencio. Clear usa la metáfora del <strong>cubo de hielo</strong>: la habitación pasa de -10° a -5° a -1°… y nada ocurre. Hasta que a 0° el hielo se derrite. Todo el "trabajo invisible" anterior no fue en vano: estaba <em>almacenado</em>.</p>
+  <ul>
+    <li>El periodo en que trabajas sin ver resultados es el <strong>"valle de la decepción"</strong>. Es donde la mayoría abandona.</li>
+    <li>Los resultados extraordinarios llegan <strong>tarde y de golpe</strong>, no de forma lineal.</li>
+  </ul>
+
+  <h3>Sistemas &gt; Metas</h3>
+  <div class="quote">
+    "No te elevas al nivel de tus metas. Caes al nivel de tus sistemas."
+    <span class="author">— James Clear</span>
+  </div>
+  <p>Las metas indican la dirección; los sistemas producen el avance. Clear identifica cuatro problemas de centrarse solo en metas:</p>
+
+  <div class="accordion">
+    <div class="accordion-item">
+      <button class="accordion-header">1. Ganadores y perdedores tienen las mismas metas <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Todos los atletas olímpicos quieren la medalla de oro. La meta no diferencia a quien gana: lo hace su <strong>sistema de entrenamiento diario</strong>. La meta siempre estuvo ahí; el sistema marcó la diferencia.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">2. Lograr una meta es un cambio momentáneo <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Ordenar tu cuarto es una meta; resuelve el síntoma una vez. Si no cambias el sistema desordenado que lo generó, el desorden regresará. <strong>Arregla las entradas y las salidas se arreglan solas.</strong></p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">3. Las metas restringen tu felicidad <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>"Seré feliz cuando logre X" pospone la satisfacción indefinidamente. Enamorarte del proceso te permite ser feliz <strong>mientras</strong> tu sistema está en marcha, no solo al cruzar la meta.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">4. Las metas chocan con el progreso a largo plazo <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Muchos corredores dejan de entrenar tras terminar el maratón: el efecto "yo-yo". El propósito de fijar sistemas es <strong>seguir jugando el juego</strong>: el verdadero pensamiento a largo plazo es el pensamiento sin línea de meta.</p></div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="fundamentos">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="intro">← Introducción</button>
+    <button class="btn secondary nav-next" data-go="identidad">Siguiente: Identidad →</button>
+  </div>
+</section>
+
+<!-- ============ 2. IDENTIDAD ============ -->
+<section class="module" id="identidad">
+  <span class="kicker">Módulo 2</span>
+  <h2>Cambia tu identidad, no solo tus resultados</h2>
+
+  <p>Existen <strong>tres capas del cambio de comportamiento</strong>, como las capas de una cebolla:</p>
+  <table>
+    <tr><th>Capa</th><th>Se enfoca en…</th><th>Ejemplo</th></tr>
+    <tr><td><strong>1. Resultados</strong> (exterior)</td><td>Lo que obtienes</td><td>Bajar de peso, publicar un libro</td></tr>
+    <tr><td><strong>2. Procesos</strong> (medio)</td><td>Lo que haces</td><td>Rutina de gimnasio, escribir a diario</td></tr>
+    <tr><td><strong>3. Identidad</strong> (núcleo)</td><td>Lo que crees de ti</td><td>"Soy una persona atlética", "soy escritor/a"</td></tr>
+  </table>
+
+  <p>La mayoría intenta cambiar de afuera hacia adentro (<em>hábitos basados en resultados</em>). Los cambios duraderos van de adentro hacia afuera (<em>hábitos basados en identidad</em>):</p>
+
+  <div class="key-idea">
+    <span class="tag">Idea clave</span>
+    <p style="margin:.4rem 0 0">El objetivo no es leer un libro, sino <strong>convertirte en lector</strong>. No es correr un maratón, sino <strong>convertirte en corredor</strong>. Cuando un comportamiento forma parte de tu identidad, ya no necesitas convencerte de hacerlo.</p>
+  </div>
+
+  <div class="quote">
+    "Cada acción que realizas es un voto por el tipo de persona en la que deseas convertirte."
+    <span class="author">— James Clear</span>
+  </div>
+
+  <p>No necesitas unanimidad, solo <strong>mayoría de votos</strong>. Un día fallido no te quita la identidad; la evidencia acumulada la construye. El ejemplo clásico del libro: ante un cigarrillo, una persona dice <em>"no puedo fumar, estoy dejándolo"</em> (sigue identificándose como fumadora) y otra dice <em>"no, gracias, no fumo"</em> (su identidad ya cambió).</p>
+
+  <h3>El proceso en dos pasos</h3>
+  <ol>
+    <li><strong>Decide qué tipo de persona quieres ser.</strong></li>
+    <li><strong>Demuéstratelo con pequeñas victorias.</strong></li>
+  </ol>
+
+  <h3>🪞 Ejercicio: construye tu identidad objetivo</h3>
+  <div class="card">
+    <p>Trabaja al revés: del resultado que quieres, a la identidad que lo produce.</p>
+    <label class="field-label" for="resultadoInput">¿Qué resultado quieres lograr?</label>
+    <input type="text" id="resultadoInput" placeholder="Ej.: escribir un libro, correr 10K, ahorrar dinero…">
+    <label class="field-label" for="identidadInput">¿Qué tipo de persona logra ese resultado?</label>
+    <input type="text" id="identidadInput" placeholder="Ej.: una persona escritora, constante, disciplinada con sus finanzas…">
+    <label class="field-label" for="votoInput">¿Qué pequeña acción de hoy sería un "voto" por esa identidad?</label>
+    <input type="text" id="votoInput" placeholder="Ej.: escribir 1 párrafo, caminar 10 minutos, transferir $5 al ahorro…">
+    <div class="btn-row"><button class="btn" id="identidadBtn">Generar mi declaración</button></div>
+    <div class="stack-output identity-output" id="identidadOutput"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="identidad">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="fundamentos">← Fundamentos</button>
+    <button class="btn secondary nav-next" data-go="bucle">Siguiente: El bucle del hábito →</button>
+  </div>
+</section>
+
+<!-- ============ 3. BUCLE ============ -->
+<section class="module" id="bucle">
+  <span class="kicker">Módulo 3</span>
+  <h2>El bucle del hábito: 4 pasos</h2>
+
+  <p>Todo hábito —bueno o malo— sigue el mismo ciclo neurológico de cuatro etapas. Entenderlo es la base de las cuatro leyes. <strong>Haz clic en cada tarjeta</strong> para descubrir cada etapa:</p>
+
+  <div class="flip-grid">
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front">1️⃣ Señal <span class="hint">(clic para voltear)</span></div>
+      <div class="flip-face flip-back">El detonante que inicia el hábito. Es la información que <strong>predice una recompensa</strong>: ver el celular, oler pan recién hecho, entrar a la cocina.</div>
+    </div></div>
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front">2️⃣ Anhelo <span class="hint">(clic para voltear)</span></div>
+      <div class="flip-face flip-back">La motivación o deseo. No anhelas el hábito en sí, sino <strong>el cambio de estado</strong> que produce: no quieres fumar, quieres el alivio que sientes al fumar.</div>
+    </div></div>
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front">3️⃣ Respuesta <span class="hint">(clic para voltear)</span></div>
+      <div class="flip-face flip-back">El hábito en sí: el pensamiento o la acción que realizas. Ocurre solo si la <strong>fricción es baja</strong> y la acción está dentro de tu capacidad.</div>
+    </div></div>
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front">4️⃣ Recompensa <span class="hint">(clic para voltear)</span></div>
+      <div class="flip-face flip-back">El objetivo final. Las recompensas <strong>satisfacen el anhelo</strong> y <strong>enseñan al cerebro</strong> qué acciones vale la pena recordar y repetir.</div>
+    </div></div>
+  </div>
+
+  <p>Si falta cualquiera de las cuatro etapas, el hábito no se forma: sin señal nunca empieza; sin anhelo no hay motivo; si es muy difícil no se ejecuta; sin recompensa no se repite.</p>
+
+  <h3>De las etapas a las leyes</h3>
+  <p>Cada etapa del bucle se corresponde con una ley del cambio de comportamiento. <strong>Haz clic en cada ley para ir a su módulo:</strong></p>
+
+  <div class="law-grid">
+    <button class="law-pill" data-go="ley1"><span class="num">1ª</span><span class="name">Hazlo obvio</span><br><span class="stage">→ actúa sobre la SEÑAL</span></button>
+    <button class="law-pill" data-go="ley2"><span class="num">2ª</span><span class="name">Hazlo atractivo</span><br><span class="stage">→ actúa sobre el ANHELO</span></button>
+    <button class="law-pill" data-go="ley3"><span class="num">3ª</span><span class="name">Hazlo sencillo</span><br><span class="stage">→ actúa sobre la RESPUESTA</span></button>
+    <button class="law-pill" data-go="ley4"><span class="num">4ª</span><span class="name">Hazlo satisfactorio</span><br><span class="stage">→ actúa sobre la RECOMPENSA</span></button>
+  </div>
+
+  <div class="key-idea">
+    <span class="tag">Idea clave</span>
+    <p style="margin:.4rem 0 0">Cuando quieras cambiar un comportamiento, pregúntate: ¿Cómo lo hago <strong>obvio</strong>? ¿<strong>Atractivo</strong>? ¿<strong>Sencillo</strong>? ¿<strong>Satisfactorio</strong>? Si un hábito no se te da, casi siempre falla alguna de estas cuatro palancas.</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="bucle">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="identidad">← Identidad</button>
+    <button class="btn secondary nav-next" data-go="ley1">Siguiente: 1ª Ley →</button>
+  </div>
+</section>
+
+<!-- ============ 4. LEY 1 ============ -->
+<section class="module" id="ley1">
+  <span class="badge">Señal</span>
+  <span class="kicker">Módulo 4 · Primera Ley</span>
+  <h2>👁️ Hazlo obvio</h2>
+
+  <p>La mayoría de nuestros hábitos son tan automáticos que ya no los vemos. Antes de construir nuevos hábitos, necesitas <strong>tomar conciencia</strong> de los actuales.</p>
+
+  <h3>La tarjeta de puntuación de hábitos (Habit Scorecard)</h3>
+  <p>Inspirada en el "señalar y nombrar" de los operadores de trenes japoneses: lista tus hábitos diarios y califica cada uno como positivo (+), negativo (–) o neutro (=) según si refuerza la identidad que deseas. Sin juzgarte: solo <strong>observar</strong>. (Encontrarás una tarjeta interactiva en el módulo de Herramientas.)</p>
+
+  <h3>Intenciones de implementación</h3>
+  <p>La mayoría falla por falta de <em>claridad</em>, no de motivación. "Voy a hacer más ejercicio" es vago; el cerebro necesita un plan concreto:</p>
+  <div class="key-idea">
+    <span class="tag">Fórmula</span>
+    <p style="margin:.4rem 0 0; font-size:1.05rem"><strong>"Yo haré [CONDUCTA] a las [HORA] en [LUGAR]."</strong></p>
+    <p style="margin:.4rem 0 0; font-size:.85rem; color:var(--muted)">Ej.: "Yo meditaré 5 minutos a las 7:00 a.m. en la cocina."</p>
+  </div>
+
+  <h3>Apilamiento de hábitos (Habit Stacking)</h3>
+  <p>Ningún hábito ocurre en el vacío: cada acción es señal de la siguiente. Aprovecha esa conectividad anclando el hábito nuevo a uno que ya tienes:</p>
+  <div class="key-idea">
+    <span class="tag">Fórmula</span>
+    <p style="margin:.4rem 0 0; font-size:1.05rem"><strong>"Después de [HÁBITO ACTUAL], haré [HÁBITO NUEVO]."</strong></p>
+  </div>
+
+  <h3>🧱 Constructor de apilamiento de hábitos</h3>
+  <div class="card">
+    <label class="field-label" for="habitoActual">Hábito que ya haces todos los días</label>
+    <input type="text" id="habitoActual" placeholder="Ej.: servirme el café de la mañana">
+    <label class="field-label" for="habitoNuevo">Hábito nuevo que quieres crear</label>
+    <input type="text" id="habitoNuevo" placeholder="Ej.: escribir 3 cosas por las que estoy agradecido/a">
+    <div class="btn-row"><button class="btn" id="stackBtn">Crear mi fórmula</button></div>
+    <div class="stack-output" id="stackOutput"></div>
+  </div>
+
+  <h3>El entorno importa más que la motivación</h3>
+  <ul>
+    <li><strong>La visión domina:</strong> somos más sensibles a las señales visuales que a cualquier otra. Un pequeño cambio en lo que ves cambia lo que haces.</li>
+    <li><strong>Haz visibles las señales buenas:</strong> la fruta en un frutero a la vista, el libro sobre la almohada, la ropa de gimnasio junto a la cama.</li>
+    <li><strong>Un espacio, un uso:</strong> los hábitos se asocian a contextos completos, no a objetos aislados. Si puedes, dedica espacios a una sola actividad ("aquí trabajo, aquí descanso"). El sofá donde estudias se vuelve señal de estudio.</li>
+    <li><strong>La autodisciplina es un mito útil:</strong> las personas "disciplinadas" en realidad estructuran su vida para <strong>necesitar menos fuerza de voluntad</strong>: evitan los entornos tentadores.</li>
+  </ul>
+
+  <div class="quote">
+    "Sé el arquitecto de tu entorno, no su víctima."
+    <span class="author">— Síntesis del capítulo 6</span>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="ley1">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="bucle">← El bucle</button>
+    <button class="btn secondary nav-next" data-go="ley2">Siguiente: 2ª Ley →</button>
+  </div>
+</section>
+
+<!-- ============ 5. LEY 2 ============ -->
+<section class="module" id="ley2">
+  <span class="badge">Anhelo</span>
+  <span class="kicker">Módulo 5 · Segunda Ley</span>
+  <h2>✨ Hazlo atractivo</h2>
+
+  <p>Cuanto más atractiva es una oportunidad, más probable es que se vuelva hábito. La clave biológica: la <strong>dopamina</strong>.</p>
+
+  <h3>Dopamina: el motor de la anticipación</h3>
+  <ul>
+    <li>La dopamina se libera no solo al <em>recibir</em> placer, sino —sobre todo— al <strong>anticiparlo</strong>.</li>
+    <li>Es el <strong>deseo</strong> (no la recompensa en sí) lo que nos impulsa a actuar. Por eso la expectativa de unas vacaciones a veces se disfruta más que las vacaciones.</li>
+    <li>Los "superestímulos" modernos (comida ultraprocesada, redes sociales) son versiones exageradas de señales que disparan anhelos intensos.</li>
+  </ul>
+
+  <h3>Agrupamiento de tentaciones (Temptation Bundling)</h3>
+  <p>Vincula una acción que <em>necesitas</em> hacer con una que <em>quieres</em> hacer. Combinada con el apilamiento de hábitos:</p>
+  <div class="key-idea">
+    <span class="tag">Fórmula</span>
+    <p style="margin:.4rem 0 0"><strong>1.</strong> "Después de [HÁBITO ACTUAL], haré [HÁBITO QUE NECESITO]."<br>
+    <strong>2.</strong> "Después de [HÁBITO QUE NECESITO], haré [HÁBITO QUE QUIERO]."</p>
+    <p style="margin:.4rem 0 0; font-size:.85rem; color:var(--muted)">Ej.: "Después de hacer 10 sentadillas, veré un capítulo de mi serie."</p>
+  </div>
+
+  <h3>El poder de la tribu</h3>
+  <p>Imitamos los hábitos de tres grupos sociales:</p>
+  <div class="accordion">
+    <div class="accordion-item">
+      <button class="accordion-header">Los cercanos (familia y amigos) <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>La proximidad moldea el comportamiento: tendemos a absorber los hábitos de quienes nos rodean. <strong>Estrategia:</strong> únete a una cultura donde tu comportamiento deseado sea lo normal y donde ya tengas algo en común con el grupo. Si rodearte de lectores es lo normal, leer deja de ser un esfuerzo.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">Los muchos (la tribu / la mayoría) <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Cuando no sabemos qué hacer, copiamos al grupo (reseñas, modas, normas sociales). Cuidado: <strong>preferimos equivocarnos con la multitud antes que acertar solos</strong>. Cambiar un hábito que choca con tu tribu es muy difícil sin cambiar de tribu.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">Los poderosos (estatus y prestigio) <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Imitamos a quienes admiramos y a quienes tienen lo que deseamos. Los comportamientos que dan <strong>aprobación, respeto y estatus</strong> nos resultan atractivos por naturaleza. Usa esto a tu favor: admira a personas cuyos hábitos quieres adoptar.</p></div>
+    </div>
+  </div>
+
+  <h3>Reprogramar el cerebro: de "tengo que" a "puedo"</h3>
+  <p>Los hábitos son atractivos cuando los asociamos con sentimientos positivos. Un cambio de lenguaje pequeño cambia el marco mental: en lugar de <em>"tengo que entrenar"</em>, decir <em>"me toca entrenar: voy a desarrollar resistencia y velocidad"</em>. La misma conducta, otra historia. También puedes crear un <strong>ritual de motivación</strong>: repetir una rutina breve justo antes del hábito (tres respiraciones profundas + sonreír) hasta que esa rutina se vuelva la señal del estado mental que necesitas.</p>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="ley2">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="ley1">← 1ª Ley</button>
+    <button class="btn secondary nav-next" data-go="ley3">Siguiente: 3ª Ley →</button>
+  </div>
+</section>
+
+<!-- ============ 6. LEY 3 ============ -->
+<section class="module" id="ley3">
+  <span class="badge">Respuesta</span>
+  <span class="kicker">Módulo 6 · Tercera Ley</span>
+  <h2>🎯 Hazlo sencillo</h2>
+
+  <h3>Movimiento ≠ Acción</h3>
+  <p>Planear, investigar y "prepararse" es <strong>movimiento</strong>: se siente productivo pero no produce resultados. <strong>Acción</strong> es el comportamiento que entrega un resultado. El movimiento es atractivo porque permite sentir progreso <em>sin riesgo de fallar</em>. La trampa: nos quedamos en la planeación para postergar la práctica.</p>
+
+  <div class="quote">
+    "La forma más efectiva de aprendizaje es la práctica, no la planeación."
+    <span class="author">— James Clear</span>
+  </div>
+
+  <h3>Repetición sobre perfección</h3>
+  <p>Los hábitos se forman por <strong>frecuencia, no por tiempo</strong>. La pregunta correcta no es "¿cuántos días tarda en formarse un hábito?", sino "¿cuántas repeticiones necesito?". Cada repetición refuerza el circuito neuronal (potenciación a largo plazo): la automaticidad es hija de la práctica.</p>
+
+  <h3>La ley del mínimo esfuerzo</h3>
+  <p>La conducta humana sigue el camino de menor resistencia. En lugar de luchar contra esto, <strong>úsalo</strong>:</p>
+  <ul>
+    <li><strong>Reduce la fricción de los buenos hábitos:</strong> deja la guitarra en medio de la sala, prepara la mochila del gimnasio la noche anterior, elige un gimnasio que esté de camino al trabajo.</li>
+    <li><strong>Aumenta la fricción de los malos:</strong> desenchufa la TV después de usarla, borra las apps de redes del teléfono, guarda el control remoto en otro cuarto.</li>
+    <li><strong>Prepara el entorno (priming):</strong> deja todo listo para que la acción futura sea trivial. Como los jardines japoneses de mínima fricción o resetear la cocina cada noche.</li>
+  </ul>
+
+  <h3>La regla de los dos minutos</h3>
+  <div class="key-idea">
+    <span class="tag">Idea clave</span>
+    <p style="margin:.4rem 0 0">"Cuando empieces un hábito nuevo, debe tomarte <strong>menos de dos minutos</strong>." Un hábito debe establecerse antes de poder mejorarse: <strong>primero estandariza, luego optimiza</strong>.</p>
+  </div>
+  <table>
+    <tr><th>Hábito ambicioso</th><th>Versión de 2 minutos</th></tr>
+    <tr><td>Leer 30 libros al año</td><td>Leer una página antes de dormir</td></tr>
+    <tr><td>Correr un maratón</td><td>Ponerme los tenis de correr</td></tr>
+    <tr><td>Estudiar para el examen</td><td>Abrir mis apuntes</td></tr>
+    <tr><td>Hacer yoga 4 veces por semana</td><td>Extender el tapete de yoga</td></tr>
+  </table>
+  <p>No es un truco para engañarte: es el <strong>ritual de entrada</strong>. Dominas el arte de <em>presentarte</em>. Un hábito que dura 2 minutos y se hace siempre vale más que uno perfecto que nunca empieza.</p>
+
+  <h3>Dispositivos de compromiso</h3>
+  <p>Decisiones presentes que aseguran tu conducta futura: contratar al entrenador y pagarlo por adelantado, usar apps que bloquean redes sociales, comprar porciones individuales en vez del paquete familiar. La automatización (ahorros automáticos, domiciliar pagos) es la versión definitiva: <strong>una sola decisión correcta que trabaja por ti para siempre</strong>.</p>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="ley3">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="ley2">← 2ª Ley</button>
+    <button class="btn secondary nav-next" data-go="ley4">Siguiente: 4ª Ley →</button>
+  </div>
+</section>
+
+<!-- ============ 7. LEY 4 ============ -->
+<section class="module" id="ley4">
+  <span class="badge">Recompensa</span>
+  <span class="kicker">Módulo 7 · Cuarta Ley</span>
+  <h2>🏆 Hazlo satisfactorio</h2>
+
+  <div class="key-idea">
+    <span class="tag">Regla cardinal del cambio de conducta</span>
+    <p style="margin:.4rem 0 0"><strong>Lo que se recompensa de inmediato, se repite. Lo que se castiga de inmediato, se evita.</strong></p>
+  </div>
+
+  <p>Las primeras tres leyes aumentan la probabilidad de hacer el hábito <em>esta vez</em>; la cuarta aumenta la probabilidad de <strong>repetirlo la próxima</strong>.</p>
+
+  <h3>El problema: vivimos en un entorno de recompensa retrasada</h3>
+  <p>Nuestro cerebro evolucionó para valorar lo inmediato. Pero los buenos hábitos tienen un costo inmediato y una recompensa lejana (ejercicio: dolor hoy, salud en años), y los malos al revés (azúcar: placer hoy, costo en años). <strong>Solución:</strong> añade un poco de placer inmediato a los hábitos que te convienen, y un poco de dolor inmediato a los que no.</p>
+  <ul>
+    <li>Elige recompensas inmediatas <strong>coherentes con tu identidad</strong>: si tu meta es ahorrar, no te premies con compras; mejor transfiere lo "no gastado" a un fondo visible llamado "Viaje a Europa".</li>
+    <li>Con el tiempo, la recompensa intrínseca (la identidad misma) toma el relevo de la extrínseca.</li>
+  </ul>
+
+  <h3>El rastreador de hábitos (Habit Tracker)</h3>
+  <p>Como Jerry Seinfeld y su calendario: escribe un chiste al día y marca una X. La regla: <strong>"no rompas la cadena"</strong>. El rastreo funciona porque activa las tres leyes a la vez y media:</p>
+  <ul>
+    <li>Es <strong>obvio</strong>: el calendario te recuerda actuar.</li>
+    <li>Es <strong>atractivo</strong>: ver tu racha motiva a continuar.</li>
+    <li>Es <strong>satisfactorio</strong>: marcar la X es una mini-recompensa inmediata y evidencia visual de tu progreso (¡y de tu identidad!).</li>
+  </ul>
+  <p>👉 Encontrarás un <strong>rastreador semanal funcional</strong> en el módulo de Herramientas.</p>
+
+  <h3>Nunca falles dos veces</h3>
+  <div class="quote">
+    "Perder una vez es un accidente. Perder dos veces es el inicio de un nuevo hábito."
+    <span class="author">— James Clear</span>
+  </div>
+  <ul>
+    <li>Los días malos importan más que los buenos: un entrenamiento mediocre mantiene viva la identidad; cero entrenamientos la erosiona.</li>
+    <li>Cuidado con <strong>medir lo equivocado</strong> (ley de Goodhart: "cuando una medida se convierte en objetivo, deja de ser buena medida"). La báscula no mide todo lo que importa.</li>
+  </ul>
+
+  <h3>El contrato de hábitos y el socio de responsabilidad</h3>
+  <p>Para que saltarte el hábito <em>duela</em> de inmediato: haz públicas las consecuencias. Un <strong>contrato de hábitos</strong> establece un castigo concreto si fallas (pagar una multa a tu socio, vestir formal una semana…) y lo firma un testigo. Saber que alguien te observa es un poderoso motivador: <strong>nos importa la opinión de los demás</strong>, y no queremos quedar mal.</p>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="ley4">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="ley3">← 3ª Ley</button>
+    <button class="btn secondary nav-next" data-go="romper">Siguiente: Romper malos hábitos →</button>
+  </div>
+</section>
+
+<!-- ============ 8. ROMPER MALOS HÁBITOS ============ -->
+<section class="module" id="romper">
+  <span class="kicker">Módulo 8</span>
+  <h2>🚫 La inversión: romper malos hábitos</h2>
+
+  <p>Cada ley tiene su inversa. Para eliminar un mal hábito, invierte las cuatro palancas:</p>
+
+  <table>
+    <tr><th>Crear un buen hábito</th><th>Romper un mal hábito</th></tr>
+    <tr><td><strong>1ª ley:</strong> Hazlo obvio</td><td><strong>Inversión:</strong> Hazlo invisible — elimina las señales del entorno (esconde el celular, no tengas dulces en casa).</td></tr>
+    <tr><td><strong>2ª ley:</strong> Hazlo atractivo</td><td><strong>Inversión:</strong> Hazlo poco atractivo — reencuadra: destaca los beneficios de evitarlo; asóciale sensaciones negativas.</td></tr>
+    <tr><td><strong>3ª ley:</strong> Hazlo sencillo</td><td><strong>Inversión:</strong> Hazlo difícil — aumenta la fricción y usa dispositivos de compromiso (bloqueadores, dejar la tarjeta en casa).</td></tr>
+    <tr><td><strong>4ª ley:</strong> Hazlo satisfactorio</td><td><strong>Inversión:</strong> Hazlo insatisfactorio — consecuencias inmediatas: contrato de hábitos, socio de responsabilidad, costo público de fallar.</td></tr>
+  </table>
+
+  <div class="key-idea">
+    <span class="tag">Matiz importante</span>
+    <p style="margin:.4rem 0 0">La eliminación de la señal es la táctica más práctica: <strong>es más fácil evitar la tentación que resistirla</strong>. La "autodisciplina" sostenida contra un entorno hostil casi siempre pierde.</p>
+  </div>
+
+  <h3>🔍 Diagnóstico interactivo de un mal hábito</h3>
+  <div class="card">
+    <p>Analiza un mal hábito con el marco de las 4 etapas:</p>
+    <label class="field-label" for="badHabit">¿Qué mal hábito quieres romper?</label>
+    <input type="text" id="badHabit" placeholder="Ej.: revisar el celular al despertar">
+    <label class="field-label" for="badCue">¿Cuál es la señal? (qué lo dispara)</label>
+    <input type="text" id="badCue" placeholder="Ej.: el celular está en la mesita de noche">
+    <label class="field-label" for="badCraving">¿Cuál es el anhelo real? (qué estado buscas)</label>
+    <input type="text" id="badCraving" placeholder="Ej.: novedad, distracción, no sentir aburrimiento">
+    <div class="btn-row"><button class="btn" id="badHabitBtn">Generar plan de inversión</button></div>
+    <div class="stack-output" id="badHabitOutput"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="romper">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="ley4">← 4ª Ley</button>
+    <button class="btn secondary nav-next" data-go="avanzado">Siguiente: Temas avanzados →</button>
+  </div>
+</section>
+
+<!-- ============ 9. AVANZADO ============ -->
+<section class="module" id="avanzado">
+  <span class="kicker">Módulo 9</span>
+  <h2>🚀 Tácticas avanzadas: de bueno a extraordinario</h2>
+
+  <h3>Genes y el juego correcto</h3>
+  <p>Los genes no eliminan el esfuerzo: <strong>definen dónde el esfuerzo rinde más</strong>. Michael Phelps (torso largo) domina la natación; Hicham El Guerrouj (piernas largas) domina la milla. Intercambia sus deportes y ambos serían mediocres.</p>
+  <ul>
+    <li><strong>Elige el campo donde las probabilidades jueguen a tu favor:</strong> los hábitos son más fáciles cuando se alinean con tus inclinaciones naturales.</li>
+    <li>Preguntas guía: ¿Qué me divierte que a otros les pesa? ¿Qué me hace perder la noción del tiempo? ¿Dónde obtengo mejores resultados que la media?</li>
+    <li>Si no encuentras un juego donde ganar, <strong>créalo</strong>: combina habilidades (Scott Adams: no era el mejor dibujante ni el más gracioso, pero la combinación lo hizo único con Dilbert).</li>
+  </ul>
+
+  <h3>La regla Ricitos de Oro (Goldilocks)</h3>
+  <div class="key-idea">
+    <span class="tag">Idea clave</span>
+    <p style="margin:.4rem 0 0">La motivación humana alcanza su máximo al trabajar en tareas en el <strong>borde justo de nuestra capacidad</strong>: ni tan fáciles que aburran, ni tan difíciles que frustren. ~4% más allá de tu habilidad actual es la zona de máxima concentración (flujo).</p>
+  </div>
+
+  <h3>El mayor enemigo del éxito no es el fracaso: es el aburrimiento</h3>
+  <div class="quote">
+    "Los profesionales se apegan al programa; los aficionados dejan que la vida se interponga."
+    <span class="author">— James Clear</span>
+  </div>
+  <ul>
+    <li>Cuando un hábito se vuelve rutina, deja de ser interesante… y ahí lo abandonamos buscando novedad.</li>
+    <li>La marca del éxito no es amar el proceso siempre, sino <strong>seguir cuando no apetece</strong>: "enamórate del aburrimiento".</li>
+  </ul>
+
+  <h3>El lado oscuro de los hábitos: revisión y reflexión</h3>
+  <p>La automaticidad tiene un costo: al volverte automático, dejas de prestar atención a los pequeños errores y puedes estancarte. <strong>Hábitos + práctica deliberada = maestría.</strong> Clear propone sistemas de reflexión:</p>
+  <ul>
+    <li><strong>Revisión anual:</strong> ¿Qué salió bien este año? ¿Qué salió mal? ¿Qué aprendí?</li>
+    <li><strong>Informe de integridad:</strong> ¿Estoy viviendo según mis valores? ¿Mi identidad sigue siendo la correcta?</li>
+    <li><strong>Identidad flexible:</strong> cuanto más te aferras a una sola identidad ("soy atleta", "soy CEO"), más frágil eres si la pierdes. Mejor: "soy alguien disciplinado y mentalmente fuerte" sobrevive a cualquier cambio de rol.</li>
+  </ul>
+
+  <div class="quote">
+    "El secreto para obtener resultados que perduren es no dejar nunca de hacer mejoras. Pequeños hábitos no suman: se componen. Ese es el poder de los hábitos atómicos."
+    <span class="author">— Conclusión del libro</span>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="avanzado">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="romper">← Romper malos hábitos</button>
+    <button class="btn secondary nav-next" data-go="herramientas">Siguiente: Herramientas →</button>
+  </div>
+</section>
+
+<!-- ============ 10. HERRAMIENTAS ============ -->
+<section class="module" id="herramientas">
+  <span class="kicker">Módulo 10</span>
+  <h2>🧰 Herramientas prácticas</h2>
+  <p>Tres herramientas del libro, listas para usar. Todo se guarda localmente en tu navegador.</p>
+
+  <h3>📋 Tarjeta de puntuación de hábitos</h3>
+  <div class="card">
+    <p style="font-size:.88rem">Lista tus hábitos diarios en orden y califícalos: <span class="sc-pos">+ positivo</span> · <span class="sc-neg">– negativo</span> · <span class="sc-neu">= neutro</span>. Recuerda: el criterio es si el hábito <strong>refuerza la identidad que quieres construir</strong>.</p>
+    <div id="scorecardList"></div>
+    <div class="btn-row">
+      <button class="btn secondary" id="addScorecardRow">+ Agregar hábito</button>
+      <button class="btn" id="saveScorecard">Guardar tarjeta</button>
+    </div>
+    <div class="stack-output" id="scorecardMsg"></div>
+  </div>
+
+  <h3>📅 Rastreador semanal de hábitos</h3>
+  <div class="card">
+    <p style="font-size:.88rem">Agrega tus hábitos y marca cada día que los cumplas. <strong>No rompas la cadena</strong> — y si fallas un día, nunca falles dos veces.</p>
+    <div style="display:flex; gap:.6rem; margin-bottom:.4rem">
+      <input type="text" id="newTrackerHabit" placeholder="Ej.: leer 1 página" style="flex:1">
+      <button class="btn" id="addTrackerHabit">Agregar</button>
+    </div>
+    <div class="tracker-grid" id="trackerGrid"></div>
+  </div>
+
+  <h3>📝 Plantilla: mi plan de hábito completo</h3>
+  <div class="card">
+    <p style="font-size:.88rem">Junta todo lo aprendido en un plan de las 4 leyes para un hábito concreto.</p>
+    <label class="field-label" for="planHabit">Hábito que quiero construir</label>
+    <input type="text" id="planHabit" placeholder="Ej.: meditar">
+    <label class="field-label" for="planObvio">1ª ley — Lo haré obvio así (hora + lugar / apilamiento):</label>
+    <input type="text" id="planObvio" placeholder="Después de servirme el café, meditaré en la silla de la sala">
+    <label class="field-label" for="planAtractivo">2ª ley — Lo haré atractivo así (tentación / tribu):</label>
+    <input type="text" id="planAtractivo" placeholder="Después de meditar, escucharé mi podcast favorito">
+    <label class="field-label" for="planSencillo">3ª ley — Lo haré sencillo así (2 minutos / fricción):</label>
+    <input type="text" id="planSencillo" placeholder="Empezaré con solo 2 minutos; dejaré la silla y la app listas">
+    <label class="field-label" for="planSatisfactorio">4ª ley — Lo haré satisfactorio así (rastreo / recompensa):</label>
+    <input type="text" id="planSatisfactorio" placeholder="Marcaré una X en mi rastreador al terminar">
+    <div class="btn-row"><button class="btn" id="planBtn">Generar mi plan</button></div>
+    <div class="stack-output" id="planOutput"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="herramientas">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="avanzado">← Temas avanzados</button>
+    <button class="btn secondary nav-next" data-go="quiz">Siguiente: Quiz final →</button>
+  </div>
+</section>
+
+<!-- ============ 11. QUIZ ============ -->
+<section class="module" id="quiz">
+  <span class="kicker">Módulo 11</span>
+  <h2>🧠 Quiz final: ¿dominas los hábitos atómicos?</h2>
+  <p>10 preguntas. Elige una respuesta por pregunta; recibirás retroalimentación inmediata.</p>
+  <div id="quizContainer"></div>
+  <div class="quiz-score" id="quizScore"></div>
+  <div class="btn-row">
+    <button class="btn secondary" id="resetQuiz">🔄 Reiniciar quiz</button>
+    <button class="btn complete-btn" data-module="quiz">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="herramientas">← Herramientas</button>
+    <span></span>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ================= Navigation & progress ================= */
+const MODULES = ["intro","fundamentos","identidad","bucle","ley1","ley2","ley3","ley4","romper","avanzado","herramientas","quiz"];
+const LS_KEY = "atomicHabitsGuide";
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch { return {}; }
+}
+function saveState(s) { localStorage.setItem(LS_KEY, JSON.stringify(s)); }
+let state = loadState();
+state.completed = state.completed || [];
+state.tracker = state.tracker || [];
+state.scorecard = state.scorecard || [];
+
+function showModule(id) {
+  if (!MODULES.includes(id)) id = "intro";
+  document.querySelectorAll("section.module").forEach(s => s.classList.toggle("visible", s.id === id));
+  document.querySelectorAll("nav.sidebar a").forEach(a => a.classList.toggle("active", a.dataset.target === id));
+  window.scrollTo({ top: 0 });
+  if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
+}
+
+function refreshProgress() {
+  const pct = Math.round(state.completed.length / MODULES.length * 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressLabel").textContent = pct + "% completado";
+  document.querySelectorAll("nav.sidebar a").forEach(a =>
+    a.classList.toggle("done", state.completed.includes(a.dataset.target)));
+}
+
+document.querySelectorAll("nav.sidebar a").forEach(a => {
+  a.addEventListener("click", e => { e.preventDefault(); showModule(a.dataset.target); });
+});
+document.querySelectorAll(".nav-next, .law-pill").forEach(b => {
+  b.addEventListener("click", () => showModule(b.dataset.go));
+});
+document.querySelectorAll(".complete-btn").forEach(b => {
+  b.addEventListener("click", () => {
+    const m = b.dataset.module;
+    if (!state.completed.includes(m)) state.completed.push(m);
+    saveState(state); refreshProgress();
+    b.textContent = "✔ Módulo completado";
+  });
+});
+
+showModule(location.hash.replace("#","") || "intro");
+refreshProgress();
+MODULES.forEach(m => {
+  if (state.completed.includes(m)) {
+    const btn = document.querySelector(`.complete-btn[data-module="${m}"]`);
+    if (btn) btn.textContent = "✔ Módulo completado";
+  }
+});
+
+/* ================= Accordions ================= */
+document.querySelectorAll(".accordion-header").forEach(h => {
+  h.addEventListener("click", () => h.parentElement.classList.toggle("open"));
+});
+
+/* ================= Flip cards ================= */
+document.querySelectorAll(".flip-card").forEach(c => {
+  c.addEventListener("click", () => c.classList.toggle("flipped"));
+});
+
+/* ================= Compound calculator ================= */
+document.getElementById("calcCompound").addEventListener("click", () => {
+  const days = Math.max(1, Math.min(3650, parseInt(document.getElementById("daysInput").value) || 365));
+  const up = Math.pow(1.01, days);
+  const down = Math.pow(0.99, days);
+  document.getElementById("upResult").textContent = up >= 100 ? Math.round(up).toLocaleString("es") + "×" : up.toFixed(2) + "×";
+  document.getElementById("downResult").textContent = (down * 100).toFixed(down < 0.01 ? 4 : 1) + "%";
+  document.getElementById("compoundResult").style.display = "flex";
+});
+
+/* ================= Identity builder ================= */
+document.getElementById("identidadBtn").addEventListener("click", () => {
+  const r = document.getElementById("resultadoInput").value.trim();
+  const i = document.getElementById("identidadInput").value.trim();
+  const v = document.getElementById("votoInput").value.trim();
+  const out = document.getElementById("identidadOutput");
+  if (!r || !i || !v) { out.textContent = "✏️ Completa los tres campos para generar tu declaración."; out.classList.add("show"); return; }
+  out.innerHTML = `🪞 <strong>Mi declaración de identidad:</strong><br><br>
+  "No persigo <em>${r}</em>. Me estoy convirtiendo en <strong>${i}</strong>.<br>
+  Hoy votaré por esa identidad haciendo: <strong>${v}</strong>.<br>
+  Cada repetición es un voto más por la persona que quiero ser."`;
+  out.classList.add("show");
+});
+
+/* ================= Habit stacking ================= */
+document.getElementById("stackBtn").addEventListener("click", () => {
+  const a = document.getElementById("habitoActual").value.trim();
+  const n = document.getElementById("habitoNuevo").value.trim();
+  const out = document.getElementById("stackOutput");
+  if (!a || !n) { out.textContent = "✏️ Completa ambos campos."; out.classList.add("show"); return; }
+  out.innerHTML = `🧱 <strong>Tu fórmula de apilamiento:</strong><br><br>
+  "Después de <strong>${a}</strong>, haré <strong>${n}</strong>."<br><br>
+  <span style="font-size:.82rem;color:var(--muted)">Consejo: sé específico/a con el momento y el lugar. Cuanto más concreta la señal, más automático el hábito.</span>`;
+  out.classList.add("show");
+});
+
+/* ================= Bad habit inversion ================= */
+document.getElementById("badHabitBtn").addEventListener("click", () => {
+  const h = document.getElementById("badHabit").value.trim();
+  const c = document.getElementById("badCue").value.trim();
+  const cr = document.getElementById("badCraving").value.trim();
+  const out = document.getElementById("badHabitOutput");
+  if (!h || !c || !cr) { out.textContent = "✏️ Completa los tres campos."; out.classList.add("show"); return; }
+  out.innerHTML = `🚫 <strong>Plan de inversión para: ${h}</strong><br><br>
+  <strong>1. Hazlo invisible:</strong> elimina o esconde la señal → "${c}". Rediseña tu entorno para no encontrarla.<br><br>
+  <strong>2. Hazlo poco atractivo:</strong> tu anhelo real es "${cr}". Busca una forma más sana de satisfacer ese mismo anhelo y recuerda los costos del hábito actual.<br><br>
+  <strong>3. Hazlo difícil:</strong> agrega pasos, distancia o bloqueos entre tú y el hábito.<br><br>
+  <strong>4. Hazlo insatisfactorio:</strong> cuéntaselo a un socio de responsabilidad o firma un contrato de hábitos con una consecuencia inmediata.`;
+  out.classList.add("show");
+});
+
+/* ================= Scorecard ================= */
+const scList = document.getElementById("scorecardList");
+function scorecardRow(name = "", val = "=") {
+  const row = document.createElement("div");
+  row.className = "scorecard-row";
+  row.innerHTML = `<input type="text" placeholder="Ej.: apagar la alarma, revisar el celular…" value="${name.replace(/"/g,'&quot;')}">
+    <select>
+      <option value="+" ${val==="+"?"selected":""}>+ positivo</option>
+      <option value="=" ${val==="="?"selected":""}>= neutro</option>
+      <option value="-" ${val==="-"?"selected":""}>– negativo</option>
+    </select>
+    <button class="tracker-del" title="Eliminar">✕</button>`;
+  row.querySelector(".tracker-del").addEventListener("click", () => row.remove());
+  scList.appendChild(row);
+}
+(state.scorecard.length ? state.scorecard : [{n:"",v:"="},{n:"",v:"="},{n:"",v:"="}]).forEach(r => scorecardRow(r.n, r.v));
+document.getElementById("addScorecardRow").addEventListener("click", () => scorecardRow());
+document.getElementById("saveScorecard").addEventListener("click", () => {
+  state.scorecard = [...scList.querySelectorAll(".scorecard-row")]
+    .map(r => ({ n: r.querySelector("input").value.trim(), v: r.querySelector("select").value }))
+    .filter(r => r.n);
+  saveState(state);
+  const pos = state.scorecard.filter(r=>r.v==="+").length, neg = state.scorecard.filter(r=>r.v==="-").length;
+  const msg = document.getElementById("scorecardMsg");
+  msg.innerHTML = `💾 Tarjeta guardada: <strong>${state.scorecard.length}</strong> hábitos (<span class="sc-pos">${pos} positivos</span>, <span class="sc-neg">${neg} negativos</span>). Recuerda: el primer paso no es juzgar, es <strong>observar</strong>.`;
+  msg.classList.add("show");
+});
+
+/* ================= Tracker ================= */
+const DAYS = ["L","M","X","J","V","S","D"];
+const trackerGrid = document.getElementById("trackerGrid");
+function renderTracker() {
+  trackerGrid.innerHTML = "";
+  if (state.tracker.length) {
+    trackerGrid.appendChild(Object.assign(document.createElement("div"), { className: "head", textContent: "Hábito" }));
+    DAYS.forEach(d => trackerGrid.appendChild(Object.assign(document.createElement("div"), { className: "head", textContent: d })));
+  }
+  state.tracker.forEach((h, hi) => {
+    const nameCell = document.createElement("div");
+    nameCell.className = "habit-name";
+    nameCell.innerHTML = `${h.name} <button class="tracker-del" title="Eliminar hábito">✕</button>`;
+    nameCell.querySelector("button").addEventListener("click", () => {
+      state.tracker.splice(hi, 1); saveState(state); renderTracker();
+    });
+    trackerGrid.appendChild(nameCell);
+    h.days.forEach((done, di) => {
+      const cell = document.createElement("div");
+      cell.className = "tracker-cell" + (done ? " done" : "");
+      cell.textContent = done ? "✔" : "";
+      cell.addEventListener("click", () => {
+        h.days[di] = !h.days[di]; saveState(state); renderTracker();
+      });
+      trackerGrid.appendChild(cell);
+    });
+  });
+}
+document.getElementById("addTrackerHabit").addEventListener("click", () => {
+  const input = document.getElementById("newTrackerHabit");
+  const name = input.value.trim();
+  if (!name) return;
+  state.tracker.push({ name, days: [false,false,false,false,false,false,false] });
+  input.value = ""; saveState(state); renderTracker();
+});
+renderTracker();
+
+/* ================= Plan generator ================= */
+document.getElementById("planBtn").addEventListener("click", () => {
+  const h = document.getElementById("planHabit").value.trim();
+  const o = document.getElementById("planObvio").value.trim();
+  const a = document.getElementById("planAtractivo").value.trim();
+  const s = document.getElementById("planSencillo").value.trim();
+  const sa = document.getElementById("planSatisfactorio").value.trim();
+  const out = document.getElementById("planOutput");
+  if (!h || !o || !a || !s || !sa) { out.textContent = "✏️ Completa los cinco campos."; out.classList.add("show"); return; }
+  out.innerHTML = `📝 <strong>Mi plan de las 4 leyes para: ${h}</strong><br><br>
+  👁️ <strong>Obvio:</strong> ${o}<br>
+  ✨ <strong>Atractivo:</strong> ${a}<br>
+  🎯 <strong>Sencillo:</strong> ${s}<br>
+  🏆 <strong>Satisfactorio:</strong> ${sa}<br><br>
+  <span style="font-size:.82rem;color:var(--muted)">Tip: imprime o copia este plan y ponlo donde lo veas todos los días.</span>`;
+  out.classList.add("show");
+});
+
+/* ================= Quiz ================= */
+const QUIZ = [
+  { q: "Si mejoras un 1% cada día durante un año, ¿cuánto mejor terminas siendo aproximadamente?",
+    opts: ["3.65 veces mejor", "37 veces mejor", "365 veces mejor", "Un 12% mejor"],
+    a: 1, fb: "1.01^365 ≈ 37.78. El interés compuesto de los hábitos es la idea fundacional del libro." },
+  { q: "Según Clear, ¿cuál es la diferencia clave entre metas y sistemas?",
+    opts: ["Las metas son para perdedores; los sistemas para ganadores", "Las metas indican dirección; los sistemas producen el progreso", "Los sistemas son metas pequeñas", "No hay diferencia real"],
+    a: 1, fb: "\"No te elevas al nivel de tus metas: caes al nivel de tus sistemas.\" Las metas orientan; el sistema diario es lo que avanza." },
+  { q: "El cambio de comportamiento más duradero empieza por la capa de…",
+    opts: ["Resultados", "Procesos", "Identidad", "Motivación"],
+    a: 2, fb: "Los hábitos basados en identidad ('soy lector') duran más que los basados en resultados ('quiero leer 30 libros')." },
+  { q: "Ordena correctamente el bucle del hábito:",
+    opts: ["Anhelo → Señal → Recompensa → Respuesta", "Señal → Anhelo → Respuesta → Recompensa", "Señal → Respuesta → Anhelo → Recompensa", "Respuesta → Señal → Anhelo → Recompensa"],
+    a: 1, fb: "Señal (predice la recompensa) → Anhelo (deseo del cambio de estado) → Respuesta (la acción) → Recompensa (satisface y enseña)." },
+  { q: "La fórmula \"Yo haré [CONDUCTA] a las [HORA] en [LUGAR]\" se llama…",
+    opts: ["Apilamiento de hábitos", "Intención de implementación", "Agrupamiento de tentaciones", "Contrato de hábitos"],
+    a: 1, fb: "Las intenciones de implementación dan al cerebro un plan concreto. El apilamiento usa otro hábito como ancla en lugar de hora y lugar." },
+  { q: "¿Qué libera dopamina con más fuerza según el libro?",
+    opts: ["Recibir la recompensa", "Recordar la recompensa", "Anticipar la recompensa", "Compartir la recompensa"],
+    a: 2, fb: "La anticipación del placer (el anhelo) es lo que nos impulsa a actuar — por eso funciona el agrupamiento de tentaciones." },
+  { q: "La regla de los dos minutos dice que…",
+    opts: ["Debes meditar 2 minutos al día", "Todo hábito debe completarse en 2 minutos para siempre", "Un hábito nuevo debe tomar menos de 2 minutos al empezar", "Debes descansar 2 minutos entre hábitos"],
+    a: 2, fb: "Primero estandariza, luego optimiza: domina el arte de presentarte. 'Leer antes de dormir' empieza como 'leer una página'." },
+  { q: "¿Cuál es la regla cardinal del cambio de conducta?",
+    opts: ["Lo que se planifica, se logra", "Lo que se recompensa de inmediato se repite; lo que se castiga de inmediato se evita", "La motivación precede a la acción", "21 días forman un hábito"],
+    a: 1, fb: "El cerebro prioriza lo inmediato. Por eso la 4ª ley añade satisfacción instantánea a los buenos hábitos." },
+  { q: "Para romper un mal hábito, la inversión de la 1ª ley es…",
+    opts: ["Hazlo difícil", "Hazlo invisible", "Hazlo insatisfactorio", "Hazlo aburrido"],
+    a: 1, fb: "Eliminar la señal del entorno es la táctica más eficaz: es más fácil evitar la tentación que resistirla." },
+  { q: "Según Clear, ¿cuál es el mayor enemigo del éxito a largo plazo?",
+    opts: ["El fracaso", "La falta de talento", "El aburrimiento", "La competencia"],
+    a: 2, fb: "Cuando el hábito se vuelve rutina, buscamos novedad y abandonamos. Los profesionales siguen aunque no apetezca." }
+];
+
+const quizContainer = document.getElementById("quizContainer");
+let quizAnswers = [];
+
+function renderQuiz() {
+  quizContainer.innerHTML = "";
+  quizAnswers = new Array(QUIZ.length).fill(null);
+  document.getElementById("quizScore").textContent = "";
+  QUIZ.forEach((item, qi) => {
+    const box = document.createElement("div");
+    box.className = "quiz-q";
+    box.innerHTML = `<p class="question">${qi + 1}. ${item.q}</p>`;
+    const optsWrap = document.createElement("div");
+    optsWrap.className = "quiz-options";
+    item.opts.forEach((opt, oi) => {
+      const btn = document.createElement("button");
+      btn.className = "quiz-option";
+      btn.textContent = opt;
+      btn.addEventListener("click", () => {
+        if (quizAnswers[qi] !== null) return;
+        quizAnswers[qi] = oi;
+        optsWrap.querySelectorAll(".quiz-option").forEach((b, bi) => {
+          b.disabled = true;
+          if (bi === item.a) b.classList.add("correct");
+          else if (bi === oi) b.classList.add("incorrect");
+        });
+        const fb = box.querySelector(".quiz-feedback");
+        fb.classList.add("show", oi === item.a ? "ok" : "bad");
+        fb.textContent = (oi === item.a ? "✅ ¡Correcto! " : "❌ No exactamente. ") + item.fb;
+        updateScore();
+      });
+      optsWrap.appendChild(btn);
+    });
+    box.appendChild(optsWrap);
+    const fb = document.createElement("div");
+    fb.className = "quiz-feedback";
+    box.appendChild(fb);
+    quizContainer.appendChild(box);
+  });
+}
+function updateScore() {
+  const answered = quizAnswers.filter(a => a !== null).length;
+  if (answered < QUIZ.length) return;
+  const correct = quizAnswers.filter((a, i) => a === QUIZ[i].a).length;
+  let msg;
+  if (correct === 10) msg = "🏅 ¡Perfecto! Dominas los hábitos atómicos. Ahora: a practicarlos.";
+  else if (correct >= 8) msg = "🌟 ¡Excelente! Tienes muy claro el sistema de las 4 leyes.";
+  else if (correct >= 6) msg = "👍 Bien. Repasa los módulos donde fallaste y vuelve a intentarlo.";
+  else msg = "📚 Buen comienzo. Te recomendamos recorrer la guía de nuevo: cada repetición es un voto por tu identidad de aprendiz.";
+  document.getElementById("quizScore").textContent = `Resultado: ${correct}/10 — ${msg}`;
+}
+document.getElementById("resetQuiz").addEventListener("click", renderQuiz);
+renderQuiz();
+</script>
+</body>
+</html>
