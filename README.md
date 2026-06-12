@@ -1,6 +1,6 @@
 # 📚 Biblioteca Práctica
 
-Biblioteca interactiva en español con **resúmenes accionables de libros y estudios científicos** sobre hábitos, productividad, aprendizaje, psicología de las decisiones y salud cerebral. Construida como páginas HTML autocontenidas, sin dependencias externas.
+Biblioteca interactiva en español con **resúmenes accionables de libros y estudios científicos** sobre hábitos, productividad, aprendizaje, psicología de las decisiones, relaciones, propósito y salud cerebral. Construida como páginas HTML autocontenidas, sin dependencias externas.
 
 ## 🚀 Cómo usarla
 
@@ -20,29 +20,24 @@ python3 -m http.server 8000
 
 | Archivo | Contenido |
 |---------|-----------|
-| `index.html` | **La biblioteca**: catálogo de 20 recursos con resúmenes prácticos completos |
+| `index.html` | **La biblioteca**: catálogo de 44 recursos (36 libros + 8 estudios) con resúmenes prácticos completos |
 | `habitos-atomicos.html` | Guía didáctica interactiva completa de *Hábitos Atómicos* (12 módulos, quiz, herramientas) |
 
 ## 📖 Contenido de la biblioteca
 
 Cada recurso incluye: **idea central en una frase**, **ideas clave**, **plan de acción con checklist persistente**, **cita destacada**, **evidencia científica** (con matices y controversias señaladas honestamente), **recursos relacionados** y **notas personales**.
 
-### Libros (12)
+### Libros (36)
 
-| Libro | Autor | Categoría |
-|-------|-------|-----------|
-| Hábitos Atómicos | James Clear | Hábitos |
-| El poder de los hábitos | Charles Duhigg | Hábitos |
-| Trabajo Profundo (Deep Work) | Cal Newport | Productividad y foco |
-| Esencialismo | Greg McKeown | Productividad y foco |
-| Apréndetelo (Make It Stick) | Brown, Roediger y McDaniel | Aprendizaje |
-| Mindset: la actitud del éxito | Carol Dweck | Aprendizaje |
-| Fluir (Flow) | Mihály Csíkszentmihályi | Psicología |
-| Pensar rápido, pensar despacio | Daniel Kahneman | Psicología |
-| Influencia | Robert Cialdini | Psicología |
-| Grit | Angela Duckworth | Psicología |
-| Por qué dormimos | Matthew Walker | Cuerpo y cerebro |
-| Spark: ejercicio y cerebro | John Ratey | Cuerpo y cerebro |
+| Categoría | Libros |
+|-----------|--------|
+| 🔁 Hábitos | Hábitos Atómicos (Clear) · El poder de los hábitos (Duhigg) · Hábitos mínimos / Tiny Habits (Fogg) · Autocontrol / The Willpower Instinct (McGonigal) |
+| 🎯 Productividad y foco | Trabajo Profundo (Newport) · Esencialismo (McKeown) · Los 7 hábitos de la gente altamente efectiva (Covey) · Organízate con eficacia / GTD (Allen) · Minimalismo digital (Newport) · Indistraíble (Eyal) · Cuatro mil semanas (Burkeman) |
+| 🧠 Aprendizaje | Apréndetelo / Make It Stick (Brown, Roediger y McDaniel) · Mindset (Dweck) · Superaprendizaje / Ultralearning (Young) · Abre tu mente a los números (Oakley) · Amplitud / Range (Epstein) |
+| 🧭 Psicología y decisiones | Pensar rápido, pensar despacio (Kahneman) · Influencia (Cialdini) · Grit (Duckworth) · Fluir (Csíkszentmihályi) · Sentirse bien / Feeling Good (Burns) · Drive (Pink) · Piénsalo otra vez / Think Again (Grant) · La psicología del dinero (Housel) |
+| 🤝 Relaciones y comunicación | Cómo ganar amigos e influir sobre las personas (Carnegie) · Inteligencia emocional (Goleman) · Rompe la barrera del no (Voss) · El poder de los introvertidos / Quiet (Cain) |
+| 🧘 Propósito y bienestar | El hombre en busca de sentido (Frankl) · Meditaciones (Marco Aurelio) · El obstáculo es el camino (Holiday) · La ciencia de la felicidad (Lyubomirsky) · La trampa de la felicidad (Harris) · Sé amable contigo mismo / Self-Compassion (Neff) |
+| 💪 Cuerpo y cerebro | Por qué dormimos (Walker) · Spark: ejercicio y cerebro (Ratey) |
 
 ### Estudios científicos (8)
 
@@ -60,7 +55,7 @@ Cada recurso incluye: **idea central en una frase**, **ideas clave**, **plan de 
 ## 🧪 Funciones interactivas
 
 - **Búsqueda** por título, autor o contenido de las ideas
-- **Filtros** por categoría, tipo (libro/estudio) y estado de lectura
+- **Filtros** por categoría (7), tipo (libro/estudio) y estado de lectura
 - **Estados de lectura** (por leer / leyendo / leído) y **favoritos** ⭐
 - **Checklists de acción** por recurso, con progreso persistente
 - **Notas personales** por recurso con guardado automático
@@ -77,4 +72,4 @@ HTML + CSS + JavaScript vanilla, un archivo por página. Diseño oscuro, respons
 
 ## ⚠️ Nota
 
-Los resúmenes son síntesis orientativas con fines educativos: no sustituyen la lectura de las obras originales. Donde la evidencia científica tiene matices o controversias (replicación, tamaños de efecto), se indica expresamente en cada ficha.
+Los resúmenes son síntesis orientativas con fines educativos: no sustituyen la lectura de las obras originales ni asesoramiento profesional. Donde la evidencia científica tiene matices o controversias (replicación, tamaños de efecto), se indica expresamente en cada ficha.
