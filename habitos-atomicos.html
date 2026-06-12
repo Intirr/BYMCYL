@@ -984,7 +984,7 @@ function refreshProgress() {
     a.classList.toggle("done", state.completed.includes(a.dataset.target)));
 }
 
-document.querySelectorAll("nav.sidebar a").forEach(a => {
+document.querySelectorAll("nav.sidebar a[data-target]").forEach(a => {
   a.addEventListener("click", e => { e.preventDefault(); showModule(a.dataset.target); });
 });
 document.querySelectorAll(".nav-next, .law-pill").forEach(b => {

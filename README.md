@@ -21,7 +21,12 @@ python3 -m http.server 8000
 | Archivo | Contenido |
 |---------|-----------|
 | `index.html` | **La biblioteca**: catálogo de 66 recursos (58 libros + 8 estudios) con resúmenes prácticos completos |
-| `habitos-atomicos.html` | Guía didáctica interactiva completa de *Hábitos Atómicos* (12 módulos, quiz, herramientas) |
+| `habitos-atomicos.html` | Guía interactiva completa de *Hábitos Atómicos* (James Clear) |
+| `trabajo-profundo.html` | Guía interactiva completa de *Trabajo Profundo* (Cal Newport) |
+| `aprendetelo.html` | Guía interactiva completa de *Apréndetelo / Make It Stick* (ciencia del aprendizaje) |
+| `pensar-rapido.html` | Guía interactiva completa de *Pensar rápido, pensar despacio* (Daniel Kahneman) |
+| `por-que-dormimos.html` | Guía interactiva completa de *Por qué dormimos* (Matthew Walker) |
+| `meditaciones.html` | Guía interactiva completa de *Meditaciones* (Marco Aurelio y estoicismo práctico) |
 
 ## 📖 Contenido de la biblioteca
 
@@ -62,9 +67,16 @@ Cada recurso incluye: **idea central en una frase**, **ideas clave**, **plan de 
 - **Estadísticas y barra de progreso** de la biblioteca
 - Todo persiste en `localStorage` (sin cuentas ni servidores)
 
-## ⚛️ Guía completa de Hábitos Atómicos
+## 🎓 Guías interactivas completas (6)
 
-La biblioteca enlaza a una guía didáctica profunda del libro de James Clear (`habitos-atomicos.html`) con 12 módulos, calculadora del 1%, constructor de identidad, apilador de hábitos, rastreador semanal, diagnóstico de malos hábitos y quiz final de 10 preguntas.
+Además de los resúmenes, seis libros tienen **guía didáctica profunda** enlazada desde su ficha: módulos navegables con progreso persistente, ejercicios interactivos y quiz final de 10 preguntas con retroalimentación.
+
+- ⚛️ **Hábitos Atómicos** — calculadora del 1%, constructor de identidad, apilador de hábitos, rastreador semanal, diagnóstico de malos hábitos
+- 🎯 **Trabajo Profundo** — clasificador de tareas, test de filosofías, constructor de rituales, marcador de horas profundas, planificador de bloques
+- 📌 **Apréndetelo (Make It Stick)** — experimento de calibración, flashcards propias, planificador de repasos espaciados, plantilla Feynman, plan de estudio
+- ⚖️ **Pensar rápido, pensar despacio** — test CRT, demos de anclaje y framing, corrector de estimaciones, pre-mortem, checklist antisesgos
+- 😴 **Por qué dormimos** — calculadoras de cafeína y ciclos de sueño, checklist de higiene, autoevaluación orientativa
+- 🏛️ **Meditaciones** — clasificador de la dicotomía del control, reformulador estoico, reencuadre de obstáculos, diario estoico persistente
 
 ## 🛠️ Tecnología
 
