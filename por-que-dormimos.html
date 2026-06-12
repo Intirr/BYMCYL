@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Por qué dormimos — Guía Didáctica Interactiva</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --surface: #181b22;
+    --surface-2: #1f232d;
+    --border: #2c3140;
+    --text: #e8eaf0;
+    --muted: #9aa3b5;
+    --accent: #e0606a;
+    --accent-2: #4fc08d;
+    --accent-3: #5b8def;
+    --danger: #e0606a;
+    --radius: 14px;
+    font-size: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+  }
+  /* ---------- Layout ---------- */
+  .layout { display: flex; min-height: 100vh; }
+  nav.sidebar {
+    width: 290px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  nav.sidebar h1 {
+    font-size: 1.05rem;
+    color: var(--accent);
+    margin-bottom: .25rem;
+    letter-spacing: .5px;
+  }
+  nav.sidebar .subtitle { font-size: .78rem; color: var(--muted); margin-bottom: 1.2rem; }
+  nav.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: .5rem .7rem;
+    border-radius: 8px;
+    font-size: .88rem;
+    margin-bottom: 2px;
+    transition: background .15s, color .15s;
+  }
+  nav.sidebar a:hover { background: var(--surface-2); color: var(--text); }
+  nav.sidebar a.active { background: var(--surface-2); color: var(--accent); font-weight: 600; }
+  nav.sidebar a .check { margin-left: auto; font-size: .8rem; color: var(--accent-2); visibility: hidden; }
+  nav.sidebar a.done .check { visibility: visible; }
+  .progress-wrap { margin: 1rem 0 1.4rem; }
+  .progress-bar-bg {
+    background: var(--surface-2);
+    border-radius: 99px;
+    height: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-bar-fill {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    height: 100%;
+    width: 0%;
+    transition: width .4s ease;
+  }
+  .progress-label { font-size: .72rem; color: var(--muted); margin-top: .35rem; text-align: right; }
+
+  main { flex: 1; max-width: 880px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+
+  /* ---------- Sections ---------- */
+  section.module { display: none; animation: fadeIn .35s ease; }
+  section.module.visible { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .kicker {
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  h2 { font-size: 1.9rem; margin: .3rem 0 1rem; line-height: 1.25; }
+  h3 { font-size: 1.25rem; margin: 2rem 0 .8rem; color: var(--accent); }
+  h4 { font-size: 1.02rem; margin: 1.4rem 0 .5rem; }
+  p { margin-bottom: 1rem; color: #cdd3e0; }
+  strong { color: var(--text); }
+  ul, ol { margin: 0 0 1rem 1.4rem; color: #cdd3e0; }
+  li { margin-bottom: .45rem; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.3rem 1.5rem;
+    margin: 1.2rem 0;
+  }
+  .quote {
+    border-left: 4px solid var(--accent);
+    background: var(--surface);
+    padding: 1rem 1.3rem;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-style: italic;
+    color: var(--text);
+    margin: 1.4rem 0;
+  }
+  .quote .author { display: block; margin-top: .5rem; font-style: normal; font-size: .8rem; color: var(--muted); }
+
+  .key-idea {
+    background: linear-gradient(135deg, rgba(224,96,106,.10), rgba(79,192,141,.08));
+    border: 1px solid rgba(224,96,106,.35);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.4rem;
+    margin: 1.4rem 0;
+  }
+  .key-idea .tag { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: .9rem; }
+  th, td { border: 1px solid var(--border); padding: .65rem .8rem; text-align: left; vertical-align: top; }
+  th { background: var(--surface-2); color: var(--accent); }
+  td { color: #cdd3e0; }
+
+  /* ---------- Accordion ---------- */
+  .accordion { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin: 1rem 0; }
+  .accordion-item + .accordion-item { border-top: 1px solid var(--border); }
+  .accordion-header {
+    width: 100%;
+    background: var(--surface);
+    color: var(--text);
+    border: none;
+    padding: 1rem 1.3rem;
+    font-size: .95rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    font-family: inherit;
+  }
+  .accordion-header:hover { background: var(--surface-2); }
+  .accordion-header .chevron { transition: transform .25s; color: var(--accent); flex-shrink: 0; }
+  .accordion-item.open .accordion-header .chevron { transform: rotate(90deg); }
+  .accordion-body { display: none; padding: .2rem 1.3rem 1.2rem; background: var(--surface); }
+  .accordion-item.open .accordion-body { display: block; }
+
+  /* ---------- Flip cards ---------- */
+  .flip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; margin: 1.2rem 0; }
+  .flip-card { perspective: 900px; height: 175px; cursor: pointer; }
+  .flip-inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform .55s; transform-style: preserve-3d;
+  }
+  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    border-radius: var(--radius);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 1rem; text-align: center;
+  }
+  .flip-front { background: var(--surface-2); border: 1px solid var(--border); font-weight: 700; gap: .4rem; }
+  .flip-front .hint { font-size: .7rem; color: var(--muted); font-weight: 400; }
+  .flip-back {
+    background: linear-gradient(135deg, #23304a, #1d2b3a);
+    border: 1px solid var(--accent-3);
+    transform: rotateY(180deg);
+    font-size: .82rem; color: #dfe6f5;
+  }
+
+  /* ---------- Quiz ---------- */
+  .quiz-q { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.4rem; margin: 1.1rem 0; }
+  .quiz-q p.question { font-weight: 600; color: var(--text); }
+  .quiz-options { display: flex; flex-direction: column; gap: .5rem; margin-top: .6rem; }
+  .quiz-option {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 9px;
+    padding: .65rem .9rem;
+    text-align: left;
+    cursor: pointer;
+    font-size: .88rem;
+    font-family: inherit;
+    transition: border-color .15s, background .15s;
+  }
+  .quiz-option:hover:not(:disabled) { border-color: var(--accent-3); }
+  .quiz-option.correct { border-color: var(--accent-2); background: rgba(79,192,141,.12); }
+  .quiz-option.incorrect { border-color: var(--danger); background: rgba(224,96,106,.12); }
+  .quiz-option:disabled { cursor: default; opacity: .85; }
+  .quiz-feedback { font-size: .83rem; margin-top: .7rem; display: none; padding: .6rem .8rem; border-radius: 8px; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: rgba(79,192,141,.12); color: #9ce0bf; }
+  .quiz-feedback.bad { background: rgba(224,96,106,.12); color: #f0a9af; }
+  .quiz-score { font-size: 1.05rem; font-weight: 700; margin-top: 1rem; color: var(--accent); }
+
+  /* ---------- Inputs / tools ---------- */
+  input[type="text"], input[type="number"], input[type="time"], select, textarea {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: .55rem .75rem;
+    font-size: .9rem;
+    font-family: inherit;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent-3); border-color: transparent; }
+  label.field-label { display: block; font-size: .78rem; color: var(--muted); margin: .8rem 0 .3rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+  .btn {
+    background: var(--accent);
+    color: #1a1405;
+    border: none;
+    border-radius: 9px;
+    padding: .6rem 1.2rem;
+    font-weight: 700;
+    font-size: .88rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: filter .15s;
+  }
+  .btn:hover { filter: brightness(1.1); }
+  .btn.secondary { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+  .btn-row { display: flex; gap: .7rem; flex-wrap: wrap; margin-top: 1rem; }
+
+  .stack-output {
+    background: var(--surface-2);
+    border: 1px dashed var(--accent-3);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    margin-top: 1rem;
+    font-size: .95rem;
+    display: none;
+  }
+  .stack-output.show { display: block; }
+
+  /* ---------- Compound calculator ---------- */
+  .compound-result { display: flex; gap: 1rem; margin-top: 1.2rem; flex-wrap: wrap; }
+  .compound-box {
+    flex: 1; min-width: 200px;
+    border-radius: var(--radius);
+    padding: 1.1rem 1.2rem;
+    text-align: center;
+  }
+  .compound-box .big { font-size: 1.9rem; font-weight: 800; display: block; }
+  .compound-box .small { font-size: .78rem; color: var(--muted); }
+  .compound-up { background: rgba(79,192,141,.1); border: 1px solid var(--accent-2); }
+  .compound-up .big { color: var(--accent-2); }
+  .compound-down { background: rgba(224,96,106,.1); border: 1px solid var(--danger); }
+  .compound-down .big { color: var(--danger); }
+
+  /* ---------- Habit tracker ---------- */
+  .tracker-grid { display: grid; grid-template-columns: minmax(140px, 1fr) repeat(7, 38px); gap: 6px; align-items: center; margin-top: 1rem; overflow-x: auto; }
+  .tracker-grid .head { font-size: .7rem; color: var(--muted); text-align: center; font-weight: 700; }
+  .tracker-grid .habit-name { font-size: .85rem; padding-right: .5rem; }
+  .tracker-cell {
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: background .15s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .tracker-cell.done { background: rgba(79,192,141,.25); border-color: var(--accent-2); }
+  .tracker-del { background: none; border: none; color: var(--danger); cursor: pointer; font-size: .9rem; padding: 0 .3rem; }
+
+  /* ---------- Scorecard ---------- */
+  .scorecard-row { display: flex; gap: .6rem; margin-bottom: .6rem; align-items: center; }
+  .scorecard-row input { flex: 1; }
+  .scorecard-row select { width: 130px; flex-shrink: 0; }
+  .sc-pos { color: var(--accent-2); } .sc-neg { color: var(--danger); } .sc-neu { color: var(--muted); }
+
+  /* ---------- Laws pills ---------- */
+  .law-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.4rem 0; }
+  .law-pill {
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: transform .15s, border-color .15s;
+    text-align: left;
+    color: var(--text);
+    font-family: inherit;
+  }
+  .law-pill:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .law-pill .num { font-size: 1.7rem; font-weight: 800; color: var(--accent); display: block; }
+  .law-pill .name { font-weight: 700; font-size: 1rem; }
+  .law-pill .stage { font-size: .75rem; color: var(--muted); }
+
+  .next-prev { display: flex; justify-content: space-between; margin-top: 3rem; gap: 1rem; }
+
+  .badge { display: inline-block; background: var(--surface-2); border: 1px solid var(--border); color: var(--accent-2); border-radius: 99px; font-size: .7rem; padding: .15rem .7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: .8rem; }
+
+  .identity-output { margin-top: 1rem; }
+
+  @media (max-width: 820px) {
+    .layout { flex-direction: column; }
+    nav.sidebar { width: 100%; height: auto; position: static; display: flex; flex-wrap: wrap; gap: .2rem; }
+    nav.sidebar h1, nav.sidebar .subtitle, .progress-wrap { width: 100%; }
+    main { padding: 1.5rem 1.1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ====================== SIDEBAR ====================== -->
+<nav class="sidebar" id="sidebar">
+  <a href="index.html" style="padding:.3rem 0; font-size:.78rem;">← Volver a la Biblioteca Práctica</a>
+  <h1>😴 Por qué dormimos</h1>
+  <div class="subtitle">Guía didáctica interactiva · basada en el libro de Matthew Walker</div>
+  <div class="progress-wrap">
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0% completado</div>
+  </div>
+  <a href="#intro" data-target="intro">🏠 Introducción <span class="check">✔</span></a>
+  <a href="#relojes" data-target="relojes">⏰ 1 · Los dos relojes del sueño <span class="check">✔</span></a>
+  <a href="#arquitectura" data-target="arquitectura">🏗️ 2 · La arquitectura del sueño <span class="check">✔</span></a>
+  <a href="#memoria" data-target="memoria">🧠 3 · Sueño y aprendizaje <span class="check">✔</span></a>
+  <a href="#salud" data-target="salud">❤️ 4 · Emociones y salud <span class="check">✔</span></a>
+  <a href="#saboteadores" data-target="saboteadores">⚠️ 5 · Los grandes saboteadores <span class="check">✔</span></a>
+  <a href="#higiene" data-target="higiene">✅ 6 · Higiene del sueño <span class="check">✔</span></a>
+  <a href="#mitos" data-target="mitos">🔍 7 · Mitos frecuentes <span class="check">✔</span></a>
+  <a href="#autodiagnostico" data-target="autodiagnostico">📋 8 · Autoevaluación <span class="check">✔</span></a>
+  <a href="#quiz" data-target="quiz">🧩 9 · Quiz final <span class="check">✔</span></a>
+</nav>
+
+<!-- ====================== MAIN ====================== -->
+<main>
+
+<!-- ============ INTRO ============ -->
+<section class="module" id="intro">
+  <span class="kicker">Bienvenida</span>
+  <h2>Guía interactiva de <em>Por qué dormimos</em></h2>
+  <p><strong>Por qué dormimos</strong> (<em>Why We Sleep</em>, 2017) de <strong>Matthew Walker</strong> es uno de los libros divulgativos más influyentes sobre el sueño. Walker es <strong>neurocientífico</strong>, profesor de neurociencia y psicología en la <strong>Universidad de California en Berkeley</strong> y director del Centro de Ciencia del Sueño Humano. Su tesis es contundente: el sueño no es un lujo ni tiempo perdido, sino <strong>el pilar sobre el que se sostienen el cerebro y el cuerpo</strong>.</p>
+
+  <div class="quote">
+    "El sueño es lo más eficaz que podemos hacer cada día para reiniciar la salud de nuestro cerebro y nuestro cuerpo."
+    <span class="author">— Matthew Walker</span>
+  </div>
+
+  <h3>La "epidemia silenciosa"</h3>
+  <p>Walker describe una <strong>epidemia silenciosa de falta de sueño</strong> en las sociedades modernas: cada vez más personas duermen menos de lo que necesitan sin darse cuenta del precio que pagan. La luz artificial, las pantallas, los horarios laborales, la cafeína y la idea cultural de que dormir poco es señal de productividad han recortado nuestras noches. El problema es que <strong>el déficit de sueño se acumula de forma invisible</strong>: rinde menos la memoria, el ánimo, el sistema inmune y el metabolismo, pero rara vez lo atribuimos a la causa real.</p>
+
+  <h3>Lo que prometen 7-9 horas</h3>
+  <p>El consenso científico —que el libro defiende— recomienda a la mayoría de adultos <strong>entre 7 y 9 horas de sueño</strong>. Dentro de ese rango, el sueño hace un trabajo extraordinario: <strong>consolida los recuerdos y el aprendizaje</strong>, <strong>regula las emociones</strong>, <strong>refuerza la inmunidad</strong>, <strong>equilibra el apetito y el metabolismo</strong> y <strong>protege el corazón</strong>. No es un solo beneficio: es un mantenimiento integral que ocurre cada noche, gratis, si lo permitimos.</p>
+
+  <div class="card">
+    <h4>Una nota honesta sobre las cifras</h4>
+    <p style="margin:.4rem 0 0">Algunas cifras puntuales del libro han sido <strong>criticadas por exageradas</strong> o por citar estudios de forma demasiado tajante. Por eso, esta guía se apoya en el <strong>consenso científico</strong> más sólido —la importancia de la <strong>regularidad</strong>, dormir <strong>7-9 horas</strong> y el papel del sueño en la <strong>memoria y la salud</strong>— y, cuando una afirmación es discutida o procede de una interpretación concreta del autor, la presenta como <em>"según Walker"</em>. La idea de fondo se mantiene intacta: dormir bien y de forma constante es una de las mejores inversiones para tu salud.</p>
+  </div>
+
+  <h3>Cómo usar esta guía</h3>
+  <div class="card">
+    <ul>
+      <li>📚 <strong>Navega por los módulos</strong> con el menú lateral. Tu progreso se guarda automáticamente en este navegador.</li>
+      <li>☕ <strong>Usa la calculadora de cafeína</strong> para saber cuándo tomar tu última taza.</li>
+      <li>🌙 <strong>Calcula tus ciclos de sueño</strong> a partir de la hora de tu alarma.</li>
+      <li>✅ <strong>Completa la checklist de higiene del sueño</strong> de las 12 reglas (también se guarda).</li>
+      <li>📋 <strong>Haz la autoevaluación</strong> orientativa y revisa el plan de 7 días.</li>
+      <li>🧩 <strong>Pon a prueba lo aprendido</strong> con el quiz final de 10 preguntas.</li>
+      <li>✅ Al final de cada módulo, marca <strong>"Completar módulo"</strong> para registrar tu avance.</li>
+    </ul>
+  </div>
+
+  <h3>Mapa del libro en 30 segundos</h3>
+  <table>
+    <tr><th>Bloque</th><th>Idea central</th></tr>
+    <tr><td><strong>Qué es el sueño</strong></td><td>Dos relojes (ritmo circadiano + presión de adenosina) deciden cuándo y cuánto dormimos; el sueño se organiza en ciclos de NREM y REM.</td></tr>
+    <tr><td><strong>Para qué sirve</strong></td><td>Memoria y aprendizaje, regulación emocional, inmunidad, metabolismo, corazón, rendimiento físico.</td></tr>
+    <tr><td><strong>Qué lo sabotea</strong></td><td>Cafeína, alcohol, luz azul/pantallas, calor, despertadores e irregularidad de horarios.</td></tr>
+    <tr><td><strong>Qué hacer</strong></td><td>Higiene del sueño: por encima de todo, un horario regular, también los fines de semana.</td></tr>
+  </table>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="intro">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <span></span>
+    <button class="btn secondary nav-next" data-go="relojes">Siguiente: Los dos relojes →</button>
+  </div>
+</section>
+
+<!-- ============ 1. RELOJES ============ -->
+<section class="module" id="relojes">
+  <span class="kicker">Módulo 1</span>
+  <h2>⏰ Los dos relojes que deciden tu sueño</h2>
+
+  <p>¿Por qué tienes sueño por la noche y no a mediodía? Walker explica que dos sistemas independientes pero coordinados regulan el sueño: el <strong>ritmo circadiano</strong> (que marca <em>cuándo</em>) y la <strong>presión de sueño por adenosina</strong> (que marca <em>cuánta</em> necesidad acumulas). Cuando ambos se alinean —es de noche y llevas muchas horas despierto— el sueño llega con facilidad.</p>
+
+  <h3>El reloj circadiano: la señal del "cuándo"</h3>
+  <p>En el cerebro, un pequeño grupo de células del hipotálamo llamado <strong>núcleo supraquiasmático</strong> funciona como un reloj maestro de aproximadamente 24 horas. Su sincronizador principal es la <strong>luz</strong>: la luz del día le dice "es de día" y la oscuridad "es de noche". A partir de esa señal, el cuerpo ajusta la temperatura, las hormonas y el estado de alerta a lo largo del día.</p>
+  <div class="key-idea">
+    <span class="tag">Idea clave</span>
+    <p style="margin:.4rem 0 0">La <strong>melatonina</strong> es la "señal de noche": la glándula pineal la libera cuando oscurece y le comunica al organismo que es hora de dormir. <strong>No es un somnífero</strong> que te "noquea": no genera el sueño, lo <em>cronometra</em>. Por eso la luz nocturna (sobre todo la azul de las pantallas) es tan dañina: retrasa la melatonina y el reloj se confunde.</p>
+  </div>
+
+  <h3>La presión de adenosina: el "cuánto"</h3>
+  <p>Mientras estás despierto, en el cerebro se acumula una sustancia llamada <strong>adenosina</strong>. Cuanto más tiempo llevas sin dormir, más adenosina hay y mayor es la <strong>presión de sueño</strong>: esa pesadez creciente que sientes al final del día. Durante el sueño, el cerebro <strong>elimina</strong> esa adenosina, y por la mañana despiertas con la "batería de presión" a cero. La <strong>cafeína</strong> hace su truco aquí: <strong>bloquea los receptores de adenosina</strong>, de modo que la presión sigue ahí pero dejas de percibirla… hasta que el efecto pasa y llega de golpe.</p>
+
+  <h3>Cronotipos: alondras y búhos</h3>
+  <p>No todos tenemos el mismo horario interno. Walker distingue <strong>cronotipos</strong> con base <strong>genética</strong>:</p>
+  <ul>
+    <li><strong>Alondras (matutinos):</strong> se despiertan temprano con energía y rinden por la mañana.</li>
+    <li><strong>Búhos (vespertinos):</strong> se activan tarde y rinden de noche; madrugar les cuesta mucho.</li>
+    <li>La mayoría está en algún punto intermedio.</li>
+  </ul>
+  <p>El problema, señala el autor, es que la sociedad está diseñada para alondras: los horarios laborales y escolares castigan a los búhos, que viven en un <strong>desfase crónico</strong> con su reloj biológico y acumulan deuda de sueño. Su cronotipo no es pereza: es biología.</p>
+
+  <h3>El jet lag</h3>
+  <p>Cuando viajas cruzando husos horarios, tu reloj circadiano <strong>no se reajusta de inmediato</strong>: sigue marcando la hora de origen mientras el mundo exterior va por otra. Por eso aparece el <strong>jet lag</strong>. El reloj se mueve despacio, aproximadamente un huso horario por día, y viajar hacia el este (adelantar el reloj) suele costar más que hacia el oeste.</p>
+
+  <h3>☕ Calculadora de cafeína</h3>
+  <div class="card">
+    <p>La cafeína tiene una <strong>vida media de 5 a 7 horas</strong>: pasado ese tiempo, todavía queda la mitad en tu cuerpo. Por eso conviene tomar la <strong>última dosis 8-10 horas antes de acostarte</strong>. Indica tu hora de dormir y calcula tu límite.</p>
+    <label class="field-label" for="cafeBed">¿A qué hora te acuestas?</label>
+    <input type="time" id="cafeBed" value="23:00">
+    <div class="btn-row"><button class="btn" id="cafeBtn">Calcular mi límite de café</button></div>
+    <div class="stack-output" id="cafeOut"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="relojes">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="intro">← Introducción</button>
+    <button class="btn secondary nav-next" data-go="arquitectura">Siguiente: La arquitectura →</button>
+  </div>
+</section>
+
+<!-- ============ 2. ARQUITECTURA ============ -->
+<section class="module" id="arquitectura">
+  <span class="kicker">Módulo 2</span>
+  <h2>🏗️ La arquitectura del sueño</h2>
+
+  <p>El sueño no es un bloque uniforme de inconsciencia. A lo largo de la noche, el cerebro recorre <strong>ciclos de unos 90 minutos</strong>, y en cada uno alterna distintas fases. Una noche completa encadena <strong>4 o 5 ciclos</strong>. Conocer esta "arquitectura" explica por qué la <em>cantidad</em> de sueño no es lo único que importa: también su <em>composición</em>.</p>
+
+  <h3>Las fases: NREM y REM</h3>
+  <p>Cada ciclo combina dos grandes tipos de sueño:</p>
+  <table>
+    <tr><th>Fase</th><th>Qué es</th><th>Para qué sirve</th></tr>
+    <tr><td><strong>NREM ligero</strong></td><td>La transición y el sueño superficial. Es fácil despertar.</td><td>Prepara el terreno; criba y ordena información.</td></tr>
+    <tr><td><strong>NREM profundo</strong><br>(ondas lentas)</td><td>El sueño más reparador, con ondas cerebrales lentas y amplias.</td><td>Traslada los recuerdos del hipocampo a la corteza; restaura el cuerpo.</td></tr>
+    <tr><td><strong>REM</strong><br>(movimientos oculares rápidos)</td><td>El sueño de los sueños vívidos; el cerebro está muy activo.</td><td>Integra ideas, alimenta la creatividad y regula las emociones.</td></tr>
+  </table>
+
+  <h3>La noche no es simétrica</h3>
+  <p>Aquí está una de las ideas más prácticas del libro: la proporción entre fases <strong>cambia a lo largo de la noche</strong>.</p>
+  <ul>
+    <li>El <strong>sueño profundo (NREM) domina la primera mitad</strong> de la noche.</li>
+    <li>El <strong>sueño REM domina la segunda mitad</strong>, sobre todo en las últimas horas, cerca del amanecer.</li>
+  </ul>
+  <div class="key-idea">
+    <span class="tag">Por qué importa</span>
+    <p style="margin:.4rem 0 0">Acostarte tarde y madrugar <strong>no recortan lo mismo</strong>. Si te acuestas tarde (y te levantas a la hora de siempre), sacrificas el <strong>sueño profundo</strong> de la primera mitad. Si te levantas demasiado pronto, sacrificas el <strong>REM</strong> de la segunda mitad. En ambos casos pierdes funciones distintas pero esenciales: no hay "media noche" que sustituya a la otra.</p>
+  </div>
+
+  <h3>El trabajo de cada fase</h3>
+  <p>Durante el <strong>NREM profundo</strong>, el cerebro hace algo parecido a un traspaso de archivos: mueve los recuerdos recientes desde el <strong>hipocampo</strong> (un almacén temporal de capacidad limitada) hacia la <strong>corteza</strong> (el almacén de largo plazo). Así libera espacio para aprender al día siguiente y fija lo aprendido. Durante el <strong>REM</strong>, el cerebro <strong>integra y conecta</strong> esa información con todo lo que ya sabes: de ahí su papel en la <strong>creatividad</strong>, la resolución de problemas y el <strong>equilibrio emocional</strong>. Soñar no es ruido: es parte del procesamiento.</p>
+
+  <div class="quote">
+    "Las fases del sueño cumplen funciones diferentes; perder una no se compensa ganando otra."
+    <span class="author">— Síntesis de la obra de Matthew Walker</span>
+  </div>
+
+  <h3>🌙 Calculadora de ciclos de sueño</h3>
+  <div class="card">
+    <p>Como cada ciclo dura ~90 minutos, conviene despertar al final de un ciclo (no a mitad de uno). Indica la hora de tu alarma y te sugerimos a qué hora acostarte para completar <strong>5 o 6 ciclos</strong>, sumando unos <strong>15 minutos</strong> para conciliar el sueño.</p>
+    <label class="field-label" for="ciclosAlarm">¿A qué hora suena tu alarma?</label>
+    <input type="time" id="ciclosAlarm" value="07:00">
+    <div class="btn-row"><button class="btn" id="ciclosBtn">Sugerir hora de acostarme</button></div>
+    <div class="stack-output" id="ciclosOut"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="arquitectura">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="relojes">← Los dos relojes</button>
+    <button class="btn secondary nav-next" data-go="memoria">Siguiente: Sueño y aprendizaje →</button>
+  </div>
+</section>
+
+<!-- ============ 3. MEMORIA ============ -->
+<section class="module" id="memoria">
+  <span class="kicker">Módulo 3</span>
+  <h2>🧠 Sueño y aprendizaje</h2>
+
+  <p>Si tuvieras que recordar una sola razón para dormir bien antes de un examen o una presentación, sería esta: <strong>el sueño es esencial para aprender</strong>, y lo es <em>dos veces</em>. Necesitas dormir <strong>antes</strong> de aprender para preparar el cerebro, y dormir <strong>después</strong> de aprender para fijar lo aprendido.</p>
+
+  <h3>Dormir ANTES: preparar la "bandeja de entrada"</h3>
+  <p>Walker compara el <strong>hipocampo</strong> con la <strong>bandeja de entrada del correo</strong>: un almacén temporal que recibe los nuevos recuerdos pero que tiene <strong>capacidad limitada</strong> y se <strong>satura</strong>. Si llegas a estudiar con falta de sueño, esa bandeja ya viene medio llena y te cuesta retener información nueva.</p>
+  <div class="key-idea">
+    <span class="tag">El experimento de la siesta</span>
+    <p style="margin:.4rem 0 0">En los estudios de Walker, un grupo que dormía una <strong>siesta</strong> a media tarde aprendía mejor por la tarde que un grupo que permanecía despierto: la siesta "vaciaba" el hipocampo y restauraba la capacidad de memorizar. <strong>Según Walker</strong>, privar de sueño puede reducir hasta cerca de un <strong>40%</strong> la capacidad de fijar recuerdos nuevos. La cifra exacta es discutible, pero la dirección es clara: el cerebro privado de sueño aprende peor.</p>
+  </div>
+
+  <h3>Dormir DESPUÉS: consolidar lo aprendido</h3>
+  <p>Una vez que has estudiado, el sueño <strong>consolida</strong> esos recuerdos para que perduren. Durante el NREM aparecen los <strong>husos de sueño</strong> (breves ráfagas de actividad eléctrica) y se produce una especie de <strong>repetición</strong> entre el hipocampo y la corteza: el cerebro "reproduce" lo aprendido y lo traslada al almacén de largo plazo. Por eso dormir tras estudiar mejora el recuerdo al día siguiente, incluso sin repasar más.</p>
+
+  <h3>Trasnochar para estudiar es contraproducente</h3>
+  <p>La conclusión es incómoda para quien hace "noches en vela": <strong>sacrificar sueño para estudiar más sale caro</strong>. Pierdes capacidad de codificar mientras estudias y, además, pierdes la consolidación posterior. Unas horas extra de repaso no compensan el daño de no dormir: <strong>se aprende más durmiendo que robándole horas a la noche</strong>.</p>
+
+  <h3>La memoria del cuerpo: el pianista</h3>
+  <p>El sueño también consolida la <strong>memoria motora</strong>, la de las habilidades. En los experimentos con secuencias motoras (como tocar una serie de teclas, igual que un pianista practica una pieza), los participantes <strong>mejoraban tras una noche de sueño sin practicar más</strong>: ganaban velocidad y precisión "gratis" mientras dormían. Buena parte de esa mejora ocurre en las últimas horas de la noche, ricas en cierta fase de NREM ligero, justo las que recortas si madrugas demasiado.</p>
+
+  <div class="quote">
+    "La práctica no hace al maestro. Es la práctica, seguida de una noche de sueño, lo que lleva a la perfección."
+    <span class="author">— Matthew Walker</span>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="memoria">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="arquitectura">← La arquitectura</button>
+    <button class="btn secondary nav-next" data-go="salud">Siguiente: Emociones y salud →</button>
+  </div>
+</section>
+
+<!-- ============ 4. SALUD ============ -->
+<section class="module" id="salud">
+  <span class="kicker">Módulo 4</span>
+  <h2>❤️ Sueño, emociones y cuerpo</h2>
+
+  <p>El sueño no solo afecta a la mente: gobierna el cuerpo entero. Walker repasa cómo la falta de sueño deteriora las emociones, la inmunidad, el metabolismo, el corazón y el rendimiento físico. Es, dice, como una grieta que se filtra por todos los sistemas a la vez.</p>
+
+  <h3>La amígdala sin freno</h3>
+  <p>La <strong>amígdala</strong> es el centro de las emociones intensas (miedo, ira). Cuando duermes bien, la <strong>corteza prefrontal</strong> la mantiene a raya, como un adulto sereno que pone límites. Sin sueño, ese freno se afloja.</p>
+  <div class="key-idea">
+    <span class="tag">Según Walker</span>
+    <p style="margin:.4rem 0 0">Tras una noche sin dormir, la amígdala puede volverse hasta un <strong>60% más reactiva</strong>: reaccionas de forma exagerada a cosas pequeñas, con más irritabilidad y volatilidad emocional. El sueño <strong>REM</strong> actúa como una <strong>"terapia nocturna"</strong>: vuelve a procesar las experiencias del día y les quita parte de su carga emocional, de modo que el recuerdo permanece pero el "filo" doloroso se suaviza.</p>
+  </div>
+
+  <h3>Inmunidad</h3>
+  <p>El sueño es un aliado del sistema inmune. La falta de sueño reduce la actividad de las <strong>células NK (natural killer)</strong>, encargadas de detectar y destruir células peligrosas, y debilita la <strong>respuesta a las vacunas</strong>: quien duerme poco genera menos anticuerpos tras vacunarse. Dormir mal, de forma sostenida, deja al cuerpo con menos defensas.</p>
+
+  <h3>Metabolismo y apetito</h3>
+  <p>Dormir poco desajusta las hormonas del hambre: sube la <strong>grelina</strong> (que da hambre) y baja la <strong>leptina</strong> (que da saciedad). Resultado: <strong>más antojos</strong>, sobre todo de azúcar y comida calórica, y mayor tendencia a comer de más. A la larga, la falta crónica de sueño se asocia a <strong>aumento de peso</strong> y peor manejo del azúcar en sangre.</p>
+
+  <h3>Corazón y rendimiento</h3>
+  <ul>
+    <li><strong>Corazón:</strong> el sueño insuficiente eleva la <strong>presión arterial</strong> y el riesgo cardiovascular. Walker cita el experimento natural del cambio de hora: al adelantar el reloj en primavera y perder una hora de sueño, los infartos repuntan al día siguiente; al recuperarla en otoño, descienden.</li>
+    <li><strong>Deporte:</strong> dormir poco reduce el rendimiento (fuerza, velocidad, resistencia, tiempo hasta el agotamiento) y <strong>aumenta el riesgo de lesión</strong>.</li>
+    <li><strong>Conducir con sueño:</strong> aparecen <strong>microsueños</strong> de segundos en los que el cerebro se desconecta. <strong>Según Walker</strong>, conducir somnoliento puede ser tan peligroso o más que conducir bajo los efectos del alcohol, porque el conductor dormido ni siquiera frena.</li>
+  </ul>
+
+  <div class="quote">
+    "Cuanto más corto duermes, más corta es tu vida."
+    <span class="author">— Afirmación de Matthew Walker</span>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="salud">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="memoria">← Sueño y aprendizaje</button>
+    <button class="btn secondary nav-next" data-go="saboteadores">Siguiente: Los saboteadores →</button>
+  </div>
+</section>
+
+<!-- ============ 5. SABOTEADORES ============ -->
+<section class="module" id="saboteadores">
+  <span class="kicker">Módulo 5</span>
+  <h2>⚠️ Los grandes saboteadores del sueño</h2>
+
+  <p>Muchas personas duermen mal sin tener un trastorno: simplemente conviven a diario con hábitos y entornos que socavan el sueño. Walker señala cinco grandes saboteadores. La buena noticia es que casi todos están <strong>bajo tu control</strong>. Aquí tienes qué hace cada uno y su arreglo práctico.</p>
+
+  <table>
+    <tr><th>Saboteador</th><th>Qué hace</th><th>El arreglo práctico</th></tr>
+    <tr>
+      <td><strong>☕ Cafeína</strong></td>
+      <td>Bloquea los receptores de <strong>adenosina</strong>, enmascarando la presión de sueño. Vida media de 5-7 h: a media tarde aún tienes mucha activa.</td>
+      <td>Toma la última dosis <strong>8-10 h antes</strong> de acostarte; vigila también té, refrescos de cola, chocolate y "energéticas".</td>
+    </tr>
+    <tr>
+      <td><strong>🍷 Alcohol</strong></td>
+      <td>Es <strong>sedación, no sueño</strong>. Fragmenta la noche con microdespertares y <strong>suprime el REM</strong>, justo la fase emocional y creativa.</td>
+      <td>No lo uses como "ayuda para dormir". Si bebes, deja varias horas antes de acostarte.</td>
+    </tr>
+    <tr>
+      <td><strong>📱 Pantallas / luz azul</strong></td>
+      <td>La luz, sobre todo la <strong>azul</strong> de móviles y tabletas, <strong>retrasa y reduce la melatonina</strong>, engañando al reloj para que crea que aún es de día.</td>
+      <td>Atenúa luces por la noche, evita pantallas la última hora y usa modo noche; mejor leer en papel.</td>
+    </tr>
+    <tr>
+      <td><strong>🌡️ Temperatura</strong></td>
+      <td>Para dormir, el cuerpo necesita <strong>bajar su temperatura central ~1 °C</strong>. Una habitación calurosa lo impide.</td>
+      <td>Mantén el dormitorio <strong>fresco (~18 °C)</strong>. Un baño o ducha caliente antes de dormir ayuda: al salir, el cuerpo se enfría.</td>
+    </tr>
+    <tr>
+      <td><strong>⏰ El despertador (y la repetición)</strong></td>
+      <td>Despertar de golpe interrumpe el sueño; el botón de <strong>"repetición" (snooze)</strong> te hace volver a dormir para sobresaltarte de nuevo, estresando el corazón.</td>
+      <td>Acuéstate para despertar de forma natural cerca de la alarma; <strong>evita el snooze</strong> y levántate a la primera.</td>
+    </tr>
+  </table>
+
+  <div class="key-idea">
+    <span class="tag">Idea clave</span>
+    <p style="margin:.4rem 0 0">Estos saboteadores actúan sobre <strong>los dos relojes</strong> del módulo 1: la cafeína y el alcohol manipulan la <strong>presión de adenosina</strong> y las fases; la luz y la temperatura desajustan el <strong>reloj circadiano</strong>. Cuidar el entorno (luz, temperatura, sustancias) es cuidar el sueño desde su raíz.</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="saboteadores">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="salud">← Emociones y salud</button>
+    <button class="btn secondary nav-next" data-go="higiene">Siguiente: Higiene del sueño →</button>
+  </div>
+</section>
+
+<!-- ============ 6. HIGIENE ============ -->
+<section class="module" id="higiene">
+  <span class="kicker">Módulo 6</span>
+  <h2>✅ Las 12 reglas de higiene del sueño</h2>
+
+  <p>Walker resume las buenas prácticas para dormir mejor en <strong>doce reglas</strong> sencillas. No hace falta aplicarlas todas a la perfección desde el primer día, pero cuantas más cumplas, mejor dormirás. Usa esta <strong>checklist interactiva</strong>: marca las que ya cumples y observa tu puntuación. Se guarda en tu navegador.</p>
+
+  <div class="key-idea">
+    <span class="tag">La regla nº 1</span>
+    <p style="margin:.4rem 0 0">Si solo pudieras seguir una, que sea la primera: <strong>mantén un horario regular</strong>, acostándote y levantándote a la misma hora <strong>todos los días, también los fines de semana</strong>. La regularidad ancla tu reloj circadiano y es, según Walker, el hábito más importante de todos.</p>
+  </div>
+
+  <h3>📋 Tu checklist de higiene del sueño</h3>
+  <div class="card">
+    <p style="font-size:.88rem">Marca cada regla que ya cumplas habitualmente. La barra muestra tu nivel actual.</p>
+    <div id="hygieneList" style="display:flex; flex-direction:column; gap:.5rem; margin-top:.6rem"></div>
+    <div class="progress-bar-bg" style="margin-top:1.1rem"><div class="progress-bar-fill" id="hygieneFill"></div></div>
+    <div class="stack-output show" id="hygieneMsg" style="border-style:solid"></div>
+    <div class="btn-row"><button class="btn secondary" id="hygieneReset">Reiniciar checklist</button></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="higiene">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="saboteadores">← Los saboteadores</button>
+    <button class="btn secondary nav-next" data-go="mitos">Siguiente: Mitos frecuentes →</button>
+  </div>
+</section>
+
+<!-- ============ 7. MITOS ============ -->
+<section class="module" id="mitos">
+  <span class="kicker">Módulo 7</span>
+  <h2>🔍 Mitos frecuentes sobre el sueño</h2>
+
+  <p>Alrededor del sueño circulan creencias muy extendidas que el libro desmonta. <strong>Haz clic en cada mito</strong> para ver qué dice la ciencia.</p>
+
+  <div class="accordion">
+    <div class="accordion-item">
+      <button class="accordion-header">"Yo funciono perfectamente con 5 horas" <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Es uno de los autoengaños más comunes. La falta de sueño <strong>recalibra tu percepción</strong>: te acostumbras a rendir por debajo de tu capacidad y dejas de notar el deterioro, así que <em>crees</em> que estás bien aunque tu memoria, atención y ánimo estén mermados. Existen personas con un gen de <strong>sueño corto</strong> que de verdad rinden bien con pocas horas, pero son <strong>rarísimas</strong>: estadísticamente, casi nadie es una de ellas.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">"Recupero el sueño el fin de semana" <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Dormir mucho el sábado alivia algo, pero <strong>la deuda de sueño no se salda del todo</strong>. El sueño no funciona como una cuenta bancaria donde repones a voluntad lo que debes: los efectos de varias noches cortas sobre la atención y el metabolismo no desaparecen con un atracón de sueño puntual. Además, dormir hasta tarde el finde desajusta tu reloj y dificulta el lunes.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">"Las pastillas para dormir dan un sueño natural" <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Walker es crítico con muchos somníferos: producen <strong>sedación, no un sueño naturalista</strong>. La estructura de fases (sobre todo el sueño profundo) no es la misma, por lo que la consolidación de la memoria puede resentirse, y al dejarlos aparece a menudo <strong>insomnio de rebote</strong>. No sustituyen un buen hábito de sueño; ante un problema persistente, conviene una valoración profesional.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">"La siesta sustituye la noche" <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>La siesta corta <strong>ayuda</strong> (mejora el estado de alerta y el ánimo), pero <strong>no reemplaza</strong> el sueño nocturno completo, donde se concentran el sueño profundo y el REM. Y un matiz importante: si tienes <strong>insomnio</strong>, evita las siestas <strong>después de las 15 h</strong>, porque reducen la presión de sueño y te costará dormir por la noche.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">"Roncar es inofensivo" <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Roncar puede ser inocuo… o una señal de <strong>apnea del sueño</strong>: pausas repetidas en la respiración que fragmentan el descanso y reducen el oxígeno, con consecuencias para el corazón y la salud. <strong>Cuándo consultar:</strong> si hay <strong>ronquido fuerte con pausas o ahogos</strong>, somnolencia diurna marcada o alguien observa que dejas de respirar mientras duermes, conviene acudir al médico.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">"El alcohol me ayuda a dormir" <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>El alcohol te <strong>seda</strong>, pero eso no es dormir bien. <strong>Fragmenta</strong> el sueño con despertares que no recuerdas y <strong>suprime el sueño REM</strong>, la fase clave para la regulación emocional y la creatividad. Te dormirás antes, pero despertarás menos descansado y más irritable.</p></div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="mitos">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="higiene">← Higiene del sueño</button>
+    <button class="btn secondary nav-next" data-go="autodiagnostico">Siguiente: Autoevaluación →</button>
+  </div>
+</section>
+
+<!-- ============ 8. AUTODIAGNÓSTICO ============ -->
+<section class="module" id="autodiagnostico">
+  <span class="kicker">Módulo 8</span>
+  <h2>📋 Autoevaluación orientativa</h2>
+
+  <p>Este breve test te ayuda a reflexionar sobre tus señales de falta de sueño. Responde con sinceridad <strong>Sí</strong> o <strong>No</strong> a las 8 preguntas y pulsa el botón para ver tu lectura orientativa.</p>
+
+  <div class="card" style="border-color:var(--danger)">
+    <p style="margin:0; font-size:.9rem">⚠️ <strong>Importante:</strong> esto <strong>no es un diagnóstico médico</strong>, solo una guía para tomar conciencia. Consulta a un profesional si tienes <strong>somnolencia diurna severa</strong>, <strong>ronquido con pausas en la respiración</strong> o <strong>insomnio crónico</strong> (dificultad para dormir varias noches por semana durante semanas).</p>
+  </div>
+
+  <div id="diagContainer"></div>
+  <div class="btn-row"><button class="btn" id="diagBtn">Ver mi resultado</button></div>
+  <div class="stack-output" id="diagOut"></div>
+
+  <h3>🗓️ Plan de 7 días para resetear tu sueño</h3>
+  <div class="card">
+    <p style="font-size:.9rem">Si quieres mejorar, aquí tienes un plan sencillo basado en las ideas del libro. Repítelo durante una semana:</p>
+    <ol>
+      <li><strong>Fija una hora de despertar única</strong> y respétala todos los días, también el fin de semana. Es el ancla de todo el plan.</li>
+      <li><strong>Busca luz natural por la mañana</strong> (10-30 min) para sincronizar tu reloj, y <strong>atenúa las luces por la noche</strong>.</li>
+      <li><strong>Elige una hora de acostarte</strong> que te dé entre 7 y 9 horas; calcúlala con tus ciclos (módulo 2).</li>
+      <li><strong>Crea una rutina de bajada</strong> de 30-60 minutos sin pantallas: lectura en papel, ducha caliente, luz tenue.</li>
+      <li><strong>Corta la cafeína</strong> 8-10 h antes de dormir y <strong>evita el alcohol</strong> como somnífero.</li>
+      <li><strong>Prepara el dormitorio:</strong> fresco (~18 °C), oscuro y sin dispositivos.</li>
+      <li><strong>Si no concilias en ~20 minutos,</strong> levántate y haz algo relajante con poca luz; vuelve a la cama cuando tengas sueño. Evita siestas largas o después de las 15 h.</li>
+    </ol>
+    <p style="font-size:.85rem; color:var(--muted)">Al séptimo día, revisa: ¿te despiertas con menos esfuerzo? ¿necesitas menos la alarma? Ajusta la hora de acostarte si hace falta.</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="autodiagnostico">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="mitos">← Mitos frecuentes</button>
+    <button class="btn secondary nav-next" data-go="quiz">Siguiente: Quiz final →</button>
+  </div>
+</section>
+
+<!-- ============ 9. QUIZ ============ -->
+<section class="module" id="quiz">
+  <span class="kicker">Módulo 9</span>
+  <h2>🧩 Quiz final: ¿entiendes por qué dormimos?</h2>
+  <p>10 preguntas. Elige una respuesta por pregunta; recibirás retroalimentación inmediata.</p>
+  <div id="quizContainer"></div>
+  <div class="quiz-score" id="quizScore"></div>
+  <div class="btn-row">
+    <button class="btn secondary" id="resetQuiz">🔄 Reiniciar quiz</button>
+    <button class="btn complete-btn" data-module="quiz">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="autodiagnostico">← Autoevaluación</button>
+    <span></span>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ================= Navigation & progress ================= */
+const MODULES = ["intro","relojes","arquitectura","memoria","salud","saboteadores","higiene","mitos","autodiagnostico","quiz"];
+const LS_KEY = "dormirGuide";
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch { return {}; }
+}
+function saveState(s) { localStorage.setItem(LS_KEY, JSON.stringify(s)); }
+let state = loadState();
+state.completed = state.completed || [];
+state.hygiene = state.hygiene || [];
+
+function showModule(id) {
+  if (!MODULES.includes(id)) id = "intro";
+  document.querySelectorAll("section.module").forEach(s => s.classList.toggle("visible", s.id === id));
+  document.querySelectorAll("nav.sidebar a").forEach(a => a.classList.toggle("active", a.dataset.target === id));
+  window.scrollTo({ top: 0 });
+  if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
+}
+
+function refreshProgress() {
+  const pct = Math.round(state.completed.length / MODULES.length * 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressLabel").textContent = pct + "% completado";
+  document.querySelectorAll("nav.sidebar a").forEach(a =>
+    a.classList.toggle("done", state.completed.includes(a.dataset.target)));
+}
+
+document.querySelectorAll("nav.sidebar a[data-target]").forEach(a => {
+  a.addEventListener("click", e => { e.preventDefault(); showModule(a.dataset.target); });
+});
+document.querySelectorAll(".nav-next, .law-pill").forEach(b => {
+  b.addEventListener("click", () => showModule(b.dataset.go));
+});
+document.querySelectorAll(".complete-btn").forEach(b => {
+  b.addEventListener("click", () => {
+    const m = b.dataset.module;
+    if (!state.completed.includes(m)) state.completed.push(m);
+    saveState(state); refreshProgress();
+    b.textContent = "✔ Módulo completado";
+  });
+});
+
+showModule(location.hash.replace("#","") || "intro");
+refreshProgress();
+MODULES.forEach(m => {
+  if (state.completed.includes(m)) {
+    const btn = document.querySelector(`.complete-btn[data-module="${m}"]`);
+    if (btn) btn.textContent = "✔ Módulo completado";
+  }
+});
+
+/* ================= Accordions ================= */
+document.querySelectorAll(".accordion-header").forEach(h => {
+  h.addEventListener("click", () => h.parentElement.classList.toggle("open"));
+});
+
+/* ================= Time helper ================= */
+function fmtTime(mins) {
+  mins = ((Math.round(mins) % 1440) + 1440) % 1440;
+  const hh = Math.floor(mins / 60), mm = mins % 60;
+  return String(hh).padStart(2, "0") + ":" + String(mm).padStart(2, "0");
+}
+
+/* ================= Caffeine calculator ================= */
+document.getElementById("cafeBtn").addEventListener("click", () => {
+  const val = document.getElementById("cafeBed").value;
+  const out = document.getElementById("cafeOut");
+  if (!val) { out.textContent = "⏰ Indica tu hora de acostarte."; out.classList.add("show"); return; }
+  const [h, m] = val.split(":").map(Number);
+  const bed = h * 60 + m;
+  const cutEarly = fmtTime(bed - 10 * 60); // 10 h antes (conservador)
+  const cutLate = fmtTime(bed - 8 * 60);   // 8 h antes (límite)
+  const lateMin = bed - 8 * 60;
+  out.innerHTML = `☕ <strong>Última taza recomendada:</strong> entre las <strong>${cutEarly}</strong> y las <strong>${cutLate}</strong> ` +
+    `(8-10 h antes de acostarte). Para proteger el sueño, mejor cuanto más temprano.<br><br>` +
+    `<strong>Por qué:</strong> la cafeína tiene una vida media de 5-7 horas. Tomemos ~6 h como referencia:<br>` +
+    `• Si tomas café a las <strong>${cutLate}</strong>, hacia las <strong>${fmtTime(lateMin + 6 * 60)}</strong> aún te queda ~<strong>50%</strong> en el cuerpo.<br>` +
+    `• Hacia las <strong>${fmtTime(lateMin + 12 * 60)}</strong> todavía circula ~<strong>25%</strong>.<br><br>` +
+    `<span style="font-size:.82rem;color:var(--muted)">Recuerda: el té, los refrescos de cola y el chocolate también llevan cafeína. La sensibilidad varía entre personas.</span>`;
+  out.classList.add("show");
+});
+
+/* ================= Sleep cycles calculator ================= */
+document.getElementById("ciclosBtn").addEventListener("click", () => {
+  const val = document.getElementById("ciclosAlarm").value;
+  const out = document.getElementById("ciclosOut");
+  if (!val) { out.textContent = "⏰ Indica la hora de tu alarma."; out.classList.add("show"); return; }
+  const [h, m] = val.split(":").map(Number);
+  const alarm = h * 60 + m;
+  const lat = 15; // latencia media para conciliar
+  const opt6 = fmtTime(alarm - 6 * 90 - lat);
+  const opt5 = fmtTime(alarm - 5 * 90 - lat);
+  const opt4 = fmtTime(alarm - 4 * 90 - lat);
+  out.innerHTML = `🌙 <strong>Para despertar a las ${val}, acuéstate hacia:</strong><br><br>` +
+    `• <strong>${opt6}</strong> → 6 ciclos (~9 h) <br>` +
+    `• <strong>${opt5}</strong> → 5 ciclos (~7,5 h) &nbsp;✅ <em>recomendado</em><br>` +
+    `• <strong>${opt4}</strong> → 4 ciclos (~6 h, solo en apuros)<br><br>` +
+    `<span style="font-size:.82rem;color:var(--muted)">Incluye ~15 min para conciliar el sueño. Es orientativo: la duración de los ciclos varía entre personas y noches.</span>`;
+  out.classList.add("show");
+});
+
+/* ================= Sleep hygiene checklist ================= */
+const RULES = [
+  { t: "Mantén un horario regular: acuéstate y levántate a la misma hora, también los fines de semana.", star: true },
+  { t: "No hagas ejercicio intenso demasiado tarde (termina 2-3 h antes de dormir)." },
+  { t: "Evita la cafeína y la nicotina por la tarde-noche." },
+  { t: "Evita el alcohol antes de acostarte." },
+  { t: "No tomes comidas copiosas ni mucho líquido a última hora de la noche." },
+  { t: "Evita, en lo posible, medicamentos que retrasen o alteren el sueño." },
+  { t: "No hagas siestas después de las 15 h." },
+  { t: "Relájate antes de dormir: reserva una rutina de bajada sin prisas." },
+  { t: "Toma un baño o ducha caliente antes de acostarte." },
+  { t: "Dormitorio oscuro, fresco (~18 °C) y sin dispositivos electrónicos." },
+  { t: "Recibe luz natural adecuada, sobre todo por la mañana; atenúa luces por la noche." },
+  { t: "No te quedes en la cama desvelado: si no duermes en ~20 min, levántate y haz algo relajante." }
+];
+const hygieneList = document.getElementById("hygieneList");
+if (!Array.isArray(state.hygiene) || state.hygiene.length !== RULES.length) {
+  state.hygiene = RULES.map(() => false);
+}
+function renderHygiene() {
+  hygieneList.innerHTML = "";
+  RULES.forEach((r, i) => {
+    const b = document.createElement("button");
+    b.className = "quiz-option" + (state.hygiene[i] ? " correct" : "");
+    const box = state.hygiene[i] ? "✅ " : "⬜ ";
+    b.innerHTML = box + (r.star ? "⭐ <strong>" + r.t + "</strong>" : r.t);
+    b.addEventListener("click", () => {
+      state.hygiene[i] = !state.hygiene[i];
+      saveState(state);
+      renderHygiene();
+    });
+    hygieneList.appendChild(b);
+  });
+  const done = state.hygiene.filter(Boolean).length;
+  const pct = Math.round(done / RULES.length * 100);
+  document.getElementById("hygieneFill").style.width = pct + "%";
+  let txt;
+  if (done <= 3) txt = "Hay mucho margen de mejora. Empieza por la regla nº 1 (horario regular): es la que más impacto tiene.";
+  else if (done <= 7) txt = "Vas por buen camino. Elige 1 o 2 reglas pendientes y conviértelas en hábito esta semana.";
+  else if (done <= 11) txt = "¡Muy bien! Tu higiene del sueño es sólida. Afina los últimos detalles.";
+  else txt = "🏅 ¡Excelente! Cumples las 12 reglas. Mantén la constancia, sobre todo el horario regular.";
+  const msg = document.getElementById("hygieneMsg");
+  msg.innerHTML = `Cumples <strong>${done}/12</strong> reglas. ${txt}`;
+}
+document.getElementById("hygieneReset").addEventListener("click", () => {
+  state.hygiene = RULES.map(() => false);
+  saveState(state);
+  renderHygiene();
+});
+renderHygiene();
+
+/* ================= Self-assessment test ================= */
+const DIAG = [
+  "¿Necesitas una alarma para despertar a tiempo casi todos los días?",
+  "Tras leer un párrafo, ¿debes releerlo a menudo porque no te concentraste?",
+  "¿Te quedarías dormido/a a media tarde si te sentaras en un lugar tranquilo sin cafeína?",
+  "Entre semana, ¿duermes menos de 7 horas?",
+  "¿Te cuesta mucho levantarte y sueles pulsar el botón de repetición?",
+  "¿Dependes de la cafeína para arrancar y rendir por la mañana?",
+  "Los fines de semana, ¿duermes bastante más que entre semana para recuperar?",
+  "¿Notas que tu memoria, tu ánimo o tu atención empeoran cuando duermes poco?"
+];
+const diagContainer = document.getElementById("diagContainer");
+let diagAns = [];
+function buildDiag() {
+  diagContainer.innerHTML = "";
+  diagAns = new Array(DIAG.length).fill(null);
+  DIAG.forEach((q, i) => {
+    const box = document.createElement("div");
+    box.className = "quiz-q";
+    box.innerHTML = `<p class="question">${i + 1}. ${q}</p>`;
+    const wrap = document.createElement("div");
+    wrap.className = "quiz-options";
+    [["Sí", true], ["No", false]].forEach(pair => {
+      const btn = document.createElement("button");
+      btn.className = "quiz-option";
+      btn.textContent = pair[0];
+      btn.addEventListener("click", () => {
+        diagAns[i] = pair[1];
+        wrap.querySelectorAll(".quiz-option").forEach(b => b.classList.remove("correct"));
+        btn.classList.add("correct");
+      });
+      wrap.appendChild(btn);
+    });
+    box.appendChild(wrap);
+    diagContainer.appendChild(box);
+  });
+}
+buildDiag();
+document.getElementById("diagBtn").addEventListener("click", () => {
+  const out = document.getElementById("diagOut");
+  if (diagAns.includes(null)) {
+    out.style.borderColor = "var(--accent-3)";
+    out.innerHTML = "✏️ Responde las 8 preguntas para ver tu resultado.";
+    out.classList.add("show");
+    return;
+  }
+  const score = diagAns.filter(a => a === true).length;
+  let color, title, body;
+  if (score <= 2) {
+    color = "var(--accent-2)";
+    title = "🟢 Tu sueño parece saludable";
+    body = "Pocas señales de deuda de sueño. Mantén tus buenos hábitos, sobre todo la regularidad de horarios.";
+  } else if (score <= 5) {
+    color = "#e0a93f";
+    title = "🟡 Señales de deuda de sueño";
+    body = "Probablemente no duermes lo suficiente o tu sueño no es de calidad. Aplica el plan de 7 días y revisa la higiene del sueño.";
+  } else {
+    color = "var(--danger)";
+    title = "🔴 Probable privación de sueño";
+    body = "Varias señales apuntan a falta de sueño importante. Prioriza dormir 7-9 h, sé constante y, si persiste, valora consultar a un profesional.";
+  }
+  out.style.borderColor = color;
+  out.innerHTML = `<strong style="color:${color}">${title}</strong> &nbsp;(${score}/8 señales)<br><br>${body}` +
+    `<br><br><span style="font-size:.82rem;color:var(--muted)">Recordatorio: esto no es un diagnóstico médico. Consulta a un profesional ante somnolencia diurna severa, ronquido con pausas o insomnio crónico.</span>`;
+  out.classList.add("show");
+});
+
+/* ================= Quiz ================= */
+const QUIZ = [
+  { q: "¿Cuáles son los dos factores que regulan cuándo y cuánto dormimos?",
+    opts: ["El ritmo circadiano y la presión de sueño (adenosina)", "La melatonina y la serotonina", "El cortisol y la insulina", "El ruido y la temperatura"],
+    a: 0, fb: "El reloj circadiano marca el 'cuándo' y la adenosina acumulada marca el 'cuánta' necesidad de dormir. Trabajan juntos." },
+  { q: "La cafeína te mantiene despierto porque…",
+    opts: ["Aumenta la melatonina", "Bloquea los receptores de adenosina", "Sube la temperatura corporal", "Estimula el sueño REM"],
+    a: 1, fb: "Bloquea la adenosina (la molécula de la somnolencia). Su vida media es de 5-7 h: por eso la última taza, 8-10 h antes de dormir." },
+  { q: "¿Cuánto dura aproximadamente un ciclo de sueño?",
+    opts: ["30 minutos", "45 minutos", "90 minutos", "3 horas"],
+    a: 2, fb: "Unos 90 minutos. Una noche completa encadena 4-5 ciclos de NREM y REM." },
+  { q: "¿Qué afirmación describe mejor las funciones de NREM y REM?",
+    opts: ["El NREM profundo consolida recuerdos (hipocampo→corteza) y el REM integra y regula emociones", "El REM consolida datos y el NREM no hace nada", "Ambos solo descansan los músculos", "El NREM genera los sueños y el REM no sirve para nada"],
+    a: 0, fb: "El NREM profundo traslada y fija los recuerdos; el REM los conecta, alimenta la creatividad y hace de 'terapia nocturna'." },
+  { q: "Si te acuestas tarde pero te despiertas a la hora de siempre, ¿qué pierdes sobre todo?",
+    opts: ["El sueño REM de la segunda mitad de la noche", "El sueño profundo (NREM) de la primera mitad de la noche", "Nada relevante", "Las dos fases por igual"],
+    a: 1, fb: "El profundo domina la primera mitad y el REM la segunda. Acostarte tarde recorta el profundo; madrugar recorta el REM." },
+  { q: "El alcohol antes de dormir…",
+    opts: ["Mejora el sueño profundo", "Es sedación, no sueño: fragmenta la noche y suprime el REM", "No afecta al sueño", "Aumenta la melatonina"],
+    a: 1, fb: "Sedar no es dormir bien: el alcohol fragmenta el sueño con microdespertares y suprime el REM." },
+  { q: "¿Cuál es la temperatura ideal aproximada del dormitorio?",
+    opts: ["24-25 °C", "18 °C", "12 °C", "La temperatura no influye"],
+    a: 1, fb: "El cuerpo necesita bajar su temperatura ~1 °C para dormir; un cuarto fresco (~18 °C) lo facilita." },
+  { q: "Según Walker, la regla de higiene del sueño MÁS importante es…",
+    opts: ["Tomar un baño caliente", "Mantener un horario regular, también los fines de semana", "Cenar poco", "No usar el móvil"],
+    a: 1, fb: "La regularidad ancla tu reloj circadiano. Es la regla nº 1 de las doce." },
+  { q: "Alguien dice 'yo funciono perfecto con 5 horas'. Lo más probable es que…",
+    opts: ["Sea cierto: mucha gente necesita solo 5 h", "La privación haya recalibrado su percepción y no note su deterioro", "Tenga el gen de sueño corto, que es muy común", "Duerma en realidad de más"],
+    a: 1, fb: "La falta de sueño recalibra tu autopercepción: te sientes bien mientras rindes peor. Los 'short-sleepers' genéticos son rarísimos." },
+  { q: "Tras una noche sin dormir, el centro emocional del cerebro (la amígdala)…",
+    opts: ["Se apaga y te vuelves indiferente", "Se vuelve hiperreactiva (según Walker, hasta ~60% más) y pierdes control emocional", "No cambia en absoluto", "Empieza a producir melatonina"],
+    a: 1, fb: "Sin sueño, la amígdala se dispara y la corteza prefrontal deja de frenarla: más volatilidad emocional. El REM hace de 'terapia nocturna'." }
+];
+
+const quizContainer = document.getElementById("quizContainer");
+let quizAnswers = [];
+
+function renderQuiz() {
+  quizContainer.innerHTML = "";
+  quizAnswers = new Array(QUIZ.length).fill(null);
+  document.getElementById("quizScore").textContent = "";
+  QUIZ.forEach((item, qi) => {
+    const box = document.createElement("div");
+    box.className = "quiz-q";
+    box.innerHTML = `<p class="question">${qi + 1}. ${item.q}</p>`;
+    const optsWrap = document.createElement("div");
+    optsWrap.className = "quiz-options";
+    item.opts.forEach((opt, oi) => {
+      const btn = document.createElement("button");
+      btn.className = "quiz-option";
+      btn.textContent = opt;
+      btn.addEventListener("click", () => {
+        if (quizAnswers[qi] !== null) return;
+        quizAnswers[qi] = oi;
+        optsWrap.querySelectorAll(".quiz-option").forEach((b, bi) => {
+          b.disabled = true;
+          if (bi === item.a) b.classList.add("correct");
+          else if (bi === oi) b.classList.add("incorrect");
+        });
+        const fb = box.querySelector(".quiz-feedback");
+        fb.classList.add("show", oi === item.a ? "ok" : "bad");
+        fb.textContent = (oi === item.a ? "✅ ¡Correcto! " : "❌ No exactamente. ") + item.fb;
+        updateScore();
+      });
+      optsWrap.appendChild(btn);
+    });
+    box.appendChild(optsWrap);
+    const fb = document.createElement("div");
+    fb.className = "quiz-feedback";
+    box.appendChild(fb);
+    quizContainer.appendChild(box);
+  });
+}
+function updateScore() {
+  const answered = quizAnswers.filter(a => a !== null).length;
+  if (answered < QUIZ.length) return;
+  const correct = quizAnswers.filter((a, i) => a === QUIZ[i].a).length;
+  let msg;
+  if (correct === 10) msg = "🏅 ¡Perfecto! Entiendes a fondo por qué dormimos. Ahora: a aplicarlo cada noche.";
+  else if (correct >= 8) msg = "🌟 ¡Excelente! Tienes muy claras las claves del sueño.";
+  else if (correct >= 6) msg = "👍 Bien. Repasa los módulos donde fallaste y vuelve a intentarlo.";
+  else msg = "📚 Buen comienzo. Te recomendamos recorrer la guía de nuevo: el sueño bien entendido se cuida mejor.";
+  document.getElementById("quizScore").textContent = `Resultado: ${correct}/10 — ${msg}`;
+}
+document.getElementById("resetQuiz").addEventListener("click", renderQuiz);
+renderQuiz();
+</script>
+</body>
+</html>
