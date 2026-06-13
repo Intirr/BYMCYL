@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía práctica · En defensa de la comida</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<meta name="theme-color" content="#0f1115">
+<script>try{if(localStorage.getItem('bp_theme')==='light')document.documentElement.dataset.theme='light';}catch(e){}</script>
+<style>
+  :root{--bg:#0f1115;--surface:#181b22;--surface-2:#1f232d;--border:#2c3140;--text:#e8eaf0;--muted:#9aa3b5;--text-2:#cdd3e0;--accent:#f5b942;--accent-2:#4fc08d;--accent-3:#5b8def;--danger:#e0606a;--radius:14px;--shadow:rgba(0,0,0,.38);font-size:16px}
+  html[data-theme="light"]{--bg:#f3f5f9;--surface:#fff;--surface-2:#e9ecf3;--border:#d7dce6;--text:#1d2230;--muted:#5e6880;--text-2:#39425a;--shadow:rgba(30,40,70,.16)}
+  *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+  body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+  ::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+  a{color:var(--accent-3)}:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+  .layout{display:flex;min-height:100vh}
+  nav.sidebar{width:300px;background:var(--surface);border-right:1px solid var(--border);padding:1.4rem 1rem;position:sticky;top:0;height:100vh;overflow-y:auto;flex-shrink:0}
+  nav.sidebar a.back-to-lib{display:flex;justify-content:center;gap:.4rem;background:var(--surface-2);border:1px solid var(--border);color:var(--text);text-decoration:none;border-radius:10px;padding:.55rem .7rem;font-size:.8rem;font-weight:600;margin-bottom:.9rem}
+  nav.sidebar a.back-to-lib:hover{border-color:var(--accent);color:var(--accent)}
+  nav.sidebar .kick{font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;color:var(--accent)}
+  nav.sidebar h1{font-size:1.05rem;margin:.2rem 0 .15rem;line-height:1.3}
+  nav.sidebar .by{font-size:.78rem;color:var(--muted);margin-bottom:1rem}
+  .progress-bar-bg{background:var(--surface-2);border-radius:99px;height:9px;overflow:hidden;border:1px solid var(--border)}
+  .progress-bar-fill{background:linear-gradient(90deg,var(--accent),var(--accent-2));height:100%;width:0%;transition:width .4s}
+  .progress-label{font-size:.72rem;color:var(--muted);margin:.35rem 0 1.1rem;text-align:right}
+  nav.sidebar .navlink{display:flex;align-items:center;gap:.5rem;color:var(--muted);text-decoration:none;padding:.5rem .7rem;border-radius:8px;font-size:.88rem;margin-bottom:2px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+  nav.sidebar .navlink:hover{background:var(--surface-2);color:var(--text)}
+  nav.sidebar .navlink.active{background:var(--surface-2);color:var(--accent);font-weight:600}
+  nav.sidebar .navlink .ck{margin-left:auto;color:var(--accent-2);visibility:hidden}
+  nav.sidebar .navlink.done .ck{visibility:visible}
+  main{flex:1;max-width:860px;margin:0 auto;padding:2.4rem 2rem 5rem}
+  section.module{display:none;animation:fade .35s ease}section.module.visible{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .kicker{font-size:.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:700}
+  h2{font-size:1.9rem;margin:.3rem 0 1rem;line-height:1.25}h3{font-size:1.2rem;margin:1.8rem 0 .8rem;color:var(--accent)}
+  p{margin-bottom:1rem;color:var(--text-2)}strong{color:var(--text)}
+  ol,ul{margin:0 0 1rem 1.3rem;color:var(--text-2)}li{margin-bottom:.6rem}
+  .meta-row{display:flex;flex-wrap:wrap;gap:.5rem;margin:.8rem 0 0}
+  .tag{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:.72rem;border-radius:99px;padding:.18rem .7rem}
+  .one-liner{background:linear-gradient(135deg,rgba(245,185,66,.10),rgba(79,192,141,.08));border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.4rem;margin:1.4rem 0;font-size:1.05rem;color:var(--text)}
+  .one-liner .lbl{display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:.3rem}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.3rem;margin:1rem 0}
+  ol.ideas li{margin-bottom:.75rem}
+  .checklist{display:flex;flex-direction:column;gap:.55rem;margin:1rem 0}
+  .check-item{display:flex;gap:.75rem;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.8rem .95rem;cursor:pointer;font-size:.94rem;color:var(--text-2)}
+  .check-item input{margin-top:.3rem;accent-color:var(--accent-2);cursor:pointer;flex-shrink:0}
+  .check-item.done{opacity:.6}.check-item.done .t{text-decoration:line-through}
+  .count{font-size:.78rem;color:var(--muted);font-weight:400}
+  .quote{border-left:4px solid var(--accent);background:var(--surface);padding:1rem 1.3rem;border-radius:0 var(--radius) var(--radius) 0;font-style:italic;color:var(--text);margin:1.2rem 0}
+  .quote .a{display:block;margin-top:.5rem;font-style:normal;font-size:.8rem;color:var(--muted)}
+  .ev{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.3rem;margin:1rem 0;font-size:.94rem}
+  .ev .lbl{display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.4rem}
+  .ev.sci{border-left:4px solid var(--accent-2)}.ev.sci .lbl{color:var(--accent-2)}
+  .ev.cav{border-left:4px solid var(--danger)}.ev.cav .lbl{color:var(--danger)}
+  .ev.study{border-left:4px solid var(--accent-3)}.ev.study .lbl{color:var(--accent-3)}
+  .ev .ref{font-size:.82rem;color:var(--muted);margin-top:.5rem}
+  .rel{display:flex;flex-wrap:wrap;gap:.5rem}
+  .rel a{background:var(--surface);border:1px solid var(--border);color:var(--text-2);border-radius:99px;padding:.4rem .9rem;font-size:.82rem;text-decoration:none}
+  .rel a:hover{border-color:var(--accent);color:var(--text)}
+  .note{width:100%;min-height:130px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:.9rem 1rem;font-size:.92rem;font-family:inherit;resize:vertical;outline:none}
+  .note:focus{border-color:var(--accent)}.hint{font-size:.72rem;color:var(--muted);margin-top:.3rem}
+  .btn{background:var(--accent);color:#0f1115;border:none;border-radius:10px;padding:.6rem 1.1rem;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit}
+  .btn.sec{background:var(--surface);color:var(--text);border:1px solid var(--border);font-weight:600}
+  .btn.sec:hover{border-color:var(--accent)}.btn-row{margin-top:2.4rem}
+  .nextprev{display:flex;justify-content:space-between;gap:1rem;margin-top:1.4rem}
+  .done-msg{color:var(--accent-2);font-weight:700;margin-top:1rem;display:none}.done-msg.show{display:block}
+  @media (max-width:820px){.layout{flex-direction:column}nav.sidebar{width:100%;height:auto;position:static}main{padding:1.6rem 1.1rem 4rem}h2{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="layout" id="layout" style="display:none">
+  <nav class="sidebar" id="sidebar">
+    <a href="../index.html" class="back-to-lib">← Volver a la Biblioteca</a>
+    <span class="kick" id="sbKick"></span>
+    <h1 id="sbTitle"></h1>
+    <div class="by" id="sbBy"></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="pFill"></div></div>
+    <div class="progress-label" id="pLabel">0% completado</div>
+    <div id="navLinks"></div>
+  </nav>
+  <main id="main"></main>
+</div>
+<script>
+window.__IT = {"id":"defensa-comida","type":"libro","emoji":"🥦","cat":"salud","title":"En defensa de la comida","author":"Michael Pollan","year":2008,"meta":["256 páginas","Resumen: 5 min"],"one":"Siete palabras resumen un siglo de ciencia nutricional: «Come comida. No demasiada. Sobre todo plantas» — y una crítica al «nutricionismo» que convirtió el comer en química de laboratorio.","ideas":["<strong>El nutricionismo como ideología.</strong> Reducir la comida a nutrientes (grasas, omega-3, antioxidantes) permitió vender productos procesados «saludables» mientras la salud poblacional empeoraba: la parte no es el todo.","<strong>«Comida» vs «sustancias comestibles».</strong> Pollan propone heurísticas: no comas nada que tu bisabuela no reconocería, evita productos con más de cinco ingredientes o ingredientes impronunciables, no compres comida donde compras gasolina.","<strong>Sobre todo plantas.</strong> El patrón (verduras, legumbres, fruta, poco procesado) importa más que cualquier nutriente estrella: las culturas con dietas tradicionales variadas enferman menos que la dieta occidental, sea cual sea su composición exacta.","<strong>No demasiada.</strong> Cómo comemos también cuenta: en mesa, despacio, en compañía, sin pantallas, parando antes de estar llenos (el hara hachi bu de Ikigai).","<strong>Cocinar es la política de salud personal más simple:</strong> quien cocina controla ingredientes, cantidades y cultura alimentaria de su casa."],"actions":["Aplica la regla de los 5 ingredientes en tu próxima compra: lo que no la pase, fuera del carro.","Llena medio plato de plantas en las comidas principales de esta semana.","Come una vez al día en mesa, sin pantallas, masticando de verdad.","Cocina 2-3 comidas más por semana de las que cocinas ahora (simple cuenta)."],"quote":{"t":"Come comida. No demasiada. Sobre todo plantas.","a":"Michael Pollan"},"caveat":"Periodismo con tesis: simplifica debates nutricionales reales y romantiza algo las dietas tradicionales. Pero sus heurísticas son robustas justo porque no apuestan por ningún nutriente de moda: coinciden con el consenso sobre patrones alimentarios y ultraprocesados.","related":["glucosa","comer-moverse-dormir","outlive"]};
+window.__CAT = {"name":"Cuerpo y cerebro","color":"#e0606a","emoji":"💪"};
+window.__RELLINKS = [{"href":"./glucosa.html","label":"🩸 La revolución de la glucosa"},{"href":"./comer-moverse-dormir.html","label":"🥗 Comer, moverse, dormir (Eat Move Sleep)"},{"href":"./outlive.html","label":"🧬 Outlive: la ciencia y el arte de la longevidad"}];
+(function GUIDE_RUNTIME() {
+  var it = window.__IT, cat = window.__CAT, rellinks = window.__RELLINKS || [];
+  document.documentElement.style.setProperty('--accent', cat.color);
+  var typeLabel = it.type === 'libro' ? '📖 Libro' : '🔬 Estudio científico';
+  var KEY = 'guia_' + it.id;
+  var st = { completed: [], actions: [], notes: '', understood: [] };
+  try { var r = localStorage.getItem(KEY); if (r) st = Object.assign(st, JSON.parse(r)); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  var MOD = [
+    { id: 'intro', icon: '🏁', label: 'Introducción' },
+    { id: 'ideas', icon: '💡', label: 'Ideas clave' },
+    { id: 'plan', icon: '🛠️', label: 'Plan de acción' },
+    { id: 'cita', icon: '❝', label: 'Cita' },
+    { id: 'evidencia', icon: '🔬', label: 'La evidencia' }
+  ];
+  if (it.study) MOD.push({ id: 'ficha', icon: '📑', label: 'Ficha del estudio' });
+  if (rellinks.length) MOD.push({ id: 'rel', icon: '🔗', label: 'Relacionados' });
+  MOD.push({ id: 'comprension', icon: '🧠', label: 'Autoevaluación' });
+  MOD.push({ id: 'notas', icon: '📝', label: 'Mis notas' });
+  var IDS = MOD.map(function (m) { return m.id; });
+
+  document.getElementById('sbKick').textContent = cat.emoji + ' ' + cat.name;
+  document.getElementById('sbTitle').textContent = it.emoji + ' ' + it.title;
+  document.getElementById('sbBy').textContent = it.author + ' · ' + it.year;
+  document.getElementById('navLinks').innerHTML = MOD.map(function (m) {
+    return '<button class="navlink" data-go="' + m.id + '">' + m.icon + ' ' + m.label + ' <span class="ck">✔</span></button>';
+  }).join('');
+
+  var metaTags = '<span class="tag">' + typeLabel + '</span>' + (it.meta || []).map(function (m) { return '<span class="tag">' + esc(m) + '</span>'; }).join('');
+
+  function sectionHTML(m) {
+    var body = '';
+    if (m.id === 'intro') {
+      body = '<span class="kicker">' + cat.emoji + ' ' + cat.name + '</span><h2>' + esc(it.title) + '</h2>' +
+        '<div class="by" style="color:var(--muted);margin-bottom:.4rem">' + esc(it.author) + ' · ' + esc(String(it.year)) + '</div>' +
+        '<div class="meta-row">' + metaTags + '</div>' +
+        '<div class="one-liner"><span class="lbl">En una frase</span>' + it.one + '</div>' +
+        '<p>Esta guía práctica recorre las <strong>ideas clave</strong>, un <strong>plan de acción</strong> con checklist que se guarda en tu navegador, la <strong>cita</strong> y la <strong>evidencia</strong> detrás del recurso. Marca «Completar» en cada módulo para seguir tu avance.</p>';
+    } else if (m.id === 'ideas') {
+      body = '<span class="kicker">Núcleo</span><h2>💡 Ideas clave</h2><ol class="ideas">' + it.ideas.map(function (i) { return '<li>' + i + '</li>'; }).join('') + '</ol>';
+    } else if (m.id === 'plan') {
+      var done = (st.actions || []).filter(Boolean).length;
+      body = '<span class="kicker">Aplícalo</span><h2>🛠️ Plan de acción <span class="count">(' + done + '/' + it.actions.length + ')</span></h2>' +
+        '<p>Convierte la teoría en conducta. Marca lo que vayas haciendo: se guarda solo.</p><div class="checklist">' +
+        it.actions.map(function (a, i) { return '<label class="check-item' + (st.actions[i] ? ' done' : '') + '"><input type="checkbox" data-act="' + i + '"' + (st.actions[i] ? ' checked' : '') + '><span class="t">' + a + '</span></label>'; }).join('') + '</div>';
+    } else if (m.id === 'cita') {
+      body = '<span class="kicker">Para recordar</span><h2>❝ Cita</h2><div class="quote">«' + it.quote.t + '»<span class="a">— ' + esc(it.quote.a) + '</span></div>';
+    } else if (m.id === 'evidencia') {
+      body = '<span class="kicker">¿Es fiable?</span><h2>🔬 La evidencia detrás</h2>';
+      if (it.science) body += '<div class="ev sci"><span class="lbl">🧬 La ciencia</span>' + it.science + '</div>';
+      if (it.caveat) body += '<div class="ev cav"><span class="lbl">⚠️ Matices y controversias</span>' + it.caveat + '</div>';
+      if (!it.science && !it.caveat && it.study) body += '<p>Consulta la ficha del estudio en el siguiente módulo.</p>';
+      if (!it.science && !it.caveat && !it.study) body += '<p>Sin notas de evidencia específicas para este recurso.</p>';
+    } else if (m.id === 'ficha') {
+      body = '<span class="kicker">El estudio</span><h2>📑 Ficha del estudio</h2><div class="ev study"><span class="lbl">🔬 Diseño</span><p>' + it.study.design + '</p><p class="ref">' + esc(it.study.ref) + '</p></div>';
+    } else if (m.id === 'rel') {
+      body = '<span class="kicker">Sigue tirando del hilo</span><h2>🔗 Recursos relacionados</h2><div class="rel">' +
+        rellinks.map(function (r) { return '<a href="' + r.href + '">' + r.label + '</a>'; }).join('') + '</div>';
+    } else if (m.id === 'comprension') {
+      var u = (st.understood || []).filter(Boolean).length;
+      body = '<span class="kicker">Comprueba</span><h2>🧠 Autoevaluación <span class="count">(' + u + '/' + it.ideas.length + ')</span></h2>' +
+        '<p>Sin volver arriba, ¿sabrías explicar cada idea con tus palabras? Marca las que tengas claras; repasa las demás.</p><div class="checklist">' +
+        it.ideas.map(function (i, ix) { var t = i.replace(/<[^>]+>/g, '').split('.')[0]; return '<label class="check-item' + (st.understood[ix] ? ' done' : '') + '"><input type="checkbox" data-und="' + ix + '"' + (st.understood[ix] ? ' checked' : '') + '><span class="t">' + esc(t) + '</span></label>'; }).join('') +
+        '</div><div class="done-msg" id="domMsg">🏅 ¡Dominado! Tienes claras todas las ideas de este recurso.</div>';
+    } else if (m.id === 'notas') {
+      body = '<span class="kicker">Tu rastro</span><h2>📝 Mis notas</h2><textarea class="note" id="noteArea" placeholder="¿Cómo lo vas a aplicar? Frases propias, ejemplos, dudas…">' + esc(st.notes || '') + '</textarea><div class="hint">Se guarda automáticamente en este navegador.</div>';
+    }
+    var i = IDS.indexOf(m.id);
+    var prev = i > 0 ? '<button class="btn sec" data-go="' + IDS[i - 1] + '">← ' + MOD[i - 1].label + '</button>' : '<span></span>';
+    var next = i < IDS.length - 1 ? '<button class="btn sec" data-go="' + IDS[i + 1] + '">' + MOD[i + 1].label + ' →</button>' : '<span></span>';
+    return '<section class="module" id="m-' + m.id + '">' + body +
+      '<div class="btn-row"><button class="btn complete" data-mod="' + m.id + '">✅ Completar módulo</button></div>' +
+      '<div class="nextprev">' + prev + next + '</div></section>';
+  }
+
+  document.getElementById('main').innerHTML = MOD.map(sectionHTML).join('');
+  document.getElementById('layout').style.display = 'flex';
+
+  function refreshProgress() {
+    var pct = Math.round(st.completed.length / IDS.length * 100);
+    document.getElementById('pFill').style.width = pct + '%';
+    document.getElementById('pLabel').textContent = pct + '% completado';
+    var links = document.querySelectorAll('.navlink');
+    for (var i = 0; i < links.length; i++) links[i].classList.toggle('done', st.completed.indexOf(links[i].dataset.go) !== -1);
+  }
+  function showModule(id) {
+    if (IDS.indexOf(id) === -1) id = IDS[0];
+    var secs = document.querySelectorAll('section.module');
+    for (var i = 0; i < secs.length; i++) secs[i].classList.toggle('visible', secs[i].id === 'm-' + id);
+    var links = document.querySelectorAll('.navlink');
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('active', links[j].dataset.go === id);
+    window.scrollTo({ top: 0 });
+    if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+  }
+
+  var nl = document.querySelectorAll('.navlink');
+  for (var i = 0; i < nl.length; i++) (function (a) { a.addEventListener('click', function () { showModule(a.dataset.go); }); })(nl[i]);
+  var main = document.getElementById('main');
+  main.addEventListener('click', function (e) {
+    var go = e.target.closest('[data-go]'); if (go) { showModule(go.dataset.go); return; }
+    var c = e.target.closest('.complete'); if (c) { var m = c.dataset.mod; if (st.completed.indexOf(m) === -1) st.completed.push(m); save(); refreshProgress(); c.textContent = '✔ Módulo completado'; }
+  });
+  main.addEventListener('change', function (e) {
+    var act = e.target.closest('[data-act]');
+    if (act) { var arr = st.actions || (st.actions = []); arr[+act.dataset.act] = act.checked; save(); act.closest('.check-item').classList.toggle('done', act.checked); var done = arr.filter(Boolean).length; var c1 = document.querySelector('#m-plan .count'); if (c1) c1.textContent = '(' + done + '/' + it.actions.length + ')'; return; }
+    var und = e.target.closest('[data-und]');
+    if (und) { var arr2 = st.understood || (st.understood = []); arr2[+und.dataset.und] = und.checked; save(); und.closest('.check-item').classList.toggle('done', und.checked); var u = arr2.filter(Boolean).length; var c2 = document.querySelector('#m-comprension .count'); if (c2) c2.textContent = '(' + u + '/' + it.ideas.length + ')'; var msg = document.getElementById('domMsg'); if (msg) msg.classList.toggle('show', u === it.ideas.length); }
+  });
+  main.addEventListener('input', function (e) { if (e.target.id === 'noteArea') { st.notes = e.target.value; save(); } });
+  document.querySelector('.back-to-lib').addEventListener('click', function (e) { e.preventDefault(); window.location.href = '../index.html'; });
+
+  for (var k = 0; k < MOD.length; k++) { if (st.completed.indexOf(MOD[k].id) !== -1) { var b = document.querySelector('.complete[data-mod="' + MOD[k].id + '"]'); if (b) b.textContent = '✔ Módulo completado'; } }
+  var u0 = (st.understood || []).filter(Boolean).length; var dm = document.getElementById('domMsg'); if (dm && u0 === it.ideas.length && it.ideas.length) dm.classList.add('show');
+  showModule(location.hash.replace('#', '') || 'intro');
+  refreshProgress();
+})();
+</script>
+</body>
+</html>

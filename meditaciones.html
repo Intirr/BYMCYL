@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta name="theme-color" content="#0f1115">
+<title>Meditaciones — Guía Didáctica Interactiva</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --surface: #181b22;
+    --surface-2: #1f232d;
+    --border: #2c3140;
+    --text: #e8eaf0;
+    --muted: #9aa3b5;
+    --accent: #3ec6c0;
+    --accent-2: #4fc08d;
+    --accent-3: #5b8def;
+    --danger: #e0606a;
+    --radius: 14px;
+    font-size: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+  }
+  /* ---------- Layout ---------- */
+  .layout { display: flex; min-height: 100vh; }
+  nav.sidebar {
+    width: 290px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  nav.sidebar h1 {
+    font-size: 1.05rem;
+    color: var(--accent);
+    margin-bottom: .25rem;
+    letter-spacing: .5px;
+  }
+  nav.sidebar .subtitle { font-size: .78rem; color: var(--muted); margin-bottom: 1.2rem; }
+  nav.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: .5rem .7rem;
+    border-radius: 8px;
+    font-size: .88rem;
+    margin-bottom: 2px;
+    transition: background .15s, color .15s;
+  }
+  nav.sidebar a:hover { background: var(--surface-2); color: var(--text); }
+  nav.sidebar a.active { background: var(--surface-2); color: var(--accent); font-weight: 600; }
+  nav.sidebar a .check { margin-left: auto; font-size: .8rem; color: var(--accent-2); visibility: hidden; }
+  nav.sidebar a.done .check { visibility: visible; }
+  nav.sidebar a.back-to-lib {
+    background: var(--surface-2); border: 1px solid var(--border);
+    justify-content: center; color: var(--text); font-weight: 600;
+    font-size: .8rem; padding: .55rem .7rem; margin-bottom: .9rem;
+  }
+  nav.sidebar a.back-to-lib:hover { border-color: var(--accent); color: var(--accent); }
+  .progress-wrap { margin: 1rem 0 1.4rem; }
+  .progress-bar-bg {
+    background: var(--surface-2);
+    border-radius: 99px;
+    height: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-bar-fill {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    height: 100%;
+    width: 0%;
+    transition: width .4s ease;
+  }
+  .progress-label { font-size: .72rem; color: var(--muted); margin-top: .35rem; text-align: right; }
+
+  main { flex: 1; max-width: 880px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+
+  /* ---------- Sections ---------- */
+  section.module { display: none; animation: fadeIn .35s ease; }
+  section.module.visible { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .kicker {
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  h2 { font-size: 1.9rem; margin: .3rem 0 1rem; line-height: 1.25; }
+  h3 { font-size: 1.25rem; margin: 2rem 0 .8rem; color: var(--accent); }
+  h4 { font-size: 1.02rem; margin: 1.4rem 0 .5rem; }
+  p { margin-bottom: 1rem; color: #cdd3e0; }
+  strong { color: var(--text); }
+  ul, ol { margin: 0 0 1rem 1.4rem; color: #cdd3e0; }
+  li { margin-bottom: .45rem; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.3rem 1.5rem;
+    margin: 1.2rem 0;
+  }
+  .quote {
+    border-left: 4px solid var(--accent);
+    background: var(--surface);
+    padding: 1rem 1.3rem;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-style: italic;
+    color: var(--text);
+    margin: 1.4rem 0;
+  }
+  .quote .author { display: block; margin-top: .5rem; font-style: normal; font-size: .8rem; color: var(--muted); }
+
+  .key-idea {
+    background: linear-gradient(135deg, rgba(62,198,192,.10), rgba(79,192,141,.08));
+    border: 1px solid rgba(62,198,192,.35);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.4rem;
+    margin: 1.4rem 0;
+  }
+  .key-idea .tag { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: .9rem; }
+  th, td { border: 1px solid var(--border); padding: .65rem .8rem; text-align: left; vertical-align: top; }
+  th { background: var(--surface-2); color: var(--accent); }
+  td { color: #cdd3e0; }
+
+  /* ---------- Accordion ---------- */
+  .accordion { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin: 1rem 0; }
+  .accordion-item + .accordion-item { border-top: 1px solid var(--border); }
+  .accordion-header {
+    width: 100%;
+    background: var(--surface);
+    color: var(--text);
+    border: none;
+    padding: 1rem 1.3rem;
+    font-size: .95rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    font-family: inherit;
+  }
+  .accordion-header:hover { background: var(--surface-2); }
+  .accordion-header .chevron { transition: transform .25s; color: var(--accent); flex-shrink: 0; }
+  .accordion-item.open .accordion-header .chevron { transform: rotate(90deg); }
+  .accordion-body { display: none; padding: .2rem 1.3rem 1.2rem; background: var(--surface); }
+  .accordion-item.open .accordion-body { display: block; }
+
+  /* ---------- Flip cards ---------- */
+  .flip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; margin: 1.2rem 0; }
+  .flip-card { perspective: 900px; height: 175px; cursor: pointer; }
+  .flip-inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform .55s; transform-style: preserve-3d;
+  }
+  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    border-radius: var(--radius);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 1rem; text-align: center;
+  }
+  .flip-front { background: var(--surface-2); border: 1px solid var(--border); font-weight: 700; gap: .4rem; }
+  .flip-front .hint { font-size: .7rem; color: var(--muted); font-weight: 400; }
+  .flip-back {
+    background: linear-gradient(135deg, #23304a, #1d2b3a);
+    border: 1px solid var(--accent-3);
+    transform: rotateY(180deg);
+    font-size: .82rem; color: #dfe6f5;
+  }
+
+  /* ---------- Quiz ---------- */
+  .quiz-q { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.4rem; margin: 1.1rem 0; }
+  .quiz-q p.question { font-weight: 600; color: var(--text); }
+  .quiz-options { display: flex; flex-direction: column; gap: .5rem; margin-top: .6rem; }
+  .quiz-option {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 9px;
+    padding: .65rem .9rem;
+    text-align: left;
+    cursor: pointer;
+    font-size: .88rem;
+    font-family: inherit;
+    transition: border-color .15s, background .15s;
+  }
+  .quiz-option:hover:not(:disabled) { border-color: var(--accent-3); }
+  .quiz-option.correct { border-color: var(--accent-2); background: rgba(79,192,141,.12); }
+  .quiz-option.incorrect { border-color: var(--danger); background: rgba(224,96,106,.12); }
+  .quiz-option:disabled { cursor: default; opacity: .85; }
+  .quiz-feedback { font-size: .83rem; margin-top: .7rem; display: none; padding: .6rem .8rem; border-radius: 8px; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: rgba(79,192,141,.12); color: #9ce0bf; }
+  .quiz-feedback.bad { background: rgba(224,96,106,.12); color: #f0a9af; }
+  .quiz-score { font-size: 1.05rem; font-weight: 700; margin-top: 1rem; color: var(--accent); }
+
+  /* ---------- Inputs / tools ---------- */
+  input[type="text"], input[type="number"], select, textarea {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: .55rem .75rem;
+    font-size: .9rem;
+    font-family: inherit;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent-3); border-color: transparent; }
+  label.field-label { display: block; font-size: .78rem; color: var(--muted); margin: .8rem 0 .3rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+  .btn {
+    background: var(--accent);
+    color: #062421;
+    border: none;
+    border-radius: 9px;
+    padding: .6rem 1.2rem;
+    font-weight: 700;
+    font-size: .88rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: filter .15s;
+  }
+  .btn:hover { filter: brightness(1.1); }
+  .btn.secondary { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+  .btn-row { display: flex; gap: .7rem; flex-wrap: wrap; margin-top: 1rem; }
+
+  .stack-output {
+    background: var(--surface-2);
+    border: 1px dashed var(--accent-3);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    margin-top: 1rem;
+    font-size: .95rem;
+    display: none;
+  }
+  .stack-output.show { display: block; }
+
+  /* ---------- Compound calculator ---------- */
+  .compound-result { display: flex; gap: 1rem; margin-top: 1.2rem; flex-wrap: wrap; }
+  .compound-box {
+    flex: 1; min-width: 200px;
+    border-radius: var(--radius);
+    padding: 1.1rem 1.2rem;
+    text-align: center;
+  }
+  .compound-box .big { font-size: 1.9rem; font-weight: 800; display: block; }
+  .compound-box .small { font-size: .78rem; color: var(--muted); }
+  .compound-up { background: rgba(79,192,141,.1); border: 1px solid var(--accent-2); }
+  .compound-up .big { color: var(--accent-2); }
+  .compound-down { background: rgba(224,96,106,.1); border: 1px solid var(--danger); }
+  .compound-down .big { color: var(--danger); }
+
+  /* ---------- Habit tracker ---------- */
+  .tracker-grid { display: grid; grid-template-columns: minmax(140px, 1fr) repeat(7, 38px); gap: 6px; align-items: center; margin-top: 1rem; overflow-x: auto; }
+  .tracker-grid .head { font-size: .7rem; color: var(--muted); text-align: center; font-weight: 700; }
+  .tracker-grid .habit-name { font-size: .85rem; padding-right: .5rem; }
+  .tracker-cell {
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: background .15s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .tracker-cell.done { background: rgba(79,192,141,.25); border-color: var(--accent-2); }
+  .tracker-del { background: none; border: none; color: var(--danger); cursor: pointer; font-size: .9rem; padding: 0 .3rem; }
+
+  /* ---------- Scorecard ---------- */
+  .scorecard-row { display: flex; gap: .6rem; margin-bottom: .6rem; align-items: center; }
+  .scorecard-row input { flex: 1; }
+  .scorecard-row select { width: 130px; flex-shrink: 0; }
+  .sc-pos { color: var(--accent-2); } .sc-neg { color: var(--danger); } .sc-neu { color: var(--muted); }
+
+  /* ---------- Laws pills ---------- */
+  .law-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.4rem 0; }
+  .law-pill {
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: transform .15s, border-color .15s;
+    text-align: left;
+    color: var(--text);
+    font-family: inherit;
+  }
+  .law-pill:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .law-pill .num { font-size: 1.7rem; font-weight: 800; color: var(--accent); display: block; }
+  .law-pill .name { font-weight: 700; font-size: 1rem; }
+  .law-pill .stage { font-size: .75rem; color: var(--muted); }
+
+  .next-prev { display: flex; justify-content: space-between; margin-top: 3rem; gap: 1rem; }
+
+  .badge { display: inline-block; background: var(--surface-2); border: 1px solid var(--border); color: var(--accent-2); border-radius: 99px; font-size: .7rem; padding: .15rem .7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: .8rem; }
+
+  .identity-output { margin-top: 1rem; }
+
+  @media (max-width: 820px) {
+    .layout { flex-direction: column; }
+    nav.sidebar { width: 100%; height: auto; position: static; display: flex; flex-wrap: wrap; gap: .2rem; }
+    nav.sidebar h1, nav.sidebar .subtitle, .progress-wrap { width: 100%; }
+    main { padding: 1.5rem 1.1rem 4rem; }
+  }
+
+  /* ---------- Clasificador de la dicotomía ---------- */
+  .clf-item { padding: 1rem 1.2rem; }
+  .clf-item .clf-text { font-weight: 600; color: var(--text); margin-bottom: .6rem; }
+  .clf-btns { display: flex; gap: .6rem; flex-wrap: wrap; }
+  .clf-btn.selected { border-color: var(--accent-3); background: rgba(91,141,239,.18); }
+  .clf-item.ok { border-color: var(--accent-2); }
+  .clf-item.bad { border-color: var(--danger); }
+
+  /* ---------- Diario estoico ---------- */
+  .journal-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .journal-col h4 { margin-top: .2rem; }
+  .journal-entry { position: relative; padding: 1rem 2.4rem 1rem 1.2rem; }
+  .journal-entry .je-date { font-size: .78rem; color: var(--accent); font-weight: 700; text-transform: capitalize; }
+  .journal-entry .je-line { font-size: .85rem; color: #cdd3e0; margin-top: .35rem; }
+  .journal-entry .je-line strong { color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: 1px; }
+  .journal-entry .tracker-del { position: absolute; top: .7rem; right: .7rem; }
+  @media (max-width: 700px) { .journal-cols { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ====================== SIDEBAR ====================== -->
+<nav class="sidebar" id="sidebar">
+  <a href="index.html" class="back-to-lib">← Volver a la Biblioteca Práctica</a>
+  <h1>🏛️ Meditaciones</h1>
+  <div class="subtitle">Guía didáctica interactiva · Marco Aurelio y el estoicismo práctico</div>
+  <div class="progress-wrap">
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0% completado</div>
+  </div>
+  <a href="#intro" data-target="intro">🏠 Introducción <span class="check">✔</span></a>
+  <a href="#dicotomia" data-target="dicotomia">🎯 1 · La dicotomía del control <span class="check">✔</span></a>
+  <a href="#juicios" data-target="juicios">💭 2 · Juicios, no cosas <span class="check">✔</span></a>
+  <a href="#virtudes" data-target="virtudes">⚖️ 3 · Las cuatro virtudes <span class="check">✔</span></a>
+  <a href="#premeditatio" data-target="premeditatio">🌅 4 · Premeditatio y memento mori <span class="check">✔</span></a>
+  <a href="#obstaculo" data-target="obstaculo">🪨 5 · El obstáculo es el camino <span class="check">✔</span></a>
+  <a href="#vista" data-target="vista">🌍 6 · La vista desde arriba <span class="check">✔</span></a>
+  <a href="#rutina" data-target="rutina">📓 7 · La rutina estoica diaria <span class="check">✔</span></a>
+  <a href="#ciencia" data-target="ciencia">🔬 8 · Del estoicismo a la ciencia <span class="check">✔</span></a>
+  <a href="#lecturas" data-target="lecturas">📚 9 · Cómo leer Meditaciones <span class="check">✔</span></a>
+  <a href="#quiz" data-target="quiz">🧠 10 · Quiz final <span class="check">✔</span></a>
+</nav>
+
+<!-- ====================== MAIN ====================== -->
+<main>
+
+<!-- ============ INTRO ============ -->
+<section class="module" id="intro">
+  <span class="kicker">Bienvenida</span>
+  <h2>Guía interactiva de <em>Meditaciones</em></h2>
+
+  <p>Entre los años 170 y 180 d. C., en campamentos militares junto al Danubio, el hombre más poderoso del mundo escribía de noche, en griego, un cuaderno que jamás pensó publicar. <strong>Marco Aurelio</strong> (121-180), emperador de Roma desde el 161, gobernó uno de los periodos más duros del Imperio: la guerra contra los partos, las invasiones de cuados y marcomanos, la <strong>peste antonina</strong> que mató a millones de personas, las inundaciones del Tíber, la rebelión de su general Avidio Casio y la muerte de varios de sus hijos. Aun así, la historia lo recuerda como el último de los "cinco buenos emperadores" y como lo más parecido al <strong>"rey filósofo"</strong> que Platón había imaginado.</p>
+
+  <p>Su cuaderno —titulado en los manuscritos <em>Ta eis heauton</em>, "Para sí mismo", y transmitido como <em>Meditaciones</em>— pertenece al género de los <strong><em>hypomnemata</em></strong>: apuntes privados, recordatorios, ejercicios escritos para uno mismo. No hay pose ni retórica para un público. Hay un hombre con poder absoluto recordándose, una y otra vez, cómo no dejarse corromper por ese poder, cómo tratar a la gente difícil, cómo encarar el dolor, la pérdida y la muerte. Esa honestidad sin testigos explica que el texto siga vivo: cuando lo lees, no escuchas a un autor, escuchas a alguien hablándose en el espejo.</p>
+
+  <div class="quote">
+    «El alma se va tiñendo del color de sus pensamientos.»
+    <span class="author">— Marco Aurelio, Meditaciones, V, 16</span>
+  </div>
+
+  <h3>El estoicismo en un minuto</h3>
+  <p>El estoicismo nace hacia el 300 a. C. en Atenas, fundado por <strong>Zenón de Citio</strong>, que enseñaba en la <em>Stoa poikile</em> (el "pórtico pintado": de ahí el nombre). Su etapa romana nos dejó los tres autores que hoy se leen: <strong>Séneca</strong> (estadista y dramaturgo), <strong>Epicteto</strong> (esclavo liberto convertido en maestro: Marco Aurelio agradece en I, 7 que su mentor Junio Rústico le prestara sus notas) y el propio <strong>Marco Aurelio</strong>. Que un esclavo y un emperador practicaran la misma filosofía dice mucho de ella. Sus ideas centrales:</p>
+  <ul>
+    <li><strong>El único bien verdadero es la virtud</strong> (el buen carácter en acción); lo demás —salud, dinero, fama— son "indiferentes": preferibles o no, pero no te hacen bueno ni malo.</li>
+    <li><strong>Solo controlas tu mente:</strong> juicios, decisiones y acciones. Todo lo externo se puede influir, no controlar.</li>
+    <li><strong>Vivir bien es vivir conforme a la razón y a la naturaleza social humana:</strong> somos seres racionales nacidos para cooperar.</li>
+  </ul>
+
+  <h3>Honestidad antes de empezar</h3>
+  <div class="card">
+    <p style="margin-bottom:.5rem"><strong>Esto es filosofía, no ciencia.</strong> No hay ensayos clínicos de <em>Meditaciones</em>, y esta guía no la tratará como un manual médico. Pero tampoco es humo: el estoicismo es el <strong>ancestro reconocido de la terapia cognitivo-conductual</strong> —Albert Ellis y Aaron Beck citaron explícitamente a los estoicos como su fuente filosófica— y varias de sus prácticas tienen parientes modernos con buena evidencia (lo vemos con detalle, y con matices, en el módulo 8).</p>
+    <p style="margin-bottom:0">Mientras tanto, su aval es otro: <strong>1.800 años de lectores</strong> que lo han usado como manual de resiliencia en guerras, cárceles, hospitales y oficinas. Pocos libros han sido tan probados en el terreno.</p>
+  </div>
+
+  <h3>Cómo usar esta guía</h3>
+  <div class="card">
+    <ul>
+      <li>📚 <strong>Navega por los módulos</strong> con el menú lateral. Tu progreso se guarda automáticamente en este navegador.</li>
+      <li>🏛️ <strong>Las citas van siempre con su referencia</strong> (libro en números romanos y número de pasaje, p. ej. VIII, 47) para que puedas localizarlas en cualquier edición.</li>
+      <li>🧪 <strong>Completa los ejercicios interactivos:</strong> el clasificador de la dicotomía, el reformulador de juicios, el reencuadre del obstáculo y un diario estoico persistente.</li>
+      <li>🧠 <strong>Pon a prueba lo aprendido</strong> con el quiz final de 10 preguntas.</li>
+      <li>✅ Al final de cada módulo, pulsa <strong>"Completar módulo"</strong> para registrar tu avance.</li>
+    </ul>
+  </div>
+
+  <h3>Mapa de la guía en 30 segundos</h3>
+  <table>
+    <tr><th>Bloque</th><th>Módulos</th><th>Qué te llevas</th></tr>
+    <tr><td><strong>Diagnóstico</strong></td><td>1 - 2</td><td>La dicotomía del control y el examen de los juicios: dónde está (y dónde no) tu poder.</td></tr>
+    <tr><td><strong>Brújula</strong></td><td>3</td><td>Las cuatro virtudes como criterio de decisión diario.</td></tr>
+    <tr><td><strong>Entrenamiento</strong></td><td>4 - 6</td><td>Premeditatio, memento mori, el obstáculo como camino y la vista desde arriba.</td></tr>
+    <tr><td><strong>Práctica</strong></td><td>7</td><td>La rutina estoica de mañana y noche, con diario propio.</td></tr>
+    <tr><td><strong>Contexto</strong></td><td>8 - 9</td><td>Qué dice la ciencia moderna y cómo seguir leyendo.</td></tr>
+  </table>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="intro">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <span></span>
+    <button class="btn secondary nav-next" data-go="dicotomia">Siguiente: La dicotomía del control →</button>
+  </div>
+</section>
+
+<!-- ============ 1. DICOTOMÍA ============ -->
+<section class="module" id="dicotomia">
+  <span class="kicker">Módulo 1</span>
+  <h2>🎯 La dicotomía del control</h2>
+
+  <p>Si el estoicismo tuviera que reducirse a una sola lección, sería esta. Epicteto —cuyas notas estudió Marco Aurelio— abre su manual con ella:</p>
+
+  <div class="quote">
+    «De las cosas que existen, unas dependen de nosotros; otras no dependen de nosotros.»
+    <span class="author">— Epicteto, Enquiridión, 1</span>
+  </div>
+
+  <p>Parece una obviedad y es, en realidad, un mapa completo de la vida mental. <strong>Dependen de ti</strong> cuatro cosas, todas internas: tus <strong>juicios</strong> (qué opinas de lo que pasa), tus <strong>impulsos</strong> (a qué te lanzas), tus <strong>deseos y aversiones</strong> (qué persigues y qué rehúyes) y tus <strong>acciones</strong>. <strong>No dependen de ti</strong>, aunque a veces puedas influirlas: la fama y la reputación, la salud y el cuerpo, el pasado, el clima, la economía, las opiniones y actos de los demás, y —esto es lo que más cuesta aceptar— <strong>los resultados</strong> de tus propios esfuerzos.</p>
+
+  <table>
+    <tr><th>✅ Depende de ti (tu parcela)</th><th>❌ No depende de ti (puedes influir, no decidir)</th></tr>
+    <tr>
+      <td>Tus juicios e interpretaciones · tus decisiones · tu esfuerzo y atención · tus valores · tu próxima respuesta</td>
+      <td>La fama y la opinión ajena · la salud y el cuerpo (en última instancia) · el pasado · los actos de otros · los resultados · el azar</td>
+    </tr>
+  </table>
+
+  <h3>El sufrimiento como error de categoría</h3>
+  <p>Para los estoicos, buena parte del sufrimiento evitable nace de <strong>archivar las cosas en la columna equivocada</strong>:</p>
+  <ul>
+    <li><strong>Tratar lo incontrolable como controlable</strong> produce ansiedad, frustración e ira: exiges al mundo (al tráfico, al jefe, al resultado) algo que el mundo nunca prometió.</li>
+    <li><strong>Tratar lo controlable como incontrolable</strong> produce victimismo y parálisis: "yo soy así", "no puedo evitarlo", "que decidan otros". Regalas la única parcela que era tuya.</li>
+  </ul>
+
+  <div class="quote">
+    «Las cosas no alcanzan el alma: permanecen quietas en el exterior. Nuestras perturbaciones nacen solo de la opinión que se forma dentro.»
+    <span class="author">— Marco Aurelio, Meditaciones, IV, 3</span>
+  </div>
+
+  <h3>El arquero estoico</h3>
+  <p>La imagen clásica con que la escuela explicaba esta idea (la recoge Cicerón en <em>De finibus</em>, III) es la del <strong>arquero</strong>: elegir bien el arco, tensar, apuntar con todo el oficio posible y soltar la flecha depende del arquero. Que la flecha dé en el blanco, ya no: una ráfaga de viento, un movimiento de la pieza, y el tiro perfecto falla. Por eso el objetivo real del arquero estoico es <strong>"apuntar bien"</strong>, no "acertar": pone todo en su ejecución y firma de antemano la paz con el resultado.</p>
+  <p>Marco Aurelio aplica esto con lo que la tradición llama la <strong>cláusula de reserva</strong>: actúa con todas tus fuerzas <em>"si nada lo impide"</em>. En VI, 50 se lo recuerda: intenta persuadir a los hombres y actúa con justicia; si algo se opone con fuerza mayor, no te aflijas — usa el impedimento como materia para otra virtud. No es resignación anticipada: es jugar a fondo la mano que sí tienes.</p>
+
+  <div class="key-idea">
+    <span class="tag">Idea clave</span>
+    <p style="margin:.4rem 0 0">La serenidad estoica no es indiferencia: es <strong>contabilidad exacta</strong>. Toda la energía que dejas de gastar en lo que no depende de ti queda disponible para lo único que sí: tu siguiente juicio y tu siguiente acción.</p>
+  </div>
+
+  <h3>🎯 Ejercicio: ¿depende de ti?</h3>
+  <div class="card">
+    <p style="font-size:.9rem">Clasifica estas 10 situaciones. Marca una opción en cada una y pulsa <strong>Corregir</strong>: recibirás una explicación por cada respuesta y tu puntuación. Ojo: hay trampas — <em>influir no es controlar</em>.</p>
+    <div id="clfList"></div>
+    <div class="btn-row">
+      <button class="btn" id="clfCheck">Corregir mis respuestas</button>
+      <button class="btn secondary" id="clfReset">🔄 Reiniciar</button>
+    </div>
+    <div class="quiz-score" id="clfScore"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="dicotomia">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="intro">← Introducción</button>
+    <button class="btn secondary nav-next" data-go="juicios">Siguiente: Juicios, no cosas →</button>
+  </div>
+</section>
+
+<!-- ============ 2. JUICIOS ============ -->
+<section class="module" id="juicios">
+  <span class="kicker">Módulo 2</span>
+  <h2>💭 No son las cosas: son tus juicios</h2>
+
+  <p>Si el módulo 1 te dijo <em>dónde</em> está tu poder, este te dice <em>cómo</em> ejercerlo. La herramienta central de todo el libro cabe en un pasaje:</p>
+
+  <div class="quote">
+    «Si algo externo te aflige, no es ello lo que te perturba, sino tu propio juicio sobre ello. Y borrar ese juicio está en tu mano. Y si te aflige algo de tu propia disposición, ¿quién te impide corregir tu criterio?»
+    <span class="author">— Marco Aurelio, Meditaciones, VIII, 47</span>
+  </div>
+
+  <p>El pasaje hace tres movimientos. Primero, <strong>reubica el dolor</strong>: no está en el hecho, está en la opinión añadida al hecho. Segundo, declara esa opinión <strong>editable</strong>: la escribiste tú, puedes revisarla. Tercero, cierra la única salida del victimismo: si lo que te duele no es externo sino tu propia conducta, también eso se corrige. En ambos casos hay algo que hacer; en ningún caso hay queja útil.</p>
+
+  <div class="quote">
+    «Borra el juicio "he sido dañado", y el daño queda borrado.»
+    <span class="author">— Marco Aurelio, Meditaciones, IV, 7</span>
+  </div>
+
+  <h3>La técnica de la descripción desnuda</h3>
+  <p>¿Cómo se "borra" un juicio en la práctica? Marco Aurelio usa un ejercicio muy concreto: <strong>describir las cosas tal como son, sin adjetivos dramáticos</strong>, como lo haría un naturalista. El ejemplo más famoso es casi cómico viniendo de un emperador en un banquete:</p>
+
+  <div class="quote">
+    «Estas viandas son el cadáver de un pez; estas otras, el cadáver de un ave o de un cerdo; este vino de Falerno, zumo de un racimo; la toga pretexta, lana de oveja teñida con la sangre de un molusco… Así hay que llegar a las cosas mismas y verlas desnudas, despojándolas de la leyenda con que se engalanan.»
+    <span class="author">— Marco Aurelio, Meditaciones, VI, 13</span>
+  </div>
+
+  <p>El manjar exquisito es un pez muerto; el símbolo supremo de estatus, lana teñida. La técnica no busca cinismo ni quitarle sabor a la vida: busca <strong>exactitud</strong>. El deseo y el miedo son grandes guionistas: añaden a los hechos capas de amenaza, urgencia e intención. La descripción desnuda retira el barniz para que decidas sobre la cosa, no sobre su leyenda.</p>
+
+  <h3>Separar el hecho del relato</h3>
+  <table>
+    <tr><th>Hecho observable</th><th>Relato que añadimos</th><th>Juicio oculto</th></tr>
+    <tr><td>Mi jefe no respondió mi mensaje en todo el día.</td><td>"Me está ignorando; seguro hice algo mal."</td><td>Su silencio habla de mí (lectura de mente).</td></tr>
+    <tr><td>Señalaron dos errores en mi presentación.</td><td>"Quedé en ridículo delante de todos."</td><td>Un error puntual define mi valor completo.</td></tr>
+    <tr><td>Tengo 14 tareas pendientes esta semana.</td><td>"Esto es imposible, me va a aplastar."</td><td>La lista es una amenaza, no una secuencia de acciones.</td></tr>
+  </table>
+
+  <div class="key-idea">
+    <span class="tag">Idea clave</span>
+    <p style="margin:.4rem 0 0">El hecho pertenece al mundo; el relato te pertenece a ti. Y <strong>solo lo que te pertenece puedes editarlo</strong>. Por eso el estoico escribe dos versiones de cada problema: la que grita su cabeza y la que firmaría un notario.</p>
+  </div>
+
+  <h3>🪶 Ejercicio: el reformulador estoico</h3>
+  <div class="card">
+    <p style="font-size:.9rem">Toma algo que te esté molestando de verdad y pásalo por las tres capas. Sé literal en la segunda: solo lo que vería una cámara, sin adjetivos ni intenciones supuestas.</p>
+    <label class="field-label" for="quejaInput">1 · Tu queja, tal como suena en tu cabeza</label>
+    <textarea id="quejaInput" rows="2" placeholder="Ej.: Mi compañero me dejó tirado con el informe, como siempre; le da igual mi tiempo…"></textarea>
+    <label class="field-label" for="hechosInput">2 · Los hechos desnudos (sin adjetivos, sin intenciones)</label>
+    <textarea id="hechosInput" rows="2" placeholder="Ej.: Acordamos entregar el viernes. Hoy es jueves y su parte no está. No ha escrito desde el martes."></textarea>
+    <label class="field-label" for="controlInput">3 · Qué depende de ti ahora (una acción concreta)</label>
+    <input type="text" id="controlInput" placeholder="Ej.: escribirle hoy preguntando un plazo realista y avisar al cliente con tiempo">
+    <div class="btn-row"><button class="btn" id="reformBtn">Generar mi tarjeta estoica</button></div>
+    <div class="stack-output" id="reformOutput"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="juicios">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="dicotomia">← La dicotomía</button>
+    <button class="btn secondary nav-next" data-go="virtudes">Siguiente: Las cuatro virtudes →</button>
+  </div>
+</section>
+
+<!-- ============ 3. VIRTUDES ============ -->
+<section class="module" id="virtudes">
+  <span class="kicker">Módulo 3</span>
+  <h2>⚖️ Las cuatro virtudes cardinales</h2>
+
+  <p>Quitar juicios falsos deja un hueco: ¿con qué criterio decides entonces? La respuesta estoica es la <strong>virtud</strong> (<em>areté</em>: excelencia del carácter), el único bien auténtico. Todo lo demás —dinero, salud, fama— es materia con la que se ejerce. La tradición, heredada de Platón y adoptada por la Stoa, la divide en cuatro. <strong>Haz clic en cada tarjeta:</strong></p>
+
+  <div class="flip-grid">
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front">🦉 Sabiduría <span class="hint">(phrónesis · clic para voltear)</span></div>
+      <div class="flip-face flip-back">Ver con claridad: distinguir el bien del mal y de lo indiferente, el hecho del relato, lo controlable de lo incontrolable. Es la virtud "directora": sin ella, las otras tres apuntan a ciegas.</div>
+    </div></div>
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front">🤝 Justicia <span class="hint">(dikaiosýne · clic para voltear)</span></div>
+      <div class="flip-face flip-back">Dar a cada uno lo suyo y actuar para el bien común. Para Marco Aurelio es la virtud central: somos seres sociales y una vida buena que dañe a otros es una contradicción.</div>
+    </div></div>
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front">🦁 Coraje <span class="hint">(andreía · clic para voltear)</span></div>
+      <div class="flip-face flip-back">Firmeza ante el miedo, el dolor y la incomodidad: hacer lo correcto aunque cueste. No es ausencia de miedo, sino no dejar que el miedo vote por ti.</div>
+    </div></div>
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front">🏺 Templanza <span class="hint">(sophrosýne · clic para voltear)</span></div>
+      <div class="flip-face flip-back">La medida justa: dominio de apetitos e impulsos, ni exceso ni rigidez. Saber cuánto es suficiente — en comida, pantalla, palabras, trabajo y hasta en indignación.</div>
+    </div></div>
+  </div>
+
+  <div class="quote">
+    «Si encuentras en la vida humana algo mejor que la justicia, la verdad, la templanza, la fortaleza…, vuélvete hacia ello con toda tu alma y disfruta de ese supremo bien que has hallado.»
+    <span class="author">— Marco Aurelio, Meditaciones, III, 6</span>
+  </div>
+
+  <h3>La virtud favorita de Marco Aurelio: la justicia</h3>
+  <p>Si algo distingue a las <em>Meditaciones</em> dentro del estoicismo es su insistencia en lo <strong>social</strong>. Marco Aurelio vuelve una y otra vez a la misma imagen: hemos nacido para cooperar <strong>"como los pies, las manos, los párpados, como las hileras de dientes superiores e inferiores"</strong> (II, 1). Obrar unos contra otros es tan antinatural como que una mano sabotee a la otra. La razón que hay en ti está también en el otro: dañarlo es dañar el tejido del que formas parte.</p>
+
+  <div class="quote">
+    «Lo que no beneficia al enjambre tampoco beneficia a la abeja.»
+    <span class="author">— Marco Aurelio, Meditaciones, VI, 54</span>
+  </div>
+
+  <h3>De la definición clásica a la práctica de hoy</h3>
+  <table>
+    <tr><th>Virtud</th><th>Definición clásica</th><th>Traducción operativa</th><th>Micro-práctica de hoy</th></tr>
+    <tr><td><strong>🦉 Sabiduría</strong></td><td>Conocimiento de lo bueno, lo malo y lo indiferente.</td><td>Pensar antes de reaccionar; pedir datos antes que dramatizar; distinguir influir de controlar.</td><td>Ante la próxima molestia, descríbela en una frase "de notario" antes de responder.</td></tr>
+    <tr><td><strong>🤝 Justicia</strong></td><td>Dar a cada uno lo suyo; servir al bien común.</td><td>Cumplir tu parte, decir la verdad, tratar a los demás como compañeros de equipo, no como obstáculos.</td><td>Haz una contribución que nadie te pidió: agradece, ayuda, repara un descuido.</td></tr>
+    <tr><td><strong>🦁 Coraje</strong></td><td>Firmeza ante el peligro y el dolor.</td><td>Tener la conversación incómoda, empezar lo que da miedo, sostener un límite sin agresividad.</td><td>Identifica qué llevas días evitando y da hoy el primer paso (solo el primero).</td></tr>
+    <tr><td><strong>🏺 Templanza</strong></td><td>Medida y dominio de los apetitos.</td><td>Moderación con comida, compras, pantalla y palabras; parar en "suficiente".</td><td>Elige un placer de hoy y tómalo a la mitad de lo habitual. Observa qué pasa.</td></tr>
+  </table>
+
+  <p>Un matiz clásico: las virtudes <strong>funcionan juntas o no funcionan</strong>. Coraje sin justicia es temeridad al servicio de cualquier cosa; templanza sin sabiduría es rigidez; justicia sin coraje se queda en buenas intenciones. Por eso el examen estoico ante un dilema recorre las cuatro.</p>
+
+  <div class="key-idea">
+    <span class="tag">Examen rápido de las 4 virtudes</span>
+    <p style="margin:.4rem 0 0">Ante cualquier decisión difícil, pregunta: ¿Estoy <strong>viendo claro</strong> o reaccionando a un relato? ¿Qué exige aquí la <strong>justicia</strong> con los demás? ¿Qué estoy <strong>evitando por miedo</strong>? ¿Dónde pide esto <strong>medida</strong> en lugar de exceso?</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="virtudes">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="juicios">← Juicios, no cosas</button>
+    <button class="btn secondary nav-next" data-go="premeditatio">Siguiente: Premeditatio →</button>
+  </div>
+</section>
+
+<!-- ============ 4. PREMEDITATIO ============ -->
+<section class="module" id="premeditatio">
+  <span class="kicker">Módulo 4</span>
+  <h2>🌅 Premeditatio malorum y memento mori</h2>
+
+  <p>Los estoicos ensayaban por adelantado las dificultades del día: la <strong><em>premeditatio malorum</em></strong>, "premeditación de los males". El pasaje más célebre de las <em>Meditaciones</em> es exactamente eso, escrito por un emperador que sabía con quién iba a desayunar:</p>
+
+  <div class="quote">
+    «Al despuntar el alba, hazte estas consideraciones previas: me encontraré con un entrometido, un ingrato, un soberbio, un mentiroso, un envidioso, un insociable. Todo eso les acontece por ignorancia de los bienes y de los males. Pero yo, que he comprendido que la naturaleza del bien es lo bello y la del mal lo vergonzoso, y que la naturaleza del que yerra es pariente de la mía —no porque compartamos sangre o semilla, sino porque participamos de la misma inteligencia y de una porción de la divinidad—, no puedo recibir daño de ninguno de ellos, porque nadie me envolverá en lo vergonzoso. Ni puedo enojarme con mi pariente ni odiarle: hemos nacido para colaborar, como los pies, las manos, los párpados, como las hileras de dientes superiores e inferiores. Obrar como adversarios los unos de los otros es contrario a la naturaleza.»
+    <span class="author">— Marco Aurelio, Meditaciones, II, 1</span>
+  </div>
+
+  <p>Fíjate en la arquitectura del pasaje. <strong>Primera mitad:</strong> anticipa lo desagradable con nombres y apellidos —no "quizá haya algún roce", sino entrometidos, ingratos, soberbios— para que nada te encuentre sin plan: la sorpresa es la mitad del golpe. <strong>Segunda mitad:</strong> desactiva de antemano la ira con tres ideas: el que obra mal lo hace <em>por ignorancia</em> (no es un monstruo, está equivocado); es <em>de tu misma naturaleza</em> (la razón compartida lo hace tu pariente); y atacarlo sería tan absurdo como que tus dientes de arriba muerdan a los de abajo. El ejercicio no prepara solo el escudo: prepara la <strong>respuesta justa</strong>.</p>
+
+  <h3>Ensayar no es rumiar</h3>
+  <p>Aquí está el matiz que separa la práctica estoica de la preocupación crónica:</p>
+  <table>
+    <tr><th>Premeditatio (ensayo)</th><th>Rumiación (preocupación)</th></tr>
+    <tr><td>Escenario <strong>concreto y plausible</strong> ("la reunión de las 10").</td><td>Catástrofes abstractas y encadenadas ("¿y si todo sale mal?").</td></tr>
+    <tr><td>Termina en un <strong>plan</strong>: "si X, entonces yo haré Y".</td><td>No termina: el bucle se repite sin producir decisiones.</td></tr>
+    <tr><td>Tiene <strong>hora y duración</strong>: unos minutos por la mañana, y se acaba.</td><td>Invade cualquier hora, sobre todo la noche.</td></tr>
+    <tr><td>Acaba en aceptación serena: "y si aun así falla, lo soportaré y usaré".</td><td>Acaba en agotamiento y evitación.</td></tr>
+  </table>
+
+  <div class="quote">
+    «Sufre más de lo necesario quien sufre antes de lo necesario.»
+    <span class="author">— Séneca, Cartas a Lucilio, 98</span>
+  </div>
+
+  <h3>Memento mori: la muerte como ordenadora de prioridades</h3>
+  <p>La versión extrema de la premeditatio es recordar la propia muerte. En Marco Aurelio no hay nada morboso en ello: es un <strong>instrumento de enfoque</strong>. Quien recuerda que el tiempo no está garantizado deja de gastarlo en rencores, postureo y discusiones de vanidad:</p>
+
+  <div class="quote">
+    «Podrías dejar la vida ahora mismo: que eso determine lo que haces, dices y piensas.»
+    <span class="author">— Marco Aurelio, Meditaciones, II, 11</span>
+  </div>
+
+  <div class="quote">
+    «No vivas como si te quedaran diez mil años. La necesidad pende sobre ti. Mientras vives, mientras es posible, sé bueno.»
+    <span class="author">— Marco Aurelio, Meditaciones, IV, 17</span>
+  </div>
+
+  <p>El memento mori funciona como un editor implacable: tacha lo trivial y subraya lo importante. La pregunta operativa no es "¿y si muero?", sino <strong>"si esto fuera más escaso de lo que creo, ¿lo trataría así?"</strong> — aplicable a la vida, pero también a una tarde con tus padres o a un año de salud.</p>
+
+  <h3>🌄 Ejercicio guiado: premeditatio en 4 pasos para tu día de mañana</h3>
+  <div class="accordion">
+    <div class="accordion-item">
+      <button class="accordion-header">Paso 1 · Elige el escenario <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Mira tu agenda de mañana y elige <strong>un solo momento</strong> con probabilidad real de fricción: una reunión tensa, un trayecto, una conversación pendiente, una entrega. Nada de catástrofes exóticas: la premeditatio trabaja con lo plausible.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">Paso 2 · Anticipa 2-3 contratiempos concretos <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Nómbralos en frío, con descripción desnuda (módulo 2): "alguien interrumpirá mi propuesta", "habrá retraso", "me pedirán cambios a última hora". Como Marco Aurelio: entrometidos, ingratos, soberbios — sin adjetivos dramáticos añadidos.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">Paso 3 · Decide tu respuesta-virtud para cada uno <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Formato "si-entonces": <em>"Si me interrumpen, entonces respiro, dejo terminar y retomo mi punto"</em> (templanza). <em>"Si hay retraso, entonces uso ese tiempo para revisar mis notas"</em> (sabiduría). Una respuesta por contratiempo, elegida ahora que estás sereno.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">Paso 4 · Cierra con la cláusula de reserva (y un límite de tiempo) <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Termina con la frase del arquero: <strong>"Haré todo lo que está en mi mano; el resultado no me pertenece."</strong> Y pon límite: el ejercicio dura 5 minutos, una vez. Si los mismos pensamientos vuelven en bucle por la tarde, eso ya no es premeditatio: es rumiación, y la respuesta es volver a la acción presente.</p></div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="premeditatio">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="virtudes">← Las cuatro virtudes</button>
+    <button class="btn secondary nav-next" data-go="obstaculo">Siguiente: El obstáculo es el camino →</button>
+  </div>
+</section>
+
+<!-- ============ 5. OBSTÁCULO ============ -->
+<section class="module" id="obstaculo">
+  <span class="kicker">Módulo 5</span>
+  <h2>🪨 El obstáculo es el camino</h2>
+
+  <div class="quote">
+    «Lo que impide la acción hace avanzar la acción; lo que se interpone en el camino se convierte en el camino.»
+    <span class="author">— Marco Aurelio, Meditaciones, V, 20</span>
+  </div>
+
+  <p>Probablemente el pasaje más citado hoy de todo el libro (da título al best-seller de Ryan Holiday). La idea completa de V, 20 es esta: la mente racional puede <strong>convertir y adaptar a su propósito cualquier impedimento</strong>, igual que el fuego no distingue entre leña buena y mala:</p>
+
+  <div class="quote">
+    «Como el fuego encendido, que de cuanto le arrojan hace llama y resplandor.»
+    <span class="author">— Marco Aurelio, Meditaciones, IV, 1</span>
+  </div>
+
+  <p>Esto no es optimismo ingenuo, es una observación precisa: <strong>cada impedimento deja al menos una virtud disponible</strong>. Marco Aurelio lo dice expresamente en VI, 50: si algo se opone a tu acción con fuerza mayor, "usa el impedimento como materia para otra virtud". El bloqueo externo te cierra una puerta y te abre un gimnasio:</p>
+  <ul>
+    <li><strong>¿Te bloquean o retrasan?</strong> Materia para la paciencia y la creatividad (otra ruta).</li>
+    <li><strong>¿Te tratan injustamente?</strong> Materia para la justicia y el temple: responder bien a quien obra mal.</li>
+    <li><strong>¿Tienes miedo?</strong> Materia para el coraje: es su única materia prima, de hecho.</li>
+    <li><strong>¿Abundancia y tentación?</strong> Materia para la templanza.</li>
+    <li><strong>¿Pérdida irreversible?</strong> Materia para la sabiduría: distinguir lo que se fue de lo que queda.</li>
+  </ul>
+
+  <h3>Amor fati: querer lo que toca</h3>
+  <p>La expresión <em>amor fati</em> ("amor al destino") es de Nietzsche, pero la actitud está ya entera en las <em>Meditaciones</em>: no solo soportar lo que ocurre, sino <strong>trabajarlo como si lo hubieras pedido</strong>, porque es la única materia prima real que tienes — la otra vida, la que iba a salir según el plan, no existe:</p>
+
+  <div class="quote">
+    «Ama únicamente lo que te acontece y está hilado con tu destino. ¿Qué hay más adecuado para ti?»
+    <span class="author">— Marco Aurelio, Meditaciones, VII, 57</span>
+  </div>
+
+  <h3>Tres obstáculos modernos, vistos a la estoica</h3>
+  <div class="accordion">
+    <div class="accordion-item">
+      <button class="accordion-header">💼 Un despido <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p><strong>No dependía de ti:</strong> la decisión, el presupuesto, el mercado. <strong>Virtudes disponibles:</strong> coraje (encajar el golpe sin esconderte) y sabiduría (auditar honestamente qué aprendiste y qué quieres ahora). <strong>El camino que abre:</strong> la revisión de rumbo que llevabas años posponiendo — nadie la hace con el sueldo cómodo. El despido no es bueno; tu respuesta puede serlo.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">🦵 Una lesión <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p><strong>No dependía de ti:</strong> el mal gesto, el diagnóstico, los plazos biológicos. <strong>Virtudes disponibles:</strong> templanza (respetar la rehabilitación sin atajos) y paciencia. <strong>El camino que abre:</strong> entrenar lo que siempre descuidaste — movilidad, técnica, la parte del cuerpo sana, o la cabeza: muchos deportistas aprenden táctica viendo desde el banquillo.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">📣 Una crítica pública <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p><strong>No dependía de ti:</strong> que la hicieran, su tono, cuánta gente la vio. <strong>Virtudes disponibles:</strong> sabiduría (¿hay algo cierto dentro? quédatelo y agradece; lo demás, descártalo) y justicia (responder sin convertirte en lo que criticas — VI, 6). <strong>El camino que abre:</strong> una versión corregida de tu trabajo y una piel más serena para la próxima.</p></div>
+    </div>
+  </div>
+
+  <p><strong>Una advertencia honesta:</strong> este principio no romantiza el sufrimiento ni dice que todo lo malo "sea para bien". La pérdida sigue siendo pérdida y duele. Lo que afirma es más sobrio y más útil: en cualquier circunstancia queda <strong>al menos una acción virtuosa disponible</strong>, y hacerla es mejor que no hacerla. El reencuadre no borra el golpe: rescata tu agencia de debajo de los escombros.</p>
+
+  <div class="quote">
+    «Sé como el promontorio contra el que rompen sin cesar las olas: él sigue firme, y en torno a él se adormece el hervor de las aguas.»
+    <span class="author">— Marco Aurelio, Meditaciones, IV, 49</span>
+  </div>
+
+  <h3>🛤️ Ejercicio: reencuadra tu obstáculo</h3>
+  <div class="card">
+    <p style="font-size:.9rem">Aplica V, 20 a algo real. Cuanto más concreto el obstáculo, más útil la tarjeta.</p>
+    <label class="field-label" for="obstInput">Tu obstáculo actual</label>
+    <input type="text" id="obstInput" placeholder="Ej.: me retiraron del proyecto que lideraba">
+    <label class="field-label" for="obstVirtud">¿Qué virtud te permite practicar?</label>
+    <select id="obstVirtud">
+      <option value="">— Elige una virtud —</option>
+      <option value="Sabiduría: ver con claridad y aprender de lo ocurrido">🦉 Sabiduría — ver con claridad y aprender</option>
+      <option value="Justicia: actuar bien con otros, incluso en medio del golpe">🤝 Justicia — actuar bien con otros pese a todo</option>
+      <option value="Coraje: sostener lo correcto aunque cueste">🦁 Coraje — hacer lo correcto aunque cueste</option>
+      <option value="Templanza: medida, paciencia y dominio del impulso">🏺 Templanza — medida y paciencia</option>
+    </select>
+    <label class="field-label" for="obstOpp">¿Qué oportunidad concreta abre?</label>
+    <textarea id="obstOpp" rows="2" placeholder="Ej.: tiempo para certificarme en lo que me faltaba y demostrar que sé trabajar en segundo plano"></textarea>
+    <div class="btn-row"><button class="btn" id="obstBtn">Generar mi tarjeta de reencuadre</button></div>
+    <div class="stack-output" id="obstOutput"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="obstaculo">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="premeditatio">← Premeditatio</button>
+    <button class="btn secondary nav-next" data-go="vista">Siguiente: La vista desde arriba →</button>
+  </div>
+</section>
+
+<!-- ============ 6. VISTA DESDE ARRIBA ============ -->
+<section class="module" id="vista">
+  <span class="kicker">Módulo 6</span>
+  <h2>🌍 La vista desde arriba y el cosmopolitismo</h2>
+
+  <p>Cuando un problema llena todo el encuadre, Marco Aurelio cambia de cámara. Es su ejercicio de imaginación favorito: <strong>contemplar la propia situación desde la altura</strong>, como la vería un observador suspendido sobre la ciudad, el planeta y los siglos:</p>
+
+  <div class="quote">
+    «Contempla desde lo alto los rebaños innumerables, las ceremonias innumerables, las travesías de toda clase entre tempestades y calmas, la diversidad de los seres que nacen, conviven y mueren.»
+    <span class="author">— Marco Aurelio, Meditaciones, IX, 30</span>
+  </div>
+
+  <p>El ejercicio funciona como un zoom progresivo. Prueba a hacerlo con tu problema de esta semana:</p>
+  <ul>
+    <li><strong>Tu habitación:</strong> tú, la pantalla, el nudo en el estómago.</li>
+    <li><strong>Tu edificio y tu calle:</strong> decenas de personas con su propio nudo en el estómago.</li>
+    <li><strong>Tu ciudad:</strong> miles de reuniones, discusiones, entregas — como la tuya.</li>
+    <li><strong>El planeta:</strong> ocho mil millones de protagonistas de su propia película.</li>
+    <li><strong>El tiempo:</strong> Marco Aurelio recomienda pensar en la corte de Vespasiano (IV, 32): gente casándose, comerciando, intrigando, ascendiendo… y nada de aquello queda. Tus pendientes de hoy correrán la misma suerte.</li>
+  </ul>
+
+  <div class="key-idea">
+    <span class="tag">Idea clave</span>
+    <p style="margin:.4rem 0 0">La pequeñez <strong>ordena, no deprime</strong>. El objetivo no es concluir "nada importa", sino devolver a cada cosa su tamaño real: visto desde arriba, el correo borde encoge — y lo que de verdad importa (las personas, el trabajo bien hecho, el carácter) sigue exactamente donde estaba.</p>
+  </div>
+
+  <h3>Ciudadanos de la misma ciudad</h3>
+  <p>Desde arriba se ve otra cosa: que no hay extranjeros. Marco Aurelio razona en cadena (IV, 4): si todos compartimos la <strong>razón</strong>, compartimos una misma ley; si compartimos ley, somos conciudadanos; luego el mundo es <strong>una sola ciudad</strong> (<em>kosmópolis</em>) de la que las ciudades visibles son barrios. De ahí el famoso "cosmopolitismo" estoico: el otro —el pesado de la reunión incluido— es <em>conciudadano tuyo</em> por el solo hecho de razonar, y la cooperación no es un sentimentalismo sino el funcionamiento normal del organismo común.</p>
+
+  <h3>Gente difícil sin volverte como ella</h3>
+  <p>Esa ciudadanía compartida no vuelve a nadie ingenuo: Marco Aurelio pasó su vida rodeado de aduladores, intrigantes y traidores, y escribió mucho sobre ello. Su regla de oro cabe en una línea:</p>
+
+  <div class="quote">
+    «La mejor manera de vengarte: no asemejarte a quien te agravió.»
+    <span class="author">— Marco Aurelio, Meditaciones, VI, 6</span>
+  </div>
+
+  <p>Y en XI, 18 se deja a sí mismo un <strong>botiquín completo</strong> de recordatorios para la ira. Cinco de los más útiles:</p>
+  <div class="accordion">
+    <div class="accordion-item">
+      <button class="accordion-header">1 · Nacimos los unos para los otros <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Antes de responder, recuerda el parentesco: estáis en el mismo equipo aunque él no lo sepa. Tu papel no es vencerlo: es, si puedes, corregirlo; y si no, soportarlo sin corromperte.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">2 · Actúa por ignorancia, no por maldad pura <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Nadie elige el error <em>como</em> error: el que te daña cree, equivocadamente, hacer algo bueno o justo para él. Esto no excusa el acto, pero cambia tu emoción: ante la ignorancia cabe pedagogía o distancia; la ira no arregla nada.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">3 · Tú también fallas <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>"También tú cometes muchas faltas y eres otro tal" — y cuando no las cometes, a veces es por miedo o por imagen, no por virtud. La memoria de los propios errores es el mejor antiinflamatorio del juicio.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">4 · No conoces el contexto completo <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>"Es preciso saber muchas cosas antes de pronunciarse con conocimiento sobre la conducta ajena." La historia que te indigna es casi siempre una versión recortada. Suspender el juicio no es debilidad: es exactitud.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">5 · Tu ira te daña más que su acto <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>El enfado prolongado cobra peaje en quien lo carga: "nuestra irritación y disgusto por ciertas conductas nos atormentan más que las conductas mismas". Y la salida no es fingir calma, sino una amabilidad <em>genuina</em>, sin ironía — esa, dice Marco Aurelio, es invencible.</p></div>
+    </div>
+  </div>
+
+  <p>Y cuando todo esto se hace cuesta arriba, queda el refugio portátil:</p>
+  <div class="quote">
+    «Buscan retiros para sí: casas de campo, playas, montañas… Pero está en tu mano, a la hora que quieras, retirarte a ti mismo. En ningún lugar se retira el hombre con más calma que en su propia alma.»
+    <span class="author">— Marco Aurelio, Meditaciones, IV, 3</span>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="vista">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="obstaculo">← El obstáculo</button>
+    <button class="btn secondary nav-next" data-go="rutina">Siguiente: La rutina estoica →</button>
+  </div>
+</section>
+
+<!-- ============ 7. RUTINA ============ -->
+<section class="module" id="rutina">
+  <span class="kicker">Módulo 7</span>
+  <h2>📓 La rutina estoica diaria</h2>
+
+  <p>Las <em>Meditaciones</em> no son un libro sobre una práctica: <strong>son la práctica misma</strong>. Cada entrada es el resultado de un hombre sentándose, probablemente a diario, a prepararse por la mañana y examinarse por la noche. Esa rutina de dos extremos del día es la columna vertebral del estoicismo aplicado, y puedes reproducirla en menos de diez minutos.</p>
+
+  <h3>🌅 Por la mañana: anticipación e intención</h3>
+  <div class="quote">
+    «Al amanecer, cuando te cueste despertar, ten a mano este pensamiento: me levanto para cumplir una tarea de ser humano. ¿Aún protesto, si voy a hacer aquello para lo que nací y para lo que fui traído al mundo? ¿O acaso fui formado para calentarme bajo las mantas?»
+    <span class="author">— Marco Aurelio, Meditaciones, V, 1</span>
+  </div>
+  <p>Dos movimientos, ya conocidos: una <strong>premeditatio breve</strong> (¿cuál es la dificultad más probable de hoy y cómo elijo responder? — el espíritu de II, 1) y una <strong>intención de virtud</strong> (¿cuál de las cuatro entreno hoy, y en qué situación concreta?). No es pensamiento positivo: es preparación táctica.</p>
+
+  <h3>🌙 Por la noche: el examen del día</h3>
+  <p>La revisión nocturna es anterior a los estoicos (viene de los pitagóricos), pero ellos la convirtieron en método. Séneca cuenta que cada noche, con la luz apagada, comparecía ante su propio tribunal:</p>
+  <div class="quote">
+    «¿Qué mal tuyo has curado hoy? ¿A qué vicio te has opuesto? ¿En qué eres mejor?»
+    <span class="author">— Séneca, Sobre la ira, III, 36</span>
+  </div>
+  <p>Epicteto recomendaba lo mismo a sus alumnos citando los versos pitagóricos: repasar cada acto del día. De ahí salen las <strong>tres preguntas clásicas</strong>: <strong>¿qué hice mal?, ¿qué hice bien?, ¿qué dejé sin hacer?</strong> El tono importa tanto como las preguntas: eres un <strong>juez compasivo</strong>, no un fiscal. Se anota el fallo, se decide la corrección y se cierra el expediente — sin flagelación, que es solo rumiación disfrazada de rigor.</p>
+
+  <table>
+    <tr><th>Momento</th><th>Práctica</th><th>Tiempo</th></tr>
+    <tr><td>🌅 Mañana</td><td>Una dificultad probable + mi respuesta "si-entonces" + virtud del día.</td><td>3 minutos</td></tr>
+    <tr><td>🌙 Noche</td><td>¿Qué hice mal? ¿Qué hice bien? ¿Qué dejé sin hacer?</td><td>5 minutos</td></tr>
+  </table>
+
+  <h3>📓 Tu diario estoico (se guarda en este navegador)</h3>
+  <div class="card">
+    <div class="journal-cols">
+      <div class="journal-col">
+        <h4>🌅 Mañana</h4>
+        <label class="field-label" for="amAnticipo">Dificultad que anticipo hoy</label>
+        <textarea id="amAnticipo" rows="2" placeholder="Ej.: la revisión del presupuesto se pondrá tensa"></textarea>
+        <label class="field-label" for="amPlan">Cómo elegiré responder (si X, entonces yo…)</label>
+        <textarea id="amPlan" rows="2" placeholder="Ej.: si suben el tono, bajo el mío y pido datos concretos"></textarea>
+        <label class="field-label" for="amVirtud">Virtud del día</label>
+        <select id="amVirtud">
+          <option value="">— Elige la virtud del día —</option>
+          <option value="Sabiduría">🦉 Sabiduría</option>
+          <option value="Justicia">🤝 Justicia</option>
+          <option value="Coraje">🦁 Coraje</option>
+          <option value="Templanza">🏺 Templanza</option>
+        </select>
+      </div>
+      <div class="journal-col">
+        <h4>🌙 Noche</h4>
+        <label class="field-label" for="pmMal">¿Qué hice mal?</label>
+        <textarea id="pmMal" rows="2" placeholder="Ej.: respondí un correo con sarcasmo innecesario"></textarea>
+        <label class="field-label" for="pmBien">¿Qué hice bien?</label>
+        <textarea id="pmBien" rows="2" placeholder="Ej.: mantuve la calma en la revisión y pedí datos"></textarea>
+        <label class="field-label" for="pmFalta">¿Qué dejé sin hacer?</label>
+        <textarea id="pmFalta" rows="2" placeholder="Ej.: la llamada que vengo aplazando desde el lunes"></textarea>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn" id="journalSave">💾 Guardar entrada de hoy</button></div>
+    <div class="stack-output" id="journalMsg"></div>
+    <h4 style="margin-top:1.6rem">Últimas entradas</h4>
+    <div id="journalList"></div>
+  </div>
+
+  <div class="quote">
+    «Deja ya de discutir cómo debe ser un hombre bueno: sélo.»
+    <span class="author">— Marco Aurelio, Meditaciones, X, 16</span>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="rutina">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="vista">← La vista desde arriba</button>
+    <button class="btn secondary nav-next" data-go="ciencia">Siguiente: Del estoicismo a la ciencia →</button>
+  </div>
+</section>
+
+<!-- ============ 8. CIENCIA ============ -->
+<section class="module" id="ciencia">
+  <span class="kicker">Módulo 8</span>
+  <h2>🔬 Del estoicismo a la ciencia</h2>
+
+  <p>En los años 50, el psicólogo <strong>Albert Ellis</strong>, decepcionado con el psicoanálisis, construyó la <strong>terapia racional emotiva conductual (TREC)</strong> sobre una frase que repartía a sus pacientes — y que tiene 1.900 años:</p>
+
+  <div class="quote">
+    «No son las cosas las que perturban a los hombres, sino las opiniones que tienen de ellas.»
+    <span class="author">— Epicteto, Enquiridión, 5</span>
+  </div>
+
+  <p>Una década después, <strong>Aaron Beck</strong>, padre de la <strong>terapia cognitiva</strong>, dejó por escrito en su manual fundacional que los orígenes filosóficos de su enfoque se remontan a los <strong>filósofos estoicos</strong>. No es una coincidencia de espíritu sino una genealogía reconocida: el modelo <strong>ABC</strong> de la TCC —un <strong>A</strong>contecimiento activa unas <strong>B</strong> (creencias/juicios) que producen unas <strong>C</strong>onsecuencias emocionales— es la dicotomía del control más VIII, 47 con vocabulario clínico: entre el hecho y la emoción siempre media un juicio, y el juicio se puede examinar y reescribir.</p>
+
+  <h3>Qué dice la evidencia moderna, práctica por práctica</h3>
+  <table>
+    <tr><th>Práctica estoica</th><th>Pariente moderno</th><th>Estado de la evidencia</th></tr>
+    <tr><td>Examinar y reformular juicios (VIII, 47; IV, 7)</td><td><strong>Reevaluación cognitiva</strong> (núcleo de la TCC)</td><td><strong>Sólido.</strong> Es una de las estrategias de regulación emocional con mejor respaldo experimental, y la TCC es de las psicoterapias más estudiadas para ansiedad y depresión.</td></tr>
+    <tr><td>Examen vespertino por escrito (tradición de Séneca y Epicteto)</td><td><strong>Escritura reflexiva / expresiva</strong></td><td><strong>Moderado.</strong> Beneficios pequeños pero consistentes en claridad y estado de ánimo; coste casi nulo. No sustituye a una terapia cuando hace falta una.</td></tr>
+    <tr><td>Vista desde arriba (IX, 30)</td><td><strong>Auto-distanciamiento</strong> (self-distancing)</td><td><strong>Prometedor.</strong> Analizar experiencias difíciles "desde fuera" reduce rumiación e intensidad emocional en estudios de laboratorio.</td></tr>
+    <tr><td>Premeditatio malorum (II, 1)</td><td>Planes <strong>"si-entonces"</strong>; ensayo mental; pre-mortem</td><td><strong>Mixto.</strong> Los planes si-entonces (intenciones de implementación) tienen buen respaldo; la visualización negativa como tal está poco estudiada y conviene dosificarla si tiendes a rumiar.</td></tr>
+  </table>
+
+  <p><strong>La letra pequeña, dicha sin rodeos:</strong> el estoicismo es filosofía, no tratamiento. Que sus herramientas se parezcan a las de la TCC no convierte un libro en terapia: si hay depresión, ansiedad clínica o duelo complicado, lo estoico —y lo sensato— es buscar ayuda profesional. Marco Aurelio tenía médico personal (Galeno, nada menos).</p>
+
+  <h3>Tres malentendidos que conviene desmontar</h3>
+  <div class="accordion">
+    <div class="accordion-item">
+      <button class="accordion-header">❌ "Ser estoico es reprimir las emociones" <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Al revés. El estoico <strong>siente</strong> la primera punzada (los estoicos la llamaban <em>propátheia</em>, la reacción involuntaria: ni siquiera el sabio se libra de ella) y trabaja sobre lo que viene después: el juicio y la respuesta. Es <em>sentir y elegir</em>, no anestesiarse. La investigación moderna añade un dato irónico: la <strong>supresión</strong> emocional es de las estrategias que peor funcionan, mientras que la <strong>reevaluación</strong> —la técnica estoica— es de las mejores. Confundirlas es confundir al estoicismo con su contrario.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">❌ "Aceptar lo que no controlas = pasividad" <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>Marco Aurelio <strong>gobernó un imperio durante 19 años, dirigió una década de guerras, legisló y administró una pandemia</strong> mientras escribía sobre aceptación. La dicotomía del control no dice "no actúes": dice "no desperdicies energía en lo que no responde a la acción, y vuélcala entera en lo que sí". Es una filosofía de generales, senadores y atletas precisamente porque libera capacidad de acción.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-header">❌ "El estoico es frío y va a lo suyo" <span class="chevron">▶</span></button>
+      <div class="accordion-body"><p>La virtud que Marco Aurelio más repite es la <strong>justicia</strong>: nacidos para colaborar (II, 1), lo que no beneficia al enjambre no beneficia a la abeja (VI, 54), ciudadanos de una misma ciudad (IV, 4). Un "estoicismo" que te haga más duro con los demás ha fallado en su examen final. La serenidad estoica es un medio para ser <em>más útil</em> a otros, no un búnker individual.</p></div>
+    </div>
+  </div>
+
+  <div class="key-idea">
+    <span class="tag">Idea clave</span>
+    <p style="margin:.4rem 0 0">El mejor resumen del estado de la cuestión: las <em>Meditaciones</em> son el <strong>ancestro honrado</strong> de la psicología cognitiva — una intuición central confirmada (el juicio media entre el hecho y la emoción), un conjunto de prácticas con parientes bien estudiados, y un marco ético que la ciencia ni confirma ni refuta, porque no es su trabajo.</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="ciencia">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="rutina">← La rutina estoica</button>
+    <button class="btn secondary nav-next" data-go="lecturas">Siguiente: Cómo leer Meditaciones →</button>
+  </div>
+</section>
+
+<!-- ============ 9. LECTURAS ============ -->
+<section class="module" id="lecturas">
+  <span class="kicker">Módulo 9</span>
+  <h2>📚 Cómo leer <em>Meditaciones</em> (y qué más leer)</h2>
+
+  <p>Primer aviso para evitar frustraciones: <strong>las <em>Meditaciones</em> no se leen como una novela</strong>. Son doce "libros" de notas sin orden temático, con repeticiones deliberadas (eran ejercicios: Marco Aurelio se repetía lo que necesitaba volver a oír). El libro I es la excepción y una joya en sí mismo: una lista de gratitudes — qué aprendió de cada persona de su vida ("De mi abuelo Vero: el buen carácter y la serenidad", I, 1).</p>
+
+  <h3>Dos maneras de entrar</h3>
+  <div class="card">
+    <ul style="margin-bottom:0">
+      <li><strong>Al azar (la más fiel al original):</strong> abre por cualquier página y lee un pasaje. Está escrito exactamente para eso: era el recordatorio diario de su autor. Un pasaje al día rinde más que veinte del tirón.</li>
+      <li><strong>Por temas (la más práctica):</strong> usa la tabla siguiente como índice temático y ve directo a lo que hoy te hace falta.</li>
+    </ul>
+  </div>
+
+  <table>
+    <tr><th>Tema</th><th>Pasajes recomendados</th></tr>
+    <tr><td><strong>La ira y la gente difícil</strong></td><td>VI, 6 · XI, 18 (el "botiquín" completo) · II, 1</td></tr>
+    <tr><td><strong>La muerte y la brevedad</strong></td><td>II, 11-17 · IV, 47-48 · IV, 17</td></tr>
+    <tr><td><strong>Vivir en el presente</strong></td><td>VIII, 36 (no cargues la vida entera: solo el presente) · II, 14 · XII, 1</td></tr>
+    <tr><td><strong>La opinión ajena</strong></td><td>XII, 4 · IV, 18 (cuánto tiempo gana quien no mira al vecino) · IV, 3</td></tr>
+    <tr><td><strong>La adversidad</strong></td><td>V, 20 · IV, 1 · IV, 49 · VI, 50</td></tr>
+    <tr><td><strong>Levantarse y empezar</strong></td><td>V, 1 · II, 1</td></tr>
+    <tr><td><strong>Cooperación y justicia</strong></td><td>II, 1 · VI, 54 · IV, 4</td></tr>
+    <tr><td><strong>La fama y el paso del tiempo</strong></td><td>IV, 32-33 · IX, 30</td></tr>
+  </table>
+
+  <div class="quote">
+    «Muchas veces me he preguntado con asombro cómo cada uno se ama a sí mismo más que a todos y, sin embargo, da menos valor a la opinión que tiene de sí mismo que a la opinión de los demás.»
+    <span class="author">— Marco Aurelio, Meditaciones, XII, 4</span>
+  </div>
+
+  <h3>Qué edición leer en español</h3>
+  <p>La referencia clásica es la de <strong>Gredos</strong> (traducción de Ramón Bach Pellicer, introducción de Carlos García Gual): fiable, anotada y la fuente habitual de las citas en español — incluidas, en espíritu, las de esta guía. Existen además ediciones de bolsillo solventes (Alianza, Cátedra y otras). Lo que conviene evitar son las versiones anónimas que circulan por internet: suelen ser retraducciones del inglés con pasajes embellecidos o directamente inventados (varias "citas de Marco Aurelio" famosas no aparecen en el libro).</p>
+
+  <h3>Puertas de entrada y compañeros de viaje</h3>
+  <table>
+    <tr><th>Obra</th><th>Por qué leerla</th></tr>
+    <tr><td><strong>Epicteto, <em>Enquiridión</em></strong></td><td>El "manual" estoico: brevísimo (se lee en una hora), directo, ordenado. La dicotomía del control en estado puro. Ideal antes o después de Marco Aurelio.</td></tr>
+    <tr><td><strong>Séneca, <em>Cartas a Lucilio</em></strong></td><td>El estoico más cercano y legible: consejos por carta sobre el tiempo, la riqueza, el miedo y la amistad. Perfecto para leer una carta al día.</td></tr>
+    <tr><td><strong>Ryan Holiday, <em>El obstáculo es el camino</em> y <em>Diario para estoicos</em></strong></td><td>Divulgación moderna construida sobre V, 20 y la rutina diaria. Anécdotas más que estudios, pero como puerta de entrada funciona — tiene ficha propia en esta Biblioteca Práctica.</td></tr>
+    <tr><td><strong>Marcos Vázquez, <em>Invicto</em></strong></td><td>Divulgación en español que conecta estoicismo y psicología actual con enfoque de entrenamiento mental. También con ficha propia en esta biblioteca.</td></tr>
+  </table>
+
+  <div class="card">
+    <p style="margin-bottom:.5rem"><strong>Cinco consejos de lectura</strong></p>
+    <ul style="margin-bottom:0">
+      <li>📖 <strong>Poco y a menudo</strong> gana a mucho y una vez: es un libro de dosis diarias.</li>
+      <li>✍️ <strong>Copia a mano</strong> el pasaje que te toque: es la diferencia entre leerlo y oírlo.</li>
+      <li>🔁 <strong>Releer no es repetir:</strong> el mismo pasaje dice cosas distintas en semanas distintas.</li>
+      <li>🎁 Deja el <strong>libro I para el final:</strong> la lista de gratitudes se aprecia mejor conociendo ya al autor.</li>
+      <li>📓 El paso natural tras leerlo es <strong>escribir tus propias meditaciones</strong> — para eso tienes el diario del módulo 7.</li>
+    </ul>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn complete-btn" data-module="lecturas">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="ciencia">← Del estoicismo a la ciencia</button>
+    <button class="btn secondary nav-next" data-go="quiz">Siguiente: Quiz final →</button>
+  </div>
+</section>
+
+<!-- ============ 10. QUIZ ============ -->
+<section class="module" id="quiz">
+  <span class="kicker">Módulo 10</span>
+  <h2>🧠 Quiz final: ¿dominas el estoicismo práctico?</h2>
+  <p>10 preguntas. Elige una respuesta por pregunta; recibirás retroalimentación inmediata con la referencia correspondiente.</p>
+  <div id="quizContainer"></div>
+  <div class="quiz-score" id="quizScore"></div>
+  <div class="btn-row">
+    <button class="btn secondary" id="resetQuiz">🔄 Reiniciar quiz</button>
+    <button class="btn complete-btn" data-module="quiz">✅ Completar módulo</button>
+  </div>
+  <div class="next-prev">
+    <button class="btn secondary nav-next" data-go="lecturas">← Cómo leer Meditaciones</button>
+    <span></span>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ================= Navigation & progress ================= */
+const MODULES = ["intro","dicotomia","juicios","virtudes","premeditatio","obstaculo","vista","rutina","ciencia","lecturas","quiz"];
+const LS_KEY = "meditacionesGuide";
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch { return {}; }
+}
+function saveState(s) { localStorage.setItem(LS_KEY, JSON.stringify(s)); }
+let state = loadState();
+state.completed = state.completed || [];
+state.journal = state.journal || [];
+
+function showModule(id) {
+  if (!MODULES.includes(id)) id = "intro";
+  document.querySelectorAll("section.module").forEach(s => s.classList.toggle("visible", s.id === id));
+  document.querySelectorAll("nav.sidebar a").forEach(a => a.classList.toggle("active", a.dataset.target === id));
+  window.scrollTo({ top: 0 });
+  if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
+}
+
+function refreshProgress() {
+  const pct = Math.round(state.completed.length / MODULES.length * 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressLabel").textContent = pct + "% completado";
+  document.querySelectorAll("nav.sidebar a").forEach(a =>
+    a.classList.toggle("done", state.completed.includes(a.dataset.target)));
+}
+
+document.querySelectorAll("nav.sidebar a[data-target]").forEach(a => {
+  a.addEventListener("click", e => { e.preventDefault(); showModule(a.dataset.target); });
+});
+document.querySelectorAll("a.back-to-lib").forEach(a => {
+  a.addEventListener("click", () => { window.location.href = a.getAttribute("href"); });
+});
+document.querySelectorAll(".nav-next, .law-pill").forEach(b => {
+  b.addEventListener("click", () => showModule(b.dataset.go));
+});
+document.querySelectorAll(".complete-btn").forEach(b => {
+  b.addEventListener("click", () => {
+    const m = b.dataset.module;
+    if (!state.completed.includes(m)) state.completed.push(m);
+    saveState(state); refreshProgress();
+    b.textContent = "✔ Módulo completado";
+  });
+});
+
+showModule(location.hash.replace("#","") || "intro");
+refreshProgress();
+MODULES.forEach(m => {
+  if (state.completed.includes(m)) {
+    const btn = document.querySelector(`.complete-btn[data-module="${m}"]`);
+    if (btn) btn.textContent = "✔ Módulo completado";
+  }
+});
+
+/* ================= Accordions ================= */
+document.querySelectorAll(".accordion-header").forEach(h => {
+  h.addEventListener("click", () => h.parentElement.classList.toggle("open"));
+});
+
+/* ================= Flip cards ================= */
+document.querySelectorAll(".flip-card").forEach(c => {
+  c.addEventListener("click", () => c.classList.toggle("flipped"));
+});
+
+/* ================= Utilidad: escape de HTML ================= */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* ================= Clasificador de la dicotomía ================= */
+const CLF = [
+  { t: "Lo que opinen de mí después de la reunión", dep: false,
+    exp: "Las opiniones ajenas ocurren en mentes ajenas. Puedes influir (prepararte, expresarte con claridad), pero no decidirlas. Tu parcela: lo que dices y cómo lo dices." },
+  { t: "Mi próxima respuesta cuando alguien me critique", dep: true,
+    exp: "Entre el estímulo y la reacción hay un espacio: tu juicio y tu respuesta. Eso es exactamente el territorio estoico (VIII, 47)." },
+  { t: "El tráfico de camino al trabajo mañana", dep: false,
+    exp: "El tráfico es mundo externo puro. Sí dependen de ti: la hora a la que sales, qué escuchas en el trayecto y el juicio sobre el atasco." },
+  { t: "Cuánto esfuerzo dedico hoy al proyecto", dep: true,
+    exp: "El esfuerzo es acción propia: una de las cosas que Epicteto pone de tu lado (juicios, impulsos, deseos, acciones)." },
+  { t: "Que el cliente apruebe el proyecto", dep: false,
+    exp: "Es el blanco del arquero: intervienen el cliente, el presupuesto, el azar. Tu parte termina en apuntar bien — calidad, entrega, argumentos." },
+  { t: "El error que cometí el año pasado", dep: false,
+    exp: "El pasado ya no admite acción: no depende de ti. Sí dependen: tu juicio sobre él, la reparación posible y lo que haces distinto hoy." },
+  { t: "La atención que doy hoy a las personas que quiero", dep: true,
+    exp: "Dónde pones la atención es una decisión presente y repetible: 100% tuya, aunque cueste ejercerla." },
+  { t: "No enfermarme este invierno", dep: false,
+    exp: "Trampa clásica: la salud es un «indiferente preferido». Puedes influir (sueño, hábitos, vacunas), pero el resultado no está garantizado. Tu parcela son los hábitos, no la garantía." },
+  { t: "El juicio que hago sobre una noticia alarmante", dep: true,
+    exp: "El titular no depende de ti; tu interpretación, sí. Es el corazón de VIII, 47: el juicio se puede examinar, dosificar y corregir." },
+  { t: "Que me den el aumento este año", dep: false,
+    exp: "Decisión ajena con factores externos (presupuesto, políticas, comparaciones). Depende de ti: tu desempeño, pedirlo con argumentos y explorar alternativas si no llega." }
+];
+const clfList = document.getElementById("clfList");
+let clfAnswers = [];
+function renderClassifier() {
+  clfList.innerHTML = "";
+  clfAnswers = new Array(CLF.length).fill(null);
+  document.getElementById("clfScore").textContent = "";
+  CLF.forEach((item, i) => {
+    const card = document.createElement("div");
+    card.className = "card clf-item";
+    const txt = document.createElement("p");
+    txt.className = "clf-text";
+    txt.textContent = (i + 1) + ". " + item.t;
+    card.appendChild(txt);
+    const btns = document.createElement("div");
+    btns.className = "clf-btns";
+    [["dep", "🟢 Depende de mí"], ["nodep", "🔴 No depende de mí"]].forEach(pair => {
+      const b = document.createElement("button");
+      b.className = "btn secondary clf-btn";
+      b.textContent = pair[1];
+      b.addEventListener("click", () => {
+        if (card.classList.contains("ok") || card.classList.contains("bad")) return;
+        clfAnswers[i] = pair[0];
+        btns.querySelectorAll(".clf-btn").forEach(x => x.classList.remove("selected"));
+        b.classList.add("selected");
+      });
+      btns.appendChild(b);
+    });
+    card.appendChild(btns);
+    const fb = document.createElement("div");
+    fb.className = "quiz-feedback";
+    card.appendChild(fb);
+    clfList.appendChild(card);
+  });
+}
+document.getElementById("clfCheck").addEventListener("click", () => {
+  const score = document.getElementById("clfScore");
+  const missing = clfAnswers.filter(a => a === null).length;
+  if (missing) { score.textContent = `✏️ Te falta clasificar ${missing} situación(es).`; return; }
+  let correct = 0;
+  clfList.querySelectorAll(".clf-item").forEach((card, i) => {
+    if (card.classList.contains("ok") || card.classList.contains("bad")) {
+      if (card.classList.contains("ok")) correct++;
+      return;
+    }
+    const good = (clfAnswers[i] === "dep") === CLF[i].dep;
+    if (good) correct++;
+    card.classList.add(good ? "ok" : "bad");
+    const fb = card.querySelector(".quiz-feedback");
+    fb.classList.add("show", good ? "ok" : "bad");
+    fb.textContent = (good ? "✅ Correcto. " : "❌ No exactamente. ") + CLF[i].exp;
+    card.querySelectorAll(".clf-btn").forEach(b => b.disabled = true);
+  });
+  let msg;
+  if (correct === 10) msg = "Epicteto aprobaría: dominas la primera lección estoica.";
+  else if (correct >= 7) msg = "Muy bien. Afina el matiz clave: influir no es controlar.";
+  else msg = "Buen comienzo: relee la tabla del módulo y vuelve a intentarlo.";
+  score.textContent = `Resultado: ${correct}/10 — ${msg}`;
+});
+document.getElementById("clfReset").addEventListener("click", renderClassifier);
+renderClassifier();
+
+/* ================= Reformulador estoico ================= */
+document.getElementById("reformBtn").addEventListener("click", () => {
+  const q = document.getElementById("quejaInput").value.trim();
+  const h = document.getElementById("hechosInput").value.trim();
+  const c = document.getElementById("controlInput").value.trim();
+  const out = document.getElementById("reformOutput");
+  if (!q || !h || !c) { out.textContent = "✏️ Completa los tres campos para generar tu tarjeta."; out.classList.add("show"); return; }
+  out.innerHTML = `🪶 <strong>Tu tarjeta estoica</strong><br><br>
+  <strong>1 · La historia que me contaba:</strong> «${esc(q)}»<br><br>
+  <strong>2 · Los hechos desnudos:</strong> ${esc(h)}<br><br>
+  <strong>3 · Lo que depende de mí ahora:</strong> ${esc(c)}<br><br>
+  <span style="font-size:.82rem;color:var(--muted)">«Si algo externo te aflige, no es ello lo que te perturba, sino tu propio juicio sobre ello. Y borrar ese juicio está en tu mano.» — Meditaciones, VIII, 47</span>`;
+  out.classList.add("show");
+});
+
+/* ================= Reencuadre del obstáculo ================= */
+document.getElementById("obstBtn").addEventListener("click", () => {
+  const o = document.getElementById("obstInput").value.trim();
+  const v = document.getElementById("obstVirtud").value;
+  const op = document.getElementById("obstOpp").value.trim();
+  const out = document.getElementById("obstOutput");
+  if (!o || !v || !op) { out.textContent = "✏️ Completa el obstáculo, elige una virtud y describe la oportunidad."; out.classList.add("show"); return; }
+  out.innerHTML = `🪨➡️🛤️ <strong>Tu tarjeta de reencuadre</strong><br><br>
+  <strong>El obstáculo:</strong> ${esc(o)}<br><br>
+  <strong>La virtud que me deja practicar:</strong> ${esc(v)}<br><br>
+  <strong>La oportunidad concreta que abre:</strong> ${esc(op)}<br><br>
+  <span style="font-size:.82rem;color:var(--muted)">«Lo que impide la acción hace avanzar la acción; lo que se interpone en el camino se convierte en el camino.» — Meditaciones, V, 20</span>`;
+  out.classList.add("show");
+});
+
+/* ================= Diario estoico persistente ================= */
+function renderJournal() {
+  const list = document.getElementById("journalList");
+  list.innerHTML = "";
+  const last = state.journal.slice(-5).reverse();
+  if (!last.length) {
+    list.innerHTML = '<p style="font-size:.85rem;color:var(--muted);margin-bottom:0">Aún no hay entradas. Aquí aparecerán tus últimas 5, guardadas en este navegador.</p>';
+    return;
+  }
+  last.forEach(e => {
+    const div = document.createElement("div");
+    div.className = "card journal-entry";
+    const lines = [];
+    if (e.anticipo) lines.push(`<div class="je-line"><strong>🌅 Anticipo:</strong> ${esc(e.anticipo)}</div>`);
+    if (e.plan) lines.push(`<div class="je-line"><strong>Mi respuesta:</strong> ${esc(e.plan)}</div>`);
+    if (e.virtud) lines.push(`<div class="je-line"><strong>Virtud del día:</strong> ${esc(e.virtud)}</div>`);
+    if (e.mal) lines.push(`<div class="je-line"><strong>🌙 Hice mal:</strong> ${esc(e.mal)}</div>`);
+    if (e.bien) lines.push(`<div class="je-line"><strong>Hice bien:</strong> ${esc(e.bien)}</div>`);
+    if (e.falta) lines.push(`<div class="je-line"><strong>Dejé sin hacer:</strong> ${esc(e.falta)}</div>`);
+    div.innerHTML = `<div class="je-date">📓 ${esc(e.d)}</div>${lines.join("")}<button class="tracker-del" title="Borrar entrada">✕</button>`;
+    div.querySelector(".tracker-del").addEventListener("click", () => {
+      state.journal = state.journal.filter(x => x.ts !== e.ts);
+      saveState(state); renderJournal();
+    });
+    list.appendChild(div);
+  });
+}
+document.getElementById("journalSave").addEventListener("click", () => {
+  const val = id => document.getElementById(id).value.trim();
+  const entry = {
+    ts: Date.now(),
+    d: new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long", year: "numeric" }),
+    anticipo: val("amAnticipo"), plan: val("amPlan"),
+    virtud: document.getElementById("amVirtud").value,
+    mal: val("pmMal"), bien: val("pmBien"), falta: val("pmFalta")
+  };
+  const msg = document.getElementById("journalMsg");
+  if (!entry.anticipo && !entry.plan && !entry.mal && !entry.bien && !entry.falta) {
+    msg.textContent = "✏️ Escribe al menos un campo antes de guardar.";
+    msg.classList.add("show");
+    return;
+  }
+  state.journal.push(entry);
+  saveState(state);
+  ["amAnticipo","amPlan","pmMal","pmBien","pmFalta"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("amVirtud").value = "";
+  msg.innerHTML = `💾 Entrada guardada (${state.journal.length} en total). «Deja ya de discutir cómo debe ser un hombre bueno: sélo.» — X, 16`;
+  msg.classList.add("show");
+  renderJournal();
+});
+renderJournal();
+
+/* ================= Quiz ================= */
+const QUIZ = [
+  { q: "¿Qué son, en origen, las Meditaciones de Marco Aurelio?",
+    opts: ["Un tratado de filosofía escrito para instruir a sus sucesores", "Discursos pronunciados ante el Senado romano", "Un cuaderno privado de notas y ejercicios para sí mismo, nunca pensado para publicarse", "Una colección de cartas a su maestro Frontón"],
+    a: 2, fb: "El título transmitido es Ta eis heauton («Para sí mismo»): hypomnemata, apuntes privados de un hombre recordándose sus principios. De ahí su tono directo y sus repeticiones." },
+  { q: "Según la dicotomía del control, ¿cuál de estas cosas depende por completo de ti?",
+    opts: ["Tu reputación", "Tus juicios y tus acciones", "Tu salud", "El resultado de tus proyectos"],
+    a: 1, fb: "Juicios, impulsos, deseos y acciones: esa es la parcela propia. Reputación, salud y resultados se pueden influir, pero no controlar — confundirlo es el «error de categoría» que fabrica sufrimiento." },
+  { q: "Completa VIII, 47: «Si algo externo te aflige, no es ello lo que te perturba, sino…»",
+    opts: ["…el destino que lo ha enviado", "…tu propio juicio sobre ello; y borrar ese juicio está en tu mano", "…la maldad de quien lo causó", "…tu mala fortuna, que debes aceptar"],
+    a: 1, fb: "El pasaje añade que borrar ese juicio depende de ti. Es la semilla de la reestructuración cognitiva: entre el hecho y la emoción siempre media una interpretación editable." },
+  { q: "¿Cuál de las cuatro virtudes cardinales enfatiza más Marco Aurelio?",
+    opts: ["La templanza", "El coraje", "La justicia", "La sabiduría"],
+    a: 2, fb: "Su tema más insistente es el social: nacimos para colaborar «como las hileras de dientes» (II, 1) y «lo que no beneficia al enjambre tampoco beneficia a la abeja» (VI, 54)." },
+  { q: "¿Qué distingue la premeditatio malorum de la preocupación rumiativa?",
+    opts: ["Imaginar desgracias cada vez peores para endurecerse", "Es concreta, breve y termina en un plan de respuesta", "Se practica solo por la noche, repasando los miedos", "Consiste en evitar pensar en los problemas"],
+    a: 1, fb: "Ensayar es: escenario plausible + respuesta «si-entonces» + cláusula de reserva, en unos minutos y una sola vez. La rumiación es un bucle abstracto, sin plan y sin final (Séneca: «sufre más de lo necesario quien sufre antes de lo necesario»)." },
+  { q: "Para Marco Aurelio, recordar la muerte (memento mori) sirve para…",
+    opts: ["Resignarse y dejar de hacer planes", "Ordenar prioridades: actuar, hablar y pensar como quien podría partir ahora mismo (II, 11)", "Despreciar el cuerpo y los placeres", "Infundir miedo para asegurar la obediencia"],
+    a: 1, fb: "Es un ordenador de prioridades, no morbo: tacha lo trivial y subraya lo importante. «Mientras vives, mientras es posible, sé bueno» (IV, 17)." },
+  { q: "¿Qué dice el célebre pasaje V, 20?",
+    opts: ["Que el obstáculo se evita con paciencia y astucia", "Que lo que impide la acción hace avanzar la acción, y lo que se interpone en el camino se convierte en el camino", "Que la fortuna favorece a los audaces", "Que el sabio no encuentra obstáculos verdaderos"],
+    a: 1, fb: "La mente convierte cada impedimento en materia de su propia acción: todo bloqueo deja al menos una virtud disponible que practicar (VI, 50)." },
+  { q: "El ejercicio de la «vista desde arriba» (IX, 30) busca…",
+    opts: ["Sentir que nada importa y desentenderse de todo", "Recuperar proporción: ver tu problema dentro de la ciudad, el planeta y el tiempo", "Demostrar la insignificancia de los demás", "Sustituir la acción por la contemplación"],
+    a: 1, fb: "La pequeñez ordena, no deprime: al alejar la cámara, el problema recupera su tamaño real y la energía vuelve a lo que depende de ti. Su pariente moderno es el auto-distanciamiento." },
+  { q: "¿Qué relación reconocieron Albert Ellis y Aaron Beck entre su terapia y el estoicismo?",
+    opts: ["Ninguna: la TCC nació de la neurociencia moderna", "Que la TCC demostró el error de los estoicos", "Una deuda directa: la frase de Epicteto «no nos perturban las cosas, sino las opiniones sobre las cosas» inspiró el modelo cognitivo", "Que el estoicismo es en sí mismo una terapia clínica completa"],
+    a: 2, fb: "Ellis citaba el Enquiridión como base de su TREC y Beck señaló a los estoicos como origen filosófico de la terapia cognitiva. Ojo al matiz: ancestro reconocido no significa que la filosofía sustituya a la terapia." },
+  { q: "¿Cuál de estas afirmaciones sobre el estoicismo es correcta?",
+    opts: ["Enseña a reprimir las emociones hasta no sentir nada", "Implica aceptar pasivamente cualquier injusticia", "Propone sentir la emoción, examinar el juicio y elegir la respuesta — sin pasividad ni frialdad", "Recomienda desconfiar de los demás y aislarse"],
+    a: 2, fb: "Marco Aurelio sintió, gobernó 19 años y guerreó una década; su virtud central es la justicia hacia otros. Estoicismo ≠ apatía, ≠ pasividad, ≠ frialdad — y la investigación añade que suprimir emociones funciona peor que reevaluarlas." }
+];
+
+const quizContainer = document.getElementById("quizContainer");
+let quizAnswers = [];
+
+function renderQuiz() {
+  quizContainer.innerHTML = "";
+  quizAnswers = new Array(QUIZ.length).fill(null);
+  document.getElementById("quizScore").textContent = "";
+  QUIZ.forEach((item, qi) => {
+    const box = document.createElement("div");
+    box.className = "quiz-q";
+    box.innerHTML = `<p class="question">${qi + 1}. ${item.q}</p>`;
+    const optsWrap = document.createElement("div");
+    optsWrap.className = "quiz-options";
+    item.opts.forEach((opt, oi) => {
+      const btn = document.createElement("button");
+      btn.className = "quiz-option";
+      btn.textContent = opt;
+      btn.addEventListener("click", () => {
+        if (quizAnswers[qi] !== null) return;
+        quizAnswers[qi] = oi;
+        optsWrap.querySelectorAll(".quiz-option").forEach((b, bi) => {
+          b.disabled = true;
+          if (bi === item.a) b.classList.add("correct");
+          else if (bi === oi) b.classList.add("incorrect");
+        });
+        const fb = box.querySelector(".quiz-feedback");
+        fb.classList.add("show", oi === item.a ? "ok" : "bad");
+        fb.textContent = (oi === item.a ? "✅ ¡Correcto! " : "❌ No exactamente. ") + item.fb;
+        updateScore();
+      });
+      optsWrap.appendChild(btn);
+    });
+    box.appendChild(optsWrap);
+    const fb = document.createElement("div");
+    fb.className = "quiz-feedback";
+    box.appendChild(fb);
+    quizContainer.appendChild(box);
+  });
+}
+function updateScore() {
+  const answered = quizAnswers.filter(a => a !== null).length;
+  if (answered < QUIZ.length) return;
+  const correct = quizAnswers.filter((a, i) => a === QUIZ[i].a).length;
+  let msg;
+  if (correct === 10) msg = "🏛️ ¡Perfecto! Ahora toca lo difícil: practicarlo. «Deja ya de discutir cómo debe ser un hombre bueno: sélo» (X, 16).";
+  else if (correct >= 8) msg = "🌟 ¡Excelente! Tienes muy claro el mapa estoico. Vuelve al diario del módulo 7 y hazlo hábito.";
+  else if (correct >= 6) msg = "👍 Bien. Repasa los módulos donde fallaste: las referencias del feedback te dicen exactamente dónde mirar.";
+  else msg = "📚 Buen comienzo. Recorre la guía de nuevo sin prisa: las Meditaciones también se escribieron releyéndose.";
+  document.getElementById("quizScore").textContent = `Resultado: ${correct}/10 — ${msg}`;
+}
+document.getElementById("resetQuiz").addEventListener("click", renderQuiz);
+renderQuiz();
+</script>
+</body>
+</html>
