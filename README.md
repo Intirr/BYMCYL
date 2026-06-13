@@ -1,6 +1,6 @@
 # 📚 Biblioteca Práctica
 
-Biblioteca interactiva en español con **resúmenes accionables de 93 libros y 23 estudios científicos** (116 recursos) sobre hábitos, productividad, aprendizaje, creatividad, psicología de las decisiones, relaciones, propósito y salud cerebral. Construida como páginas HTML autocontenidas, sin dependencias externas.
+Biblioteca interactiva en español con **resúmenes accionables de 121 libros y 35 estudios científicos** (156 recursos) sobre hábitos, productividad, aprendizaje, creatividad, psicología de las decisiones, relaciones, propósito y salud cerebral. Construida como páginas HTML autocontenidas, sin dependencias externas.
 
 ## 🚀 Cómo usarla
 
@@ -29,22 +29,22 @@ python3 -m http.server 8000
 
 Cada recurso incluye: **idea central en una frase**, **ideas clave**, **plan de acción con checklist persistente**, **cita destacada**, **evidencia científica** (con matices y controversias señaladas honestamente), **recursos relacionados** y **notas personales**.
 
-### Catálogo por categorías (116 recursos)
+### Catálogo por categorías (156 recursos)
 
 | Categoría | Recursos | Algunos títulos |
 |-----------|----------|-----------------|
 | 🔁 Hábitos | 12 | Hábitos Atómicos · El poder de los hábitos · Tiny Habits · La magia del orden · El efecto compuesto |
-| 🎯 Productividad y foco | 16 | Trabajo Profundo · Esencialismo · GTD · Cuatro mil semanas · ¿Cuándo? · Descansa · La semana laboral de 4 horas |
-| 🧠 Aprendizaje | 12 | Apréndetelo · Mindset · Range · Peak (Ericsson) · Los desafíos de la memoria · El arte de aprender |
-| 🎨 Creatividad | 4 | El camino del artista · Roba como un artista · Libera tu magia · Caminar y creatividad (Oppezzo) |
-| 🧭 Psicología y decisiones | 23 | Pensar rápido, pensar despacio · Influencia · Nudge · Antifrágil · Ruido · Decídete · Algoritmos para vivir · La psicología del dinero |
-| 🤝 Relaciones y comunicación | 11 | Cómo ganar amigos · Conversaciones cruciales · Rompe la barrera del no · Apegados · Supercomunicadores · El arte de amar |
-| 🧘 Propósito y bienestar | 25 | El hombre en busca de sentido · Meditaciones · Enquiridión · Séneca · La trampa de la felicidad · Agilidad emocional · Ikigai |
-| 💪 Cuerpo y cerebro | 13 | Por qué dormimos · Spark · Outlive · ¿Por qué las cebras no tienen úlcera? · Generación dopamina · Respira |
+| 🎯 Productividad y foco | 20 | Trabajo Profundo · Esencialismo · GTD · Cuatro mil semanas · Lo único · Haz tiempo · Hyperfocus · La semana laboral de 4 horas |
+| 🧠 Aprendizaje | 18 | Apréndetelo · Mindset · Range · Peak (Ericsson) · ¿Cómo aprendemos? (Dehaene) · Maestría · Los desafíos de la memoria |
+| 🎨 Creatividad | 9 | El camino del artista · Roba como un artista · La guerra del arte · Originales · Creatividad S.A. · Pájaro a pájaro · Enseña tu trabajo |
+| 🧭 Psicología y decisiones | 31 | Pensar rápido, pensar despacio · Nudge · Antifrágil · Ruido · El cisne negro · Factfulness · Pensar en apuestas · Algoritmos para vivir |
+| 🤝 Relaciones y comunicación | 16 | Cómo ganar amigos · Conversaciones cruciales · Comunicación no violenta · Gottman · Apegados · Supercomunicadores · Límites |
+| 🧘 Propósito y bienestar | 33 | El hombre en busca de sentido · Meditaciones · Enquiridión · La trampa de la felicidad · Diseña tu vida · 10% más feliz · Ikigai |
+| 💪 Cuerpo y cerebro | 17 | Por qué dormimos · Spark · Outlive · El cuerpo lleva la cuenta · Lifespan · La revolución de la glucosa · Respira |
 
-### Estudios científicos destacados (23)
+### Estudios científicos destacados (35)
 
-Desde los clásicos (intenciones de implementación de Gollwitzer, los 66 días de Lally, el efecto test de Roediger, la práctica deliberada de Ericsson) hasta hallazgos aplicables hoy mismo: la mera presencia del móvil reduce tu capacidad cognitiva (Ward 2017), el coste real de las interrupciones (Mark 2008), qué técnicas de estudio funcionan (Dunlosky 2013), gratitud experimental (Emmons 2003), relaciones y mortalidad (Holt-Lunstad 2010), dormir 6 horas sin notar el deterioro (Van Dongen 2003), ejercicio y depresión (Schuch 2018), hablarte por tu nombre (Kross 2014) o caminar para generar ideas (Oppezzo 2014). Cada ficha incluye referencia completa, diseño del estudio y cómo aplicarlo.
+Desde los clásicos (intenciones de implementación de Gollwitzer, los 66 días de Lally, el efecto test de Roediger, la práctica deliberada de Ericsson, el test de la golosina de Mischel, la disonancia cognitiva de Festinger) hasta hallazgos aplicables hoy mismo: la mera presencia del móvil reduce tu capacidad cognitiva (Ward 2017), qué técnicas de estudio funcionan (Dunlosky 2013), las 36 preguntas para enamorarse (Aron 1997), relaciones y mortalidad (Holt-Lunstad 2010), dormir 6 horas sin notar el deterioro (Van Dongen 2003), una multa es un precio (Gneezy 2000), ¿el dinero da la felicidad? (Killingsworth–Kahneman 2023) o caminar para generar ideas (Oppezzo 2014). Cada ficha incluye referencia completa, diseño del estudio, cómo aplicarlo y, cuando procede, sus controversias y réplicas.
 
 ## 🧪 Funciones interactivas
 
@@ -61,7 +61,7 @@ Desde los clásicos (intenciones de implementación de Gollwitzer, los 66 días 
 
 ## 🎓 Guías interactivas completas (3)
 
-Además de los resúmenes, tres libros tienen **guía didáctica profunda** enlazada desde su ficha: módulos navegables con progreso persistente, ejercicios interactivos y quiz final de 10 preguntas con retroalimentación.
+Además de los resúmenes, tres libros tienen **guía didáctica profunda** como página propia (`habitos-atomicos.html`, `por-que-dormimos.html`, `meditaciones.html`): módulos navegables con progreso persistente, ejercicios interactivos y quiz final de 10 preguntas con retroalimentación. Cada guía incluye un enlace «← Volver a la Biblioteca Práctica».
 
 - ⚛️ **Hábitos Atómicos** — calculadora del 1%, constructor de identidad, apilador de hábitos, rastreador semanal, diagnóstico de malos hábitos
 - 😴 **Por qué dormimos** — calculadoras de cafeína y ciclos de sueño, checklist de higiene (12 reglas), autoevaluación orientativa y plan de 7 días

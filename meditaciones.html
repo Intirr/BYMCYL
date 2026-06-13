@@ -63,6 +63,12 @@
   nav.sidebar a.active { background: var(--surface-2); color: var(--accent); font-weight: 600; }
   nav.sidebar a .check { margin-left: auto; font-size: .8rem; color: var(--accent-2); visibility: hidden; }
   nav.sidebar a.done .check { visibility: visible; }
+  nav.sidebar a.back-to-lib {
+    background: var(--surface-2); border: 1px solid var(--border);
+    justify-content: center; color: var(--text); font-weight: 600;
+    font-size: .8rem; padding: .55rem .7rem; margin-bottom: .9rem;
+  }
+  nav.sidebar a.back-to-lib:hover { border-color: var(--accent); color: var(--accent); }
   .progress-wrap { margin: 1rem 0 1.4rem; }
   .progress-bar-bg {
     background: var(--surface-2);
@@ -341,7 +347,7 @@
 
 <!-- ====================== SIDEBAR ====================== -->
 <nav class="sidebar" id="sidebar">
-  <a href="index.html" style="padding:.3rem 0; font-size:.78rem;">← Volver a la Biblioteca Práctica</a>
+  <a href="index.html" class="back-to-lib">← Volver a la Biblioteca Práctica</a>
   <h1>🏛️ Meditaciones</h1>
   <div class="subtitle">Guía didáctica interactiva · Marco Aurelio y el estoicismo práctico</div>
   <div class="progress-wrap">
@@ -1093,6 +1099,9 @@ function refreshProgress() {
 
 document.querySelectorAll("nav.sidebar a[data-target]").forEach(a => {
   a.addEventListener("click", e => { e.preventDefault(); showModule(a.dataset.target); });
+});
+document.querySelectorAll("a.back-to-lib").forEach(a => {
+  a.addEventListener("click", () => { window.location.href = a.getAttribute("href"); });
 });
 document.querySelectorAll(".nav-next, .law-pill").forEach(b => {
   b.addEventListener("click", () => showModule(b.dataset.go));
