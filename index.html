@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Biblioteca Práctica — Resúmenes de libros y ciencia aplicada</title>
+<meta name="description" content="Biblioteca interactiva con 200 resúmenes accionables de libros y estudios científicos sobre hábitos, foco, aprendizaje, decisiones, relaciones, propósito y cerebro.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta name="theme-color" content="#0f1115">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Biblioteca Práctica — 200 resúmenes accionables">
+<meta property="og:description" content="Resúmenes prácticos de 151 libros y 49 estudios científicos, con ideas clave, plan de acción y evidencia. En español.">
+<meta property="og:image" content="assets/og-image.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Biblioteca Práctica — 200 resúmenes accionables">
+<meta name="twitter:description" content="Resúmenes prácticos de libros y estudios científicos, con ideas clave, plan de acción y evidencia.">
+<meta name="twitter:image" content="assets/og-image.svg">
 <style>
   :root {
     --bg: #0f1115;
@@ -68,6 +79,9 @@
     background: linear-gradient(92deg, var(--accent), #e8862f);
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
+  .brand-mark { display: inline-flex; margin-bottom: .5rem; }
+  .brand-mark svg { width: 58px; height: 58px; filter: drop-shadow(0 6px 16px rgba(245,185,66,.25)); }
+  html[data-mode="mobile"] .brand-mark svg { width: 46px; height: 46px; }
   header.hero p.tagline { color: var(--muted); max-width: 640px; margin: .7rem auto 0; font-size: 1rem; }
   .stats {
     display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem;
@@ -442,7 +456,18 @@
 <!-- ===== Pantalla selectora de modo ===== -->
 <div class="mode-picker" id="modePicker" role="dialog" aria-modal="true" aria-label="Elige el modo de visualización">
   <div class="mp-box">
-    <div class="mp-logo">📚</div>
+    <div class="mp-logo" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="58" height="58">
+        <defs>
+          <linearGradient id="mpA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5b942"/><stop offset="1" stop-color="#e8862f"/></linearGradient>
+          <linearGradient id="mpB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8a52f"/><stop offset="1" stop-color="#cf7220"/></linearGradient>
+        </defs>
+        <path d="M32 6 L34.4 12.6 L41 15 L34.4 17.4 L32 24 L29.6 17.4 L23 15 L29.6 12.6 Z" fill="#3ec6c0"/>
+        <path d="M32 31 L13 28 L13 46 L32 48 Z" fill="url(#mpA)"/>
+        <path d="M32 31 L51 28 L51 46 L32 48 Z" fill="url(#mpB)"/>
+        <line x1="32" y1="31" x2="32" y2="48" stroke="#0f1115" stroke-opacity=".30" stroke-width="1.5"/>
+      </svg>
+    </div>
     <h2>Biblioteca <span>Práctica</span></h2>
     <p class="mp-sub">¿Cómo quieres ver la biblioteca?</p>
     <div class="mp-options">
@@ -466,7 +491,22 @@
 
 <header class="hero">
   <div class="wrap">
-    <h1>📚 Biblioteca <span>Práctica</span></h1>
+    <div class="brand-mark" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Biblioteca Práctica">
+        <defs>
+          <linearGradient id="hmA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5b942"/><stop offset="1" stop-color="#e8862f"/></linearGradient>
+          <linearGradient id="hmB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8a52f"/><stop offset="1" stop-color="#cf7220"/></linearGradient>
+        </defs>
+        <path d="M32 6 L34.4 12.6 L41 15 L34.4 17.4 L32 24 L29.6 17.4 L23 15 L29.6 12.6 Z" fill="#3ec6c0"/>
+        <path d="M32 31 L13 28 L13 46 L32 48 Z" fill="url(#hmA)"/>
+        <path d="M32 31 L51 28 L51 46 L32 48 Z" fill="url(#hmB)"/>
+        <line x1="32" y1="31" x2="32" y2="48" stroke="#0f1115" stroke-opacity=".30" stroke-width="1.5"/>
+        <g stroke="#0f1115" stroke-opacity=".25" stroke-width="1.4" stroke-linecap="round">
+          <line x1="18" y1="34.5" x2="28" y2="35.4"/><line x1="36" y1="35.4" x2="46" y2="34.5"/>
+        </g>
+      </svg>
+    </div>
+    <h1>Biblioteca <span>Práctica</span></h1>
     <p class="tagline">Resúmenes accionables de libros y estudios científicos sobre hábitos, foco, aprendizaje, decisiones, relaciones, propósito y cerebro. Cada recurso incluye ideas clave, un plan de acción y la evidencia que lo respalda.</p>
     <div class="stats">
       <div class="stat">📦 <b id="statTotal">0</b> recursos</div>

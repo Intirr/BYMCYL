@@ -73,6 +73,8 @@ Además de los resúmenes, tres libros tienen **guía didáctica profunda** como
 
 HTML + CSS + JavaScript vanilla, un archivo por página. Diseño oscuro, responsivo (escritorio y móvil), sin frameworks ni CDN.
 
+**Identidad visual** (en `assets/`, todo SVG vectorial en la paleta de la app): `logo.svg` (logotipo con icono de libro + chispa de idea), `favicon.svg` (favicon de pestaña, presente en la biblioteca y en las guías) y `og-image.svg` (tarjeta para compartir, referenciada en las metaetiquetas Open Graph/Twitter de `index.html`). Nota: algunas redes no renderizan `og:image` en SVG; para esos casos conviene exportar una versión PNG (1200×630).
+
 ## ⚠️ Nota
 
 Los resúmenes son síntesis orientativas con fines educativos: no sustituyen la lectura de las obras originales ni asesoramiento profesional. Donde la evidencia científica tiene matices o controversias (replicación, tamaños de efecto), se indica expresamente en cada ficha.
