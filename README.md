@@ -48,6 +48,7 @@ Desde los clásicos (la curva del olvido de Ebbinghaus 1885, intenciones de impl
 
 ## 🧪 Funciones interactivas
 
+- **Pantalla de bienvenida** que deja elegir entre **Modo Móvil** (una columna en tarjetas de lista, controles grandes, chips deslizables) y **Modo Escritorio** (rejilla amplia de varias columnas, ficha más ancha), con opción de autodetección; la elección se recuerda y se cambia con el botón 🖥️/📱 de la barra
 - **Búsqueda** por título, autor o ideas, insensible a tildes y mayúsculas (atajo: tecla `/`)
 - **Filtros** por categoría (8, con contador), tipo (libro/estudio) y estado de lectura
 - **Ordenación** por título, autor o año, y botón 🎲 **recurso al azar**
