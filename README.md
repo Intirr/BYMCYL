@@ -20,12 +20,13 @@ python3 -m http.server 8000
 
 | Archivo | Contenido |
 |---------|-----------|
-| `index.html` | **La biblioteca**: catálogo completo con resúmenes prácticos |
-| `guia.html` | **Generador de guías prácticas**: dada `?id=<recurso>`, construye una guía interactiva para cualquiera de los 200 recursos a partir de los datos |
-| `assets/data.js` | **Fuente única de datos**: catálogo (`CATS` + `LIBRARY`, 200 recursos), usado por la biblioteca y por el generador de guías |
+| `index.html` | **La biblioteca**: catálogo completo con resúmenes prácticos (autocontenido, sin dependencias externas) |
+| `guias/<id>.html` | **Una guía práctica interactiva por recurso** (197 archivos individuales y autocontenidos) |
 | `habitos-atomicos.html` | Guía interactiva ampliada de *Hábitos Atómicos* (James Clear) |
 | `por-que-dormimos.html` | Guía interactiva ampliada de *Por qué dormimos* (Matthew Walker) |
 | `meditaciones.html` | Guía interactiva ampliada de *Meditaciones* (Marco Aurelio y estoicismo práctico) |
+| `assets/data.js` | Catálogo (`CATS` + `LIBRARY`) usado como fuente para regenerar las guías |
+| `tools/gen-guias.js` | Script que genera los archivos de `guias/` a partir del catálogo (`node tools/gen-guias.js`) |
 
 ## 📖 Contenido de la biblioteca
 
@@ -65,7 +66,7 @@ Desde los clásicos (la curva del olvido de Ebbinghaus 1885, intenciones de impl
 
 ## 🎓 Guías prácticas
 
-**Cada uno de los 200 recursos tiene su guía práctica interactiva.** Desde la ficha de la biblioteca, el botón **«📘 Abrir guía práctica»** abre `guia.html?id=<recurso>`, que genera —a partir de los datos del catálogo y con el estilo de las guías— una página navegable temática por el color de su categoría, con módulos: Introducción, Ideas clave, Plan de acción (checklist persistente), Cita, La evidencia, Ficha del estudio (en los estudios científicos), Relacionados, Autoevaluación y Mis notas. El progreso, la checklist y las notas se guardan por recurso en `localStorage`.
+**Cada uno de los 200 recursos tiene su propia guía práctica interactiva**, como archivo individual y autocontenido en `guias/<id>.html` (197 archivos + las 3 guías ampliadas). Desde la ficha de la biblioteca, el botón **«📘 Abrir guía práctica»** abre la guía del recurso: una página navegable, temática por el color de su categoría, con módulos: Introducción, Ideas clave, Plan de acción (checklist persistente), Cita, La evidencia, Ficha del estudio (en los estudios científicos), Relacionados, Autoevaluación y Mis notas. El progreso, la checklist y las notas se guardan por recurso en `localStorage`. Para regenerarlas tras editar el catálogo: `node tools/gen-guias.js`.
 
 ### Tres guías ampliadas (artesanales)
 
