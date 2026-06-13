@@ -1,6 +1,6 @@
 # 📚 Biblioteca Práctica
 
-Biblioteca interactiva en español con **resúmenes accionables de 121 libros y 35 estudios científicos** (156 recursos) sobre hábitos, productividad, aprendizaje, creatividad, psicología de las decisiones, relaciones, propósito y salud cerebral. Construida como páginas HTML autocontenidas, sin dependencias externas.
+Biblioteca interactiva en español con **resúmenes accionables de 151 libros y 49 estudios científicos** (200 recursos) sobre hábitos, productividad, aprendizaje, creatividad, psicología de las decisiones, relaciones, propósito y salud cerebral. Construida como páginas HTML autocontenidas, sin dependencias externas.
 
 ## 🚀 Cómo usarla
 
@@ -29,22 +29,22 @@ python3 -m http.server 8000
 
 Cada recurso incluye: **idea central en una frase**, **ideas clave**, **plan de acción con checklist persistente**, **cita destacada**, **evidencia científica** (con matices y controversias señaladas honestamente), **recursos relacionados** y **notas personales**.
 
-### Catálogo por categorías (156 recursos)
+### Catálogo por categorías (200 recursos)
 
 | Categoría | Recursos | Algunos títulos |
 |-----------|----------|-----------------|
-| 🔁 Hábitos | 12 | Hábitos Atómicos · El poder de los hábitos · Tiny Habits · La magia del orden · El efecto compuesto |
-| 🎯 Productividad y foco | 20 | Trabajo Profundo · Esencialismo · GTD · Cuatro mil semanas · Lo único · Haz tiempo · Hyperfocus · La semana laboral de 4 horas |
-| 🧠 Aprendizaje | 18 | Apréndetelo · Mindset · Range · Peak (Ericsson) · ¿Cómo aprendemos? (Dehaene) · Maestría · Los desafíos de la memoria |
-| 🎨 Creatividad | 9 | El camino del artista · Roba como un artista · La guerra del arte · Originales · Creatividad S.A. · Pájaro a pájaro · Enseña tu trabajo |
-| 🧭 Psicología y decisiones | 31 | Pensar rápido, pensar despacio · Nudge · Antifrágil · Ruido · El cisne negro · Factfulness · Pensar en apuestas · Algoritmos para vivir |
-| 🤝 Relaciones y comunicación | 16 | Cómo ganar amigos · Conversaciones cruciales · Comunicación no violenta · Gottman · Apegados · Supercomunicadores · Límites |
-| 🧘 Propósito y bienestar | 33 | El hombre en busca de sentido · Meditaciones · Enquiridión · La trampa de la felicidad · Diseña tu vida · 10% más feliz · Ikigai |
-| 💪 Cuerpo y cerebro | 17 | Por qué dormimos · Spark · Outlive · El cuerpo lleva la cuenta · Lifespan · La revolución de la glucosa · Respira |
+| 🔁 Hábitos | 14 | Hábitos Atómicos · El poder de los hábitos · Tiny Habits · La magia del orden · El efecto compuesto · Mañanas milagrosas |
+| 🎯 Productividad y foco | 26 | Trabajo Profundo · Esencialismo · GTD · Cuatro mil semanas · Lo único · Hyperfocus · Crea tu segunda mente · La mente organizada |
+| 🧠 Aprendizaje | 24 | Apréndetelo · Mindset · Range · Peak (Ericsson) · ¿Cómo aprendemos? (Dehaene) · Fluent Forever · Cómo leer un libro |
+| 🎨 Creatividad | 12 | El camino del artista · Roba como un artista · La guerra del arte · Originales · El hábito creativo · Las buenas ideas |
+| 🧭 Psicología y decisiones | 38 | Pensar rápido, pensar despacio · Nudge · Antifrágil · Ruido · El cisne negro · Superpronosticadores · Subliminal · Algoritmos para vivir |
+| 🤝 Relaciones y comunicación | 23 | Cómo ganar amigos · Conversaciones difíciles · Obtenga el sí · Comunicación no violenta · Abrázame fuerte · El cerebro del niño |
+| 🧘 Propósito y bienestar | 41 | El hombre en busca de sentido · Meditaciones · El arte de la buena vida · La trampa de la felicidad · 12 reglas para vivir · Una mente liberada |
+| 💪 Cuerpo y cerebro | 22 | Por qué dormimos · Spark · Outlive · En defensa de la comida · La digestión es la cuestión · Comer, moverse, dormir |
 
-### Estudios científicos destacados (35)
+### Estudios científicos destacados (49)
 
-Desde los clásicos (intenciones de implementación de Gollwitzer, los 66 días de Lally, el efecto test de Roediger, la práctica deliberada de Ericsson, el test de la golosina de Mischel, la disonancia cognitiva de Festinger) hasta hallazgos aplicables hoy mismo: la mera presencia del móvil reduce tu capacidad cognitiva (Ward 2017), qué técnicas de estudio funcionan (Dunlosky 2013), las 36 preguntas para enamorarse (Aron 1997), relaciones y mortalidad (Holt-Lunstad 2010), dormir 6 horas sin notar el deterioro (Van Dongen 2003), una multa es un precio (Gneezy 2000), ¿el dinero da la felicidad? (Killingsworth–Kahneman 2023) o caminar para generar ideas (Oppezzo 2014). Cada ficha incluye referencia completa, diseño del estudio, cómo aplicarlo y, cuando procede, sus controversias y réplicas.
+Desde los clásicos (la curva del olvido de Ebbinghaus 1885, intenciones de implementación de Gollwitzer, la práctica deliberada de Ericsson, el test de la golosina de Mischel, elogiar la inteligencia de Mueller–Dweck, la disonancia cognitiva de Festinger) hasta hallazgos aplicables hoy mismo: la mera presencia del móvil reduce tu capacidad cognitiva (Ward 2017), qué técnicas de estudio funcionan (Dunlosky 2013), recuperar vence a los mapas conceptuales (Karpicke 2011), escribir la lista de tareas ayuda a dormir (Scullin 2018), hablar con desconocidos (Epley 2014), relaciones y mortalidad (Holt-Lunstad 2010), ¿puede el ejercicio compensar 8 h sentado? (Ekelund 2016), metas específicas y difíciles (Locke–Latham), tres cosas buenas (Seligman 2005) o ¿el dinero da la felicidad? (Killingsworth–Kahneman 2023). Cada ficha incluye referencia completa, diseño del estudio, cómo aplicarlo y, cuando procede, sus controversias y réplicas.
 
 ## 🧪 Funciones interactivas
 
@@ -57,6 +57,7 @@ Desde los clásicos (intenciones de implementación de Gollwitzer, los 66 días 
 - **Estadísticas** (leídos, leyendo, favoritos, acciones completadas) y barra de progreso
 - **Copiar enlace directo** a cualquier recurso, y contador de resultados visibles
 - **Exportar/importar** todos tus datos en JSON (estados, favoritos, checklists y notas)
+- **Diseño responsive**: en móvil, chips de categoría deslizables, controles a pantalla completa, objetivos táctiles amplios y campos a 16px (sin zoom forzado en iOS); en escritorio, hero con degradados, rejilla de hasta 4 columnas y tarjetas con franja de color por categoría
 - Todo persiste en `localStorage` (sin cuentas ni servidores)
 
 ## 🎓 Guías interactivas completas (3)

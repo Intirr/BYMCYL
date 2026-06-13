@@ -50,12 +50,24 @@
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
   a { color: var(--accent-3); }
-  .wrap { max-width: 1140px; margin: 0 auto; padding: 0 1.4rem; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 1.4rem; }
 
   /* ---------- Hero ---------- */
-  header.hero { padding: 3rem 0 1.6rem; text-align: center; }
-  header.hero h1 { font-size: 2.2rem; line-height: 1.2; }
-  header.hero h1 span { color: var(--accent); }
+  header.hero { padding: 3.2rem 0 1.8rem; text-align: center; position: relative; overflow: hidden; }
+  header.hero::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(620px 300px at 18% 0%, rgba(245,185,66,.13), transparent 65%),
+      radial-gradient(620px 300px at 82% 0%, rgba(91,141,239,.12), transparent 65%),
+      radial-gradient(560px 300px at 50% 115%, rgba(62,198,192,.10), transparent 65%);
+  }
+  header.hero .wrap { position: relative; }
+  header.hero h1 { font-size: 2.5rem; line-height: 1.2; letter-spacing: -.5px; }
+  header.hero h1 span {
+    background: linear-gradient(92deg, var(--accent), #e8862f);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
   header.hero p.tagline { color: var(--muted); max-width: 640px; margin: .7rem auto 0; font-size: 1rem; }
   .stats {
     display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem;
@@ -83,6 +95,7 @@
     background: var(--toolbar-bg); backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border);
     padding: .9rem 0;
+    box-shadow: 0 8px 22px -16px var(--shadow);
   }
   .toolbar-inner { display: flex; flex-direction: column; gap: .7rem; }
   .search-row { display: flex; gap: .7rem; flex-wrap: wrap; }
@@ -129,11 +142,12 @@
   /* ---------- Grid ---------- */
   main { padding: 1.8rem 0 4rem; }
   .grid {
-    display: grid; gap: 1.1rem;
-    grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+    display: grid; gap: 1.2rem;
+    grid-template-columns: repeat(auto-fill, minmax(262px, 1fr));
   }
   .card {
     background: var(--surface); border: 1px solid var(--border);
+    border-top: 3px solid transparent;
     border-radius: var(--radius); overflow: hidden; cursor: pointer;
     display: flex; flex-direction: column;
     transition: transform .15s, border-color .15s, box-shadow .2s;
@@ -301,10 +315,44 @@
 
   @media (max-width: 720px) {
     header.hero { padding-top: 2rem; }
-    header.hero h1 { font-size: 1.6rem; }
+    header.hero h1 { font-size: 1.75rem; }
+    header.hero p.tagline { font-size: .9rem; }
+    .stats { gap: .45rem; }
+    .stat { padding: .3rem .8rem; font-size: .76rem; }
+
+    /* Toolbar: inputs sin zoom iOS, selects a mitades, chips deslizables */
+    .search-box input { font-size: 16px; padding-top: .55rem; padding-bottom: .55rem; }
+    .toolbar select { flex: 1 1 40%; min-width: 0; font-size: .85rem; }
+    .icon-btn { flex: 0 0 auto; }
+    .chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .35rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip { flex: 0 0 auto; padding: .42rem .9rem; }
+
+    /* Tarjetas: objetivos táctiles más generosos */
+    .status-pill { padding: .3rem .7rem; font-size: .72rem; }
+    .cover .fav-btn { width: 2.2rem; height: 2.2rem; font-size: 1.05rem; }
+
+    /* Detalle a pantalla completa cómodo */
+    .detail { padding: 1.1rem .95rem 4.5rem; }
     .detail-head { gap: .9rem; }
     .detail-cover { width: 84px; height: 84px; font-size: 2.3rem; }
     .detail-title h2 { font-size: 1.35rem; }
+    .detail-controls { gap: .55rem; }
+    .segmented { width: 100%; display: flex; }
+    .segmented button { flex: 1; padding: .6rem .4rem; }
+    .fav-toggle, .ghost-btn { flex: 1 1 46%; text-align: center; padding: .6rem .5rem; }
+    .one-liner { padding: .95rem 1.05rem; font-size: .96rem; }
+    .check-item { padding: .8rem .85rem; }
+    .back-btn { padding: .6rem 1rem; }
+  }
+  @media (max-width: 480px) {
+    .wrap { padding: 0 1rem; }
+    .grid { grid-template-columns: 1fr; gap: .9rem; }
+    .cover { height: 96px; font-size: 2.4rem; }
+    .card-body { padding: .85rem .95rem .95rem; }
+    header.hero h1 { font-size: 1.55rem; }
+    .progress-wrap { max-width: 100%; }
+    .to-top { right: .9rem; bottom: .9rem; }
   }
 </style>
 </head>
@@ -3247,6 +3295,696 @@ const LIBRARY = [
   related: ['outlive', 'generacion-dopamina', 'por-que-dormimos']
 },
 
+{
+  id: 'procrastinacion-steel', type: 'libro', emoji: '🦥', cat: 'productividad',
+  title: 'Procrastinación (The Procrastination Equation)', author: 'Piers Steel', year: 2010,
+  meta: ['368 páginas', 'Resumen: 6 min'],
+  one: 'El autor del metaanálisis definitivo convierte su ecuación en manual: la motivación sube con la expectativa y el valor de la tarea, y baja con la impulsividad y la demora — cada término es una palanca.',
+  ideas: [
+    '<strong>La ecuación.</strong> Motivación = (Expectativa × Valor) / (Impulsividad × Demora). Procrastinas cuando no crees lograrlo, no te importa, te distraes fácil o el premio queda lejos: diagnostica cuál falla antes de recetarte nada.',
+    '<strong>No es pereza ni gestión del tiempo.</strong> Es regulación emocional e impulsividad: elegimos alivio inmediato (evitar lo aversivo) a costa del yo futuro — por eso los planes perfectos no bastan.',
+    '<strong>Subir expectativa.</strong> Espirales de éxito (empezar tan pequeño que no puedas fallar), contagiarte de gente que hace, y atribuir los logros a tu proceso.',
+    '<strong>Subir valor.</strong> Conecta la tarea con metas que te importan, hazla más difícil si te aburre (flow) y empárejala con placer (música, café, temptation bundling).',
+    '<strong>Domar impulsividad y demora.</strong> Elimina tentaciones del campo visual, usa precompromisos con coste, trocea metas lejanas en hitos con fecha próxima.'
+  ],
+  actions: [
+    'Diagnostica tu término débil con una tarea concreta: ¿no me veo capaz, no me importa, me distraigo o queda lejos?',
+    'Crea una espiral de éxito: versión de 10 minutos diarios de la tarea evitada, una semana seguida.',
+    'Pon fechas intermedias con testigo a tu próximo proyecto largo.',
+    'Quita el atractor principal de tu vista durante los bloques de trabajo (el móvil a otra habitación).'
+  ],
+  quote: { t: 'La procrastinación no es un misterio de carácter: es una ecuación con cuatro variables que puedes mover.', a: 'Piers Steel (tesis del libro)' },
+  science: 'Es el raro caso de libro de autoayuda escrito por el autor del metaanálisis de referencia (216 estudios, en esta biblioteca): la teoría de la motivación temporal aplicada con honestidad sobre qué funciona y cuánto.',
+  related: ['steel-2007', 'milkman-2014', 'traguese-sapo']
+},
+
+{
+  id: 'sin-esfuerzo', type: 'libro', emoji: '🎐', cat: 'productividad',
+  title: 'Sin esfuerzo (Effortless)', author: 'Greg McKeown', year: 2021,
+  meta: ['272 páginas', 'Resumen: 5 min'],
+  one: 'La secuela de Esencialismo: una vez decidido QUÉ importa, la pregunta es CÓMO hacerlo más fácil — porque agotarse no es señal de virtud y lo sostenible vence a lo heroico.',
+  ideas: [
+    '<strong>Invierte la pregunta.</strong> En lugar de «¿por qué es tan difícil?», pregunta «¿cómo sería esto si fuera fácil?»: a menudo complicamos lo importante por asociar esfuerzo con mérito.',
+    '<strong>Estado sin esfuerzo.</strong> Descansar antes de estar agotado, soltar rencores que pesan (el rencor es un contrato que firmas tú) y emparejar lo importante con disfrute.',
+    '<strong>Acción sin esfuerzo.</strong> Define «hecho» antes de empezar, empieza ridículamente pequeño (los primeros 10 minutos), avanza a ritmo sostenible: ni cero ni heroico — fija un rango mínimo-máximo diario.',
+    '<strong>Resultados sin esfuerzo (residuales).</strong> Prefiere acciones que rinden muchas veces: automatizar, enseñar a otros a enseñar, escribir una vez lo que respondes siempre, confiar por defecto con las personas adecuadas.',
+    '<strong>Antes de añadir esfuerzo, quita estorbos.</strong> Simplificar pasos vale más que empujar más fuerte (via negativa aplicada al trabajo).'
+  ],
+  actions: [
+    'Toma tu proyecto más pesado y responde por escrito: «¿cómo sería si fuera fácil?» — elimina 2 pasos.',
+    'Fija rango diario para lo importante: nunca menos de X, nunca más de Y (protege el mañana).',
+    'Define «hecho» de tu tarea de hoy en una frase antes de empezar.',
+    'Crea un residual esta semana: una plantilla, automatización o documento que te ahorre repetirte.'
+  ],
+  quote: { t: '¿Y si esto pudiera ser fácil?', a: 'Greg McKeown' },
+  caveat: 'Más ligero y anecdótico que Esencialismo, con algo de relleno; pero su corrección al culto del esfuerzo es valiosa y coincide con la evidencia sobre sostenibilidad y descanso (Rest, De Bloom). Léelo como segundo tiempo de Esencialismo.',
+  related: ['esencialismo', 'descansa-rest', 'cuatro-mil-semanas']
+},
+
+{
+  id: 'mente-organizada', type: 'libro', emoji: '🗄️', cat: 'productividad',
+  title: 'La mente organizada (The Organized Mind)', author: 'Daniel Levitin', year: 2014,
+  meta: ['528 páginas', 'Resumen: 6 min'],
+  one: 'Un neurocientífico explica por qué la era de la sobreinformación desborda un cerebro diseñado para otra escala — y cómo externalizar la organización al entorno en lugar de a la memoria.',
+  ideas: [
+    '<strong>La atención es el recurso limitante.</strong> El cerebro tiene un filtro atencional y una red de divagación; alternar entre tareas no es trabajar más: es pagar peaje neuronal cada vez (el mito de la multitarea, con su química).',
+    '<strong>Externaliza sin culpa.</strong> El principio de Levitin: traslada la carga de la memoria al mundo — listas, lugares fijos, categorías físicas. «La organización de la mente empieza fuera de la mente».',
+    '<strong>La regla del lugar designado.</strong> Los objetos que se pierden (llaves, gafas) necesitan un único sitio SIEMPRE: el hipocampo recuerda ubicaciones estables, no decisiones diarias.',
+    '<strong>Satisficing organizativo.</strong> No optimices cada decisión trivial: estandariza (misma ropa, mismos desayunos, mismas rutas) y guarda el juicio para lo que importa.',
+    '<strong>Tiempo y decisiones.</strong> Agrupa tareas similares, programa las decisiones difíciles en tus horas altas y deja huecos: un calendario al 100% es un sistema sin amortiguadores.'
+  ],
+  actions: [
+    'Asigna un único lugar a tus 3 objetos más perdibles y úsalo una semana sin excepción.',
+    'Externaliza todo lo que tu cabeza esté reteniendo hoy: lista única + calendario (y revísalos a diario).',
+    'Estandariza 2 decisiones triviales recurrentes (desayuno, ropa de diario).',
+    'Agrupa tareas del mismo tipo (correo, llamadas, recados) en bloques en lugar de intercalarlas.'
+  ],
+  quote: { t: 'Los más organizados no tienen mejor memoria: tienen mejores sistemas externos.', a: 'Daniel Levitin (tesis del libro)' },
+  science: 'Neurociencia divulgada de primera mano (atención, hipocampo, coste de conmutación) aplicada a casa, trabajo y decisiones. Algo extenso y misceláneo, pero es la base científica de lo que GTD hace por intuición.',
+  related: ['gtd-organizate', 'masicampo-2011', 'mark-2008']
+},
+
+{
+  id: 'segunda-mente', type: 'libro', emoji: '💾', cat: 'productividad',
+  title: 'Crea tu segunda mente (Building a Second Brain)', author: 'Tiago Forte', year: 2022,
+  meta: ['272 páginas', 'Resumen: 6 min'],
+  one: 'Tu cabeza es para tener ideas, no para almacenarlas: un sistema digital personal (capturar, organizar, destilar, expresar) convierte lo que lees y piensas en material reutilizable para crear.',
+  ideas: [
+    '<strong>El método CODE.</strong> Captura lo que resuena (poco y bueno), Organiza por accionabilidad, Destila la esencia (resaltar lo resaltado) y Expresa: el conocimiento solo rinde cuando se convierte en algo.',
+    '<strong>PARA: organiza por proyecto, no por tema.</strong> Proyectos (con fecha), Áreas (responsabilidades), Recursos (intereses) y Archivo: la pregunta no es «¿de qué trata esto?» sino «¿para qué lo usaré?».',
+    '<strong>Destilación progresiva.</strong> Cada vez que vuelvas a una nota, resume un nivel más (negritas → resaltado de negritas → resumen propio): el futuro tú agradece densidad, no volumen.',
+    '<strong>Paquetes intermedios.</strong> Crea piezas reutilizables (notas, esquemas, ejemplos) en vez de empezar cada proyecto de cero: la creatividad es ensamblaje.',
+    '<strong>El cuaderno no es un museo.</strong> El éxito del sistema se mide en lo que produces con él, no en lo bonito que está archivado.'
+  ],
+  actions: [
+    'Monta tu PARA en la app de notas que ya uses (4 carpetas) y mueve ahí lo activo.',
+    'Captura con criterio una semana: solo lo que resuene o sirva a un proyecto actual.',
+    'Practica la destilación: vuelve a 3 notas viejas y resúmelas en 2 líneas propias cada una.',
+    'Empieza tu próximo proyecto ensamblando paquetes intermedios existentes antes de crear nada nuevo.'
+  ],
+  quote: { t: 'Tu mente es para tener ideas, no para guardarlas: dale una segunda donde guardarlas.', a: 'Tiago Forte (sobre la máxima de David Allen)' },
+  caveat: 'Sistematiza bien una práctica útil, con riesgo conocido: la «productividad de coleccionista» (organizar notas como forma de procrastinar la obra). El propio método lo advierte: si no expresas, solo acumulas. La base cognitiva (externalizar) es sólida (Levitin, Masicampo).',
+  related: ['gtd-organizate', 'mente-organizada', 'ensena-trabajo']
+},
+
+{
+  id: 'mananas-milagrosas', type: 'libro', emoji: '🌞', cat: 'habitos',
+  title: 'Mañanas milagrosas (The Miracle Morning)', author: 'Hal Elrod', year: 2012,
+  meta: ['256 páginas', 'Resumen: 5 min'],
+  one: 'Levantarse antes para regalarse una hora de prácticas —los SAVERS: silencio, afirmaciones, visualización, ejercicio, lectura y escritura— como ritual fundacional del día.',
+  ideas: [
+    '<strong>Los SAVERS.</strong> Silence (meditación/respiración), Affirmations, Visualization, Exercise, Reading y Scribing (diario): seis prácticas breves encadenadas antes de que el mundo pida nada.',
+    '<strong>El nivel 10.</strong> Elrod (que sobrevivió a un accidente devastador) argumenta que el desarrollo personal diario es lo que separa la vida que llevas de la que podrías llevar: la mañana es el hueco que nadie te quita.',
+    '<strong>La versión de 6 minutos.</strong> Un minuto por práctica los días imposibles: el ritual importa más que la duración.',
+    '<strong>Despertar con propósito.</strong> Las 5 tácticas anti-snooze: intención al acostarse, alarma lejos, lavarse la cara, agua, vestirse — diseñar la transición, no pelearla.',
+    '<strong>Personalizable.</strong> El orden y la duración de los SAVERS se adaptan; lo innegociable es la cita contigo antes que con el correo.'
+  ],
+  actions: [
+    'Prueba 7 días la versión de 6-15 minutos de los SAVERS, adelantando el despertar solo lo que adelantes el acostarte.',
+    'Prepara la transición la noche antes: alarma lejos, ropa lista, vaso de agua.',
+    'Elige tus 3 SAVERS favoritos si seis te abruman: silencio, ejercicio y escritura son el trío con más respaldo.',
+    'Mide ánimo y foco esa semana y decide con datos si lo mantienes.'
+  ],
+  quote: { t: 'Cómo te despiertas cada día determina, más de lo que crees, cómo vives cada día.', a: 'Hal Elrod (tesis del libro)' },
+  caveat: 'Historia personal inspiradora y fórmula comercial: sin estudios propios, y las afirmaciones/visualización tienen evidencia floja (la visualización del resultado puede incluso restar: ver Stadler/Oettingen). Lo sólido del paquete: meditación, ejercicio, lectura y diario — a la hora que tu cronotipo permita.',
+  related: ['club-5-manana', 'cuando-pink', 'habitos-atomicos']
+},
+
+{
+  id: 'fluent-forever', type: 'libro', emoji: '🌐', cat: 'aprendizaje',
+  title: 'Fluent Forever: cómo aprender cualquier idioma', author: 'Gabriel Wyner', year: 2014,
+  meta: ['336 páginas', 'Resumen: 6 min'],
+  one: 'Un cantante de ópera que aprendió varios idiomas destila el método: pronunciación primero, vocabulario con imágenes (nunca traducciones) y repetición espaciada para no olvidar jamás.',
+  ideas: [
+    '<strong>Oído y pronunciación antes que nada.</strong> Entrenar los sonidos del idioma (pares mínimos) recablea el oído adulto y hace que todo lo demás (vocabulario, escucha) se adhiera mejor.',
+    '<strong>Prohibido traducir.</strong> Conecta cada palabra nueva a imágenes, recuerdos y emociones propias, no a su equivalente en tu idioma: las conexiones multisensoriales son las que el cerebro retiene.',
+    '<strong>SRS como columna vertebral.</strong> Tarjetas de repetición espaciada (Anki) hechas por ti (el acto de crearlas ya enseña), con las 625 palabras más frecuentes como base.',
+    '<strong>La gramática como rompecabezas de frases.</strong> Aprende estructuras desde ejemplos reales descompuestos en tarjetas, no desde reglas abstractas.',
+    '<strong>Inmersión hablada cuanto antes.</strong> Tutores e intercambios desde el principio: el idioma es una destreza motora y social, no una asignatura.'
+  ],
+  actions: [
+    'Dedica las 2 primeras semanas solo a sonidos: pares mínimos y entrenamiento de oído del idioma elegido.',
+    'Monta tu mazo Anki con las 625 palabras frecuentes usando imágenes (Google Imágenes en el idioma meta).',
+    'Crea tú las tarjetas (no descargues mazos): el esfuerzo de elaborarlas es parte del aprendizaje.',
+    'Agenda una conversación semanal con nativo desde el primer mes.'
+  ],
+  quote: { t: 'No memorices traducciones: dale al idioma imágenes, sonidos y recuerdos tuyos.', a: 'Gabriel Wyner (tesis del libro)' },
+  science: 'Es ciencia del aprendizaje aplicada con rigor inusual al caso de los idiomas: recuperación y espaciado (Roediger, Cepeda), elaboración multisensorial y el efecto de generación. De lo mejor para ver las técnicas de Apréndetelo funcionando en un dominio concreto.',
+  related: ['aprendetelo', 'cepeda-2006', 'superaprendizaje']
+},
+
+{
+  id: 'claves-talento', type: 'libro', emoji: '🧶', cat: 'aprendizaje',
+  title: 'Las claves del talento (The Talent Code)', author: 'Daniel Coyle', year: 2009,
+  meta: ['288 páginas', 'Resumen: 6 min'],
+  one: 'Visitando «semilleros de talento» (tenis ruso, fútbol brasileño, academias de música), Coyle encuentra el patrón: práctica profunda al borde del error, ignición motivacional y maestros que susurran correcciones.',
+  ideas: [
+    '<strong>Práctica profunda.</strong> Trocear la habilidad, ir a cámara lenta, operar al filo del error y corregir al instante: el esfuerzo torpe y atento es exactamente lo que construye el circuito (no la repetición cómoda).',
+    '<strong>La mielina como metáfora.</strong> Coyle lo cuenta como «aislar cables»: cada repetición precisa envuelve el circuito y lo hace más rápido. La neurociencia real es más matizada, pero la regla práctica sobrevive: lo que disparas con precisión, se consolida.',
+    '<strong>Ignición.</strong> Las llamas motivacionales se encienden por señales de pertenencia y posibilidad («alguien como yo lo logró»): los semilleros producen rachas de campeones porque el primero enciende a los demás.',
+    '<strong>El maestro susurrador.</strong> Los grandes coaches dan correcciones cortas, concretas e inmediatas (no discursos): información al punto de error.',
+    '<strong>Pequeño y al límite vence a mucho y cómodo.</strong> Sesiones breves de máxima atención superan a horas en piloto automático.'
+  ],
+  actions: [
+    'Practica a cámara lenta lo que quieras pulir: exagera la precisión hasta que el error desaparezca, luego acelera.',
+    'Busca tu ignición: historias de gente como tú que llegó a donde quieres ir.',
+    'Pide correcciones cortas y concretas («¿qué UNA cosa corrijo ahora?») en vez de evaluaciones generales.',
+    'Acorta y intensifica: 30 minutos al borde del error valen más que 2 horas cómodas.'
+  ],
+  quote: { t: 'La torpeza atenta no es señal de que te falte talento: es la sensación del talento construyéndose.', a: 'Daniel Coyle (tesis del libro)' },
+  caveat: 'El mecanismo «mielina = talento» simplifica la neurociencia (la consolidación implica mucho más), y los semilleros tienen sesgo de selección. Como traducción vívida de la práctica deliberada de Ericsson, funciona muy bien.',
+  related: ['peak-ericsson', 'ericsson-1993', 'arte-de-aprender']
+},
+
+{
+  id: 'como-leer-libro', type: 'libro', emoji: '📖', cat: 'aprendizaje',
+  title: 'Cómo leer un libro', author: 'Mortimer Adler y Charles Van Doren', year: 1972,
+  meta: ['448 páginas', 'Resumen: 6 min'],
+  one: 'El clásico sobre lectura activa: leer bien no es pasar páginas sino interrogar al libro en cuatro niveles — y la mayoría nunca pasó del primero.',
+  ideas: [
+    '<strong>Los cuatro niveles.</strong> Elemental (decodificar), inspeccional (lectura sistemática por encima: índice, prólogo, calas), analítica (desmontar el libro: qué dice, cómo, si es verdad y qué importa) y sintópica (leer varios libros sobre un tema en conversación).',
+    '<strong>La lectura inspeccional es una habilidad, no trampa.</strong> Saber en 30-60 minutos qué ofrece un libro y si merece lectura completa multiplica tu dieta lectora: no todos los libros merecen el mismo esfuerzo.',
+    '<strong>Leer es preguntar.</strong> El lector exigente lleva 4 preguntas: ¿de qué trata en conjunto?, ¿qué dice en detalle?, ¿es cierto, en todo o en parte?, ¿y qué? — y escribe en los márgenes (el libro se posee leyéndolo a lápiz).',
+    '<strong>No critiques antes de entender.</strong> «Estoy de acuerdo / no estoy de acuerdo / suspendo el juicio» solo son legítimos tras poder resumir la postura del autor mejor que él (anticipa a Rapoport y a Grant).',
+    '<strong>La lectura sintópica</strong> es la herramienta de quien investiga: definir el tema, encontrar los pasajes relevantes de muchos autores, traducirlos a un vocabulario común y hacerles dialogar.'
+  ],
+  actions: [
+    'Antes de comprar/empezar un libro, hazle una inspección de 20 minutos: índice, prólogo, conclusión, 2-3 calas.',
+    'Lee tu próximo libro serio con las 4 preguntas a mano y márgenes a lápiz.',
+    'Al terminar cada capítulo, resume en 2 líneas qué dijo (recuperación, no relectura).',
+    'Para tu próximo tema de interés, haz mini-sintópica: 3 libros/fuentes comparados sobre la misma pregunta.'
+  ],
+  quote: { t: 'Algunos libros se prueban, otros se tragan, y unos pocos se mastican y digieren.', a: 'Francis Bacon (lema del enfoque de Adler)' },
+  science: 'Anterior a la ciencia cognitiva moderna, pero converge con ella: leer interrogando es elaboración + generación, y resumir al cerrar es práctica de recuperación. La biblioteca entera se usa mejor tras este libro.',
+  related: ['aprendetelo', 'segunda-mente', 'piensalo-otra-vez']
+},
+
+{
+  id: 'subliminal', type: 'libro', emoji: '🕶️', cat: 'psicologia',
+  title: 'Subliminal: cómo tu inconsciente gobierna tu conducta', author: 'Leonard Mlodinow', year: 2012,
+  meta: ['352 páginas', 'Resumen: 6 min'],
+  one: 'La mayor parte de tu actividad mental ocurre bajo el radar: percepción, memoria y juicios sociales se fabrican inconscientemente — y conocer la maquinaria te hace menos marioneta de ella.',
+  ideas: [
+    '<strong>El inconsciente moderno no es el de Freud.</strong> No es un sótano de deseos reprimidos sino una maquinaria de procesamiento masivo y rápido que filtra, completa y decide antes de que «tú» te enteres.',
+    '<strong>La memoria es reconstrucción, no grabación.</strong> Cada recuerdo se rearma al evocarlo, rellenando huecos con expectativas: por eso los testigos sinceros se equivocan con total confianza.',
+    '<strong>La percepción también inventa.</strong> Vemos lo que el cerebro predice que hay (puntos ciegos rellenados, ambigüedades resueltas): la «realidad percibida» es una interfaz útil, no una fotografía.',
+    '<strong>Juicios sociales automáticos.</strong> Voz, cara, etiquetas y grupo activan evaluaciones instantáneas (atractivo = competente, mi grupo = mejor) que luego el consciente racionaliza.',
+    '<strong>Implicación práctica.</strong> No puedes apagar la maquinaria, pero sí desconfiar de tus certezas instantáneas en decisiones importantes: estructura, criterios y segundas miradas.'
+  ],
+  actions: [
+    'Trata tus recuerdos importantes como reconstrucciones: contrasta con registros (mensajes, fotos, notas) antes de discutir por ellos.',
+    'En evaluaciones de personas (contratar, calificar), usa criterios escritos antes de conocer al candidato: tu primera impresión ya decidió.',
+    'Date una segunda mirada deliberada en juicios rápidos con consecuencias.',
+    'Documenta decisiones clave por escrito en el momento: tu yo futuro reescribirá la historia.'
+  ],
+  quote: { t: 'Creemos percibir y recordar el mundo tal como es; en realidad percibimos y recordamos el mundo tal como nos conviene reconstruirlo.', a: 'Leonard Mlodinow (tesis del libro)' },
+  science: 'Mlodinow (físico y divulgador de primera línea) resume bien la ciencia del «nuevo inconsciente» (priming perceptivo, memoria reconstructiva de Loftus, cognición social). Algunos estudios de priming social citados envejecieron mal con la crisis de replicación; el núcleo perceptivo y de memoria es sólido.',
+  related: ['pensar-rapido', 'predeciblemente-irracional', 'festinger-1959']
+},
+
+{
+  id: 'superpronosticadores', type: 'libro', emoji: '🦉', cat: 'psicologia',
+  title: 'Superpronosticadores (Superforecasting)', author: 'Philip Tetlock y Dan Gardner', year: 2015,
+  meta: ['352 páginas', 'Resumen: 7 min'],
+  one: 'En un torneo de predicción de la inteligencia de EE. UU., aficionados con buen método superaron a analistas con información clasificada: predecir bien es una habilidad entrenable con reglas conocidas.',
+  ideas: [
+    '<strong>El zorro vence al erizo.</strong> Tetlock demostró antes que los expertos mediáticos predicen casi como el azar: los que mejor pronostican no tienen UNA gran teoría (erizo) sino muchas pequeñas fuentes y dudas (zorro).',
+    '<strong>Descomponer la pregunta.</strong> Los superpronosticadores trocean («¿qué tendría que pasar para que X?»), buscan primero la tasa base (vista externa) y solo después ajustan con los detalles del caso (vista interna).',
+    '<strong>Granularidad probabilística.</strong> Piensan en 60% vs 65%, no en «probable/improbable»: la precisión numérica obliga a pensar y permite medir el error (calibración con Brier scores).',
+    '<strong>Actualización constante y por gotas.</strong> Cambian de opinión a menudo y poco cada vez, ante cada nueva evidencia: ni terquedad ni bandazos.',
+    '<strong>El equipo y la crítica suman.</strong> Grupos con disenso activo y «perpetuo beta» (mentalidad de mejora del pronosticador) baten a individuos brillantes.'
+  ],
+  actions: [
+    'Convierte tus opiniones fuertes en pronósticos medibles con fecha y probabilidad («70% de que X antes de junio»).',
+    'Empieza toda estimación por la tasa base: ¿qué pasó en los casos parecidos?',
+    'Lleva un registro de pronósticos y revísalo: la calibración solo mejora con feedback.',
+    'Actualiza por gotas: pregunta ante cada noticia «¿cuánto cambia esto mi número?» (casi nunca es 0% ni 100%).'
+  ],
+  quote: { t: 'La previsión no es un don: es la suma de hábitos de pensamiento que se pueden aprender y cultivar.', a: 'Philip Tetlock' },
+  science: 'Basado en el Good Judgment Project (torneos IARPA con miles de participantes y años de datos): de lo más sólido del estante de decisiones. Es la versión empírica y entrenable de Pensar en apuestas.',
+  related: ['pensar-apuestas', 'piensalo-otra-vez', 'ruido-kahneman']
+},
+
+{
+  id: 'mente-millonaria', type: 'libro', emoji: '💎', cat: 'psicologia',
+  title: 'Los secretos de la mente millonaria', author: 'T. Harv Eker', year: 2005,
+  meta: ['224 páginas', 'Resumen: 5 min'],
+  one: 'Tu relación con el dinero sigue un «patrón» aprendido en la infancia (lo que oíste, viste y viviste): revisarlo y gestionar el dinero con un sistema simple de frascos es el núcleo aprovechable del libro.',
+  ideas: [
+    '<strong>El patrón del dinero.</strong> Frases de casa («el dinero corrompe», «no crece en los árboles»), modelos parentales y experiencias tempranas programan tu comportamiento financiero adulto: gastador, ahorrador ansioso, evitador.',
+    '<strong>Verbalizar, cuestionar, reescribir.</strong> El proceso útil: detectar la creencia heredada, rastrear su origen, decidir si te sirve hoy y sustituirla por una conducta concreta.',
+    '<strong>El sistema de frascos.</strong> Repartir ingresos en porcentajes fijos (necesidades, libertad financiera/inversión, formación, ocio, donaciones, ahorro a largo): presupuesto conductual simple que automatiza decisiones.',
+    '<strong>Pagarte primero y hacer crecer la brecha.</strong> Coincide con Babilonia y Housel: ingresos − ego = libertad; los porcentajes importan más que las cantidades al empezar.',
+    '<strong>Acción sobre afirmación.</strong> Aunque el libro promueve declaraciones en voz alta, lo que mueve la aguja son los sistemas (transferencias automáticas) y la exposición gradual a aprender de dinero.'
+  ],
+  actions: [
+    'Escribe 5 frases sobre dinero que oías de niño y marca cuáles gobiernan aún tus decisiones.',
+    'Monta una versión del sistema de frascos con transferencias automáticas el día de cobro (aunque sea 5-10% a inversión).',
+    'Sustituye una creencia heredada por una conducta medible este mes (p. ej., «no entiendo de dinero» → 30 min/semana de educación financiera).',
+    'Revisa tu «techo» : ¿qué haces cuando el dinero entra de más — lo quemas para volver a tu nivel programado?'
+  ],
+  quote: { t: 'Te pagan en proporción directa al valor que entregas según el mercado… y gestionas según el patrón que traes de casa.', a: 'T. Harv Eker (síntesis)' },
+  caveat: 'Caveat serio: lenguaje de seminario, promesas de «mentalidad millonaria» sin evidencia y un negocio de cursos detrás. Lo rescatable es real pero modesto: examinar creencias financieras heredadas y automatizar porcentajes. Para la versión sobria, La psicología del dinero; para el clásico, Babilonia.',
+  related: ['psicologia-dinero', 'hombre-rico-babilonia', 'padre-rico']
+},
+
+{
+  id: 'hombre-rico-babilonia', type: 'libro', emoji: '🪙', cat: 'psicologia',
+  title: 'El hombre más rico de Babilonia', author: 'George S. Clason', year: 1926,
+  meta: ['160 páginas', 'Resumen: 5 min'],
+  one: 'Parábolas ambientadas en Babilonia con las reglas eternas del dinero: págate primero el 10%, controla tus gastos, haz trabajar cada moneda y protege el capital de pérdidas y de «expertos» en lo que no saben.',
+  ideas: [
+    '<strong>Págate primero.</strong> «Una parte de todo lo que ganas es tuya para conservarla»: mínimo un 10% antes de pagar a nadie más — el fundamento que todo el género repite desde entonces.',
+    '<strong>Controla tus gastos.</strong> Los «gastos necesarios» crecen hasta igualar los ingresos si no los limitas (Parkinson financiero): presupuesto consciente, no austeridad ciega.',
+    '<strong>Haz que el oro trabaje.</strong> Cada moneda ahorrada es un «esclavo» que puede generar hijos (interés compuesto): la riqueza no es el sueldo, es el flujo que tu capital produce.',
+    '<strong>Protege el capital.</strong> Invierte solo donde el principal esté razonablemente seguro y pide consejo a quien sepa DE ESO: el oro huye de quien lo confía a expertos en otra cosa o a rentabilidades de fantasía.',
+    '<strong>La suerte sigue a la acción.</strong> «La diosa de la buena suerte favorece a quien actúa»: las oportunidades caducan; dudar eternamente también es una decisión.'
+  ],
+  actions: [
+    'Activa el 10% automático si aún no lo tienes: transferencia el día de cobro, antes de tocar nada.',
+    'Haz tu presupuesto del 90: lista gastos, separa deseos de necesidades y asigna límites.',
+    'Pon tu ahorro a trabajar de forma aburrida y diversificada; huye de promesas de rentabilidad extraordinaria.',
+    'Antes de invertir en algo, pregunta: ¿quién me aconseja y qué sabe específicamente de esto?'
+  ],
+  quote: { t: 'Una parte de todo lo que ganas es tuya y debes conservarla.', a: 'George S. Clason' },
+  science: 'Parábolas de 1926, no ciencia ni finanzas modernas (nada de fondos indexados ni fiscalidad): pero sus reglas conductuales son exactamente las que la economía del comportamiento valida hoy — automatizar, pagar(se) primero, desconfiar del exceso de confianza. Envejeció mejor que casi todo el género.',
+  related: ['psicologia-dinero', 'mente-millonaria', 'nudge']
+},
+
+{
+  id: 'nadie-me-lo-dijo', type: 'libro', emoji: '🧰', cat: 'psicologia',
+  title: '¿Por qué nadie me lo dijo antes?', author: 'Julie Smith', year: 2022,
+  meta: ['368 páginas', 'Resumen: 6 min'],
+  one: 'Una psicóloga clínica reparte su caja de herramientas en capítulos breves e independientes: qué hacer (de verdad, con técnicas de consulta) con el ánimo bajo, la ansiedad, la autocrítica, el duelo y el estrés.',
+  ideas: [
+    '<strong>Las emociones no son averías.</strong> Son información y fisiología: el ánimo bajo no siempre tiene «un porqué» profundo — sueño, movimiento, conexión y conducta lo mueven más que rumiar su causa.',
+    '<strong>La espiral conducta-ánimo.</strong> Cuando estás mal haces menos, y hacer menos te hunde más: la activación conductual (actuar primero, sentir después) es la palanca con más evidencia.',
+    '<strong>Pensamientos no son hechos.</strong> Defusión y distancia: nómbralos, ponles apellido («ahí está mi crítico»), examina la evidencia — TCC clásica explicada sin jerga.',
+    '<strong>La ansiedad baja afrontando.</strong> La evitación la alimenta; la exposición gradual la encoge. Y el cuerpo importa: respiración alargando la exhalación, cafeína, sueño.',
+    '<strong>Valores como dirección.</strong> En duelo, decisiones y rachas malas: pregunta qué haría tu versión alineada con lo que te importa, y da el paso pequeño de hoy.'
+  ],
+  actions: [
+    'Con ánimo bajo, usa activación conductual: agenda 2 actividades pequeñas de valor o placer y hazlas SIN esperar ganas.',
+    'Practica la defusión diaria: «estoy teniendo el pensamiento de que…» ante tu autocrítica más repetida.',
+    'Para la ansiedad, escribe tu escalera de exposición (de 0 a 10) y sube un peldaño esta semana.',
+    'Cuida los básicos como tratamiento: sueño regular, movimiento diario, menos cafeína en picos.'
+  ],
+  quote: { t: 'No necesitas estar enfermo para usar las herramientas de la terapia: necesitas saber que existen.', a: 'Julie Smith (tesis del libro)' },
+  science: 'TCC, ACT y activación conductual —tratamientos con buena evidencia— en formato accesible y honesto sobre sus límites (no sustituye terapia cuando hace falta). De los grandes éxitos recientes del género que mejor representa la práctica clínica real.',
+  related: ['sentirse-bien', 'trampa-felicidad', 'agilidad-emocional']
+},
+
+{
+  id: 'felicidad-ventaja', type: 'libro', emoji: '☀️', cat: 'psicologia',
+  title: 'La felicidad como ventaja (The Happiness Advantage)', author: 'Shawn Achor', year: 2010,
+  meta: ['256 páginas', 'Resumen: 5 min'],
+  one: 'Invertimos la fórmula: no es «ten éxito y serás feliz» sino al revés — el cerebro en positivo rinde, aprende y conecta mejor, y ese estado se entrena con prácticas concretas.',
+  ideas: [
+    '<strong>La fórmula invertida.</strong> Perseguir la felicidad tras cada meta la aleja (la portería se mueve); cultivarla primero mejora energía, creatividad y resultados — la ventaja competitiva más barata.',
+    '<strong>El efecto Tetris.</strong> El cerebro se entrena en lo que escanea: auditores que solo ven errores, abogados que solo ven riesgos… y puede reentrenarse para escanear lo bueno (gratitud, logros) sin perder rigor.',
+    '<strong>Caer hacia arriba.</strong> Tras el golpe hay tres caminos (donde estabas, peor, o mejor gracias al aprendizaje): los que encuentran la «tercera ruta» convierten crisis en bifurcación.',
+    '<strong>El círculo Zorro.</strong> Cuando todo desborda, encoge el círculo de control a lo manejable (una tarea, un hábito) y expándelo con cada victoria.',
+    '<strong>La regla de los 20 segundos.</strong> Baja 20 segundos la fricción de los hábitos buenos y súbesela a los malos: la energía de activación decide más que la motivación (puro diseño de entorno).'
+  ],
+  actions: [
+    'Practica «tres cosas buenas» al día durante 21 días (con el porqué de cada una).',
+    'Aplica la regla de los 20 segundos hoy: deja preparado lo bueno y desinstala/aleja lo malo.',
+    'Ante una crisis, dibuja las tres rutas y busca activamente la tercera (qué aprendizaje te deja por delante).',
+    'Si todo te supera, define tu círculo Zorro: la única cosa controlable de hoy.'
+  ],
+  quote: { t: 'El cerebro positivo tiene una ventaja injusta: rinde mejor justo cuando los demás funcionan en modo amenaza.', a: 'Shawn Achor (tesis del libro)' },
+  caveat: 'El marketing exagera cifras («31% más productivo») extraídas de metaanálisis correlacionales; Achor vende muy bien lo que Seligman y Lyubomirsky midieron con más cautela. Las prácticas que recomienda sí tienen ensayos detrás (ver Seligman 2005, Emmons 2003).',
+  related: ['ciencia-felicidad', 'seligman-2005', 'cultiva-felicidad']
+},
+
+{
+  id: 'doce-reglas', type: 'libro', emoji: '🦞', cat: 'bienestar',
+  title: '12 reglas para vivir', author: 'Jordan Peterson', year: 2018,
+  meta: ['448 páginas', 'Resumen: 6 min'],
+  one: 'Un psicólogo clínico mezcla mitología, biología y consulta en doce máximas contra el caos: endereza la espalda, ordena tu casa, di la verdad y compárate con quien eras ayer.',
+  ideas: [
+    '<strong>Regla 1: postura y estatus.</strong> La famosa langosta: los circuitos de jerarquía son antiguos, y la postura erguida no solo refleja confianza — también la retroalimenta. Preséntate al mundo como alguien que se defiende.',
+    '<strong>Regla 2: trátate como a alguien a tu cargo.</strong> Cuidamos mejor a nuestro perro que a nosotros (medicamos al perro, no nos tomamos lo recetado): aplícate la diligencia que darías a quien amas.',
+    '<strong>Regla 4: compárate con quien eras ayer,</strong> no con otro de hoy: la única comparación que informa sin envenenar.',
+    '<strong>Regla 6: ordena tu casa antes de criticar el mundo.</strong> Empieza por lo que está a tu alcance y sabes que está mal: la credibilidad (y la cordura) se construyen ahí.',
+    '<strong>Reglas 8-10: di la verdad (o al menos no mientas), asume que el otro sabe algo que tú no, y sé preciso al hablar</strong> — el caos se domestica nombrándolo.'
+  ],
+  actions: [
+    'Una semana de postura deliberada: hombros atrás al entrar en cada sala, y observa el efecto en cómo te tratan y te sientes.',
+    'Trátate como a alguien a tu cargo: cumple esta semana contigo lo que cumplirías con otro (cita médica, descanso, promesas).',
+    'Sustituye una comparación con otros por una métrica contra tu ayer.',
+    'Elige lo más pequeño de tu «casa» que sabes que está mal y arréglalo hoy.'
+  ],
+  quote: { t: 'Compárate con quien eras ayer, no con quien otro es hoy.', a: 'Jordan Peterson' },
+  caveat: 'Autor polarizante: el libro mezcla consejo clínico útil con mitología junguiana, biología discutible (la langosta simplifica mucho) y opiniones culturales que han generado controversia legítima. Aquí se resume el núcleo de autoayuda práctica; el resto, júzgalo aparte y con espíritu crítico.',
+  related: ['hombre-busca-sentido', 'meditaciones', 'sentirse-bien']
+},
+
+{
+  id: 'mente-liberada', type: 'libro', emoji: '🔓', cat: 'bienestar',
+  title: 'Una mente liberada (A Liberated Mind)', author: 'Steven Hayes', year: 2019,
+  meta: ['400 páginas', 'Resumen: 6 min'],
+  one: 'El creador de la terapia de aceptación y compromiso (ACT) explica los seis giros de la flexibilidad psicológica: la habilidad de estar presente, abrirte a lo que sientes y actuar según tus valores.',
+  ideas: [
+    '<strong>El problema es la rigidez, no el dolor.</strong> Evitar, rumiar y obedecer reglas mentales rígidas convierte dolor normal en sufrimiento crónico: la salud psicológica es flexibilidad, no ausencia de malestar.',
+    '<strong>Defusión.</strong> Mirar los pensamientos en lugar de DESDE ellos: la mente es un narrador incansable, no un oráculo (su «giro»: agradece a tu mente y elige tú).',
+    '<strong>El yo como contexto.</strong> No eres tu historia ni tus etiquetas: eres el lugar desde donde se observan — eso da espacio para cambiar sin defender el personaje.',
+    '<strong>Aceptación y presente.</strong> Abrirse a sentir lo que ya está aquí (en vez de pelearlo) y volver al ahora son habilidades entrenables, no actitudes zen.',
+    '<strong>Valores y acción comprometida.</strong> Elegir direcciones vitales (no metas con final) y dar pasos públicos y pequeños hacia ellas, especialmente con el malestar a bordo.'
+  ],
+  actions: [
+    'Practica el giro de defusión: antepón «mi mente dice que…» y decide luego tú.',
+    'Escribe tus 3 etiquetas más rígidas («soy X») y reformúlalas como historias que tu yo-contexto observa.',
+    'Haz sitio una vez al día a una emoción incómoda 60 segundos (dónde está, qué forma tiene) sin resolverla.',
+    'Elige un valor y su acción mínima de hoy; hazla aunque la mente proteste.'
+  ],
+  quote: { t: 'No se trata de sentirte mejor, sino de sentir mejor: con apertura, presencia y propósito.', a: 'Steven Hayes (tesis de ACT)' },
+  science: 'Es la fuente primaria de ACT, con cientos de ensayos clínicos en ansiedad, depresión, dolor y adicciones. La versión divulgativa de consumo rápido es La trampa de la felicidad; esta es la del creador, con la ciencia y la historia del enfoque.',
+  related: ['trampa-felicidad', 'agilidad-emocional', 'se-amable-contigo']
+},
+
+{
+  id: 'conversaciones-dificiles', type: 'libro', emoji: '🌉', cat: 'relaciones',
+  title: 'Conversaciones difíciles', author: 'Douglas Stone, Bruce Patton y Sheila Heen', year: 1999,
+  meta: ['352 páginas', 'Resumen: 6 min'],
+  one: 'Del Proyecto de Negociación de Harvard: toda conversación difícil son en realidad tres a la vez —qué pasó, qué sentimos y qué dice de mí— y se desbloquean empezando por la «tercera historia».',
+  ideas: [
+    '<strong>Las tres conversaciones.</strong> La del «qué pasó» (hechos, intenciones, culpa), la de los sentimientos (que están aunque se disfracen de argumentos) y la de la identidad (¿soy competente?, ¿soy buena persona?): si una se ignora, sabotea a las otras.',
+    '<strong>De la certeza a la curiosidad.</strong> Tú no tienes LA historia: tienes una. El otro no es irracional: tiene información y un relato que no conoces. La pregunta no es quién tiene razón sino qué ve cada uno.',
+    '<strong>Intención ≠ impacto.</strong> Inferimos malas intenciones del daño recibido («me hizo daño, luego quiso dañarme»): separa lo que te impactó de lo que el otro pretendía, y pregunta.',
+    '<strong>De la culpa a la contribución.</strong> «¿De quién es la culpa?» mira atrás y bloquea; «¿qué aportó cada uno al problema, incluido yo?» mira adelante y resuelve.',
+    '<strong>Empieza por la tercera historia.</strong> Abre como lo haría un mediador: describiendo la diferencia entre vuestras versiones sin juzgar ninguna («tú ves X, yo veo Y: me gustaría entender»).'
+  ],
+  actions: [
+    'Prepara tu próxima conversación difícil mapeando las tres conversaciones por escrito.',
+    'Redacta tu apertura en «tercera historia»: la diferencia descrita sin culpables.',
+    'Sustituye una acusación de intención («lo hiciste para…») por impacto + pregunta («cuando pasó X me sentí Y; ¿cómo lo viste tú?»).',
+    'Haz tu mapa de contribución: qué puso cada parte (incluida la tuya) y qué cambiarías tú primero.'
+  ],
+  quote: { t: 'En toda conversación difícil hay tres conversaciones — y la que más se ignora es la de la identidad.', a: 'Stone, Patton y Heen (tesis del libro)' },
+  science: 'Del mismo laboratorio que Obtenga el sí (Harvard Negotiation Project), basado en décadas de mediación y docencia: marco clínico-práctico, no experimental, plenamente coherente con la evidencia sobre atribuciones e identidad.',
+  related: ['conversaciones-cruciales', 'obtenga-el-si', 'cnv']
+},
+
+{
+  id: 'obtenga-el-si', type: 'libro', emoji: '🪢', cat: 'relaciones',
+  title: 'Obtenga el sí (Getting to Yes)', author: 'Roger Fisher, William Ury y Bruce Patton', year: 1981,
+  meta: ['240 páginas', 'Resumen: 6 min'],
+  one: 'El clásico de Harvard que cambió la negociación: ni duro ni blando, sino por principios — separa personas de problema, negocia intereses (no posiciones) y mide con criterios objetivos.',
+  ideas: [
+    '<strong>Separa a las personas del problema.</strong> Duro con el problema, suave con las personas: la relación y el asunto se gestionan por separado, o las emociones contaminan los términos y viceversa.',
+    '<strong>Intereses, no posiciones.</strong> La posición es lo que dices querer (la ventana abierta); el interés, el porqué (aire fresco / evitar corriente): bajo posiciones incompatibles suele haber intereses conciliables.',
+    '<strong>Inventa opciones de beneficio mutuo.</strong> Antes de repartir el pastel, agrándalo: sesiones separadas de generar (sin compromiso) y decidir, buscando diferencias que intercambiar (tiempo, riesgo, prioridades).',
+    '<strong>Criterios objetivos.</strong> Ancla el acuerdo a estándares independientes (mercado, precedentes, tasaciones): que ceda el que está fuera del criterio, no el que menos aguanta.',
+    '<strong>MAAN (BATNA).</strong> Tu poder real es tu Mejor Alternativa a un Acuerdo Negociado: conócela, mejórala antes de sentarte, y compara toda oferta contra ella — nunca contra tus ilusiones.'
+  ],
+  actions: [
+    'Antes de tu próxima negociación, escribe tu MAAN y una acción concreta para mejorarla.',
+    'Traduce tu posición y la del otro a intereses: tres «porqués» por bando.',
+    'Lleva 2-3 criterios objetivos (datos de mercado, precedentes) y propón decidir con ellos.',
+    'Genera opciones ANTES de evaluar: 15 minutos de variantes sin descartar nada.'
+  ],
+  quote: { t: 'Sea duro con el problema y suave con las personas.', a: 'Fisher y Ury' },
+  science: 'El marco fundacional de la negociación moderna (Harvard Negotiation Project), validado por décadas de uso en diplomacia y empresa. Voss (Rompe la barrera del no) lo matiza desde la trinchera emocional: leídos juntos se complementan — estructura + empatía táctica.',
+  related: ['rompe-barrera-no', 'conversaciones-dificiles', 'influencia']
+},
+
+{
+  id: 'abrazame-fuerte', type: 'libro', emoji: '🤗', cat: 'relaciones',
+  title: 'Abrázame fuerte', author: 'Sue Johnson', year: 2008,
+  meta: ['320 páginas', 'Resumen: 6 min'],
+  one: 'La creadora de la terapia focalizada en las emociones (EFT): las peleas de pareja casi nunca van del tema que discutís — son protestas de apego («¿estás ahí para mí?») que se curan con siete conversaciones.',
+  ideas: [
+    '<strong>El amor adulto es apego.</strong> Necesitar a tu pareja como base segura no es dependencia patológica: es el mismo vínculo de Bowlby en versión adulta — y su amenaza dispara pánico primario.',
+    '<strong>Los diálogos demonio.</strong> Tres patrones que atrapan: «encuentra al malo» (ataque-ataque), la «polca de la protesta» (uno persigue, otro se retira: el más común) y «paralizar y huir» (ambos retirados). El enemigo es el patrón, no la pareja.',
+    '<strong>La pregunta real bajo cada pelea:</strong> ¿estás ahí para mí?, ¿te importo?, ¿vendrás cuando te necesite? (A.R.E.: accesibilidad, respuesta, compromiso emocional). Los platos sucios son el campo de batalla, no la guerra.',
+    '<strong>Los momentos de desconexión se reparan.</strong> Las parejas seguras no se hieren menos: reparan antes y mejor, nombrando la herida y la necesidad en vez de la acusación.',
+    '<strong>Hablar desde lo blando.</strong> Bajo la ira (emoción secundaria) hay miedo o tristeza (primaria): expresar lo blando («me asusté cuando no llamaste») invita; lo duro («eres un egoísta») confirma el ciclo.'
+  ],
+  actions: [
+    'Identificad vuestro diálogo demonio y ponedle nombre: «ya está aquí la polca» convierte al patrón en enemigo común.',
+    'En la próxima pelea, busca la pregunta de apego debajo: ¿qué me está preguntando realmente? ¿qué estoy preguntando yo?',
+    'Practica hablar desde la emoción primaria: cambia un reproche por el miedo o la tristeza que lo habita.',
+    'Cread un ritual breve de reconexión diaria (6 segundos de abrazo real, pregunta del día) que mantenga la base segura.'
+  ],
+  quote: { t: 'La mayoría de las peleas son, en realidad, protestas por la desconexión emocional.', a: 'Sue Johnson' },
+  science: 'La EFT es de las terapias de pareja con mejor evidencia (ensayos con tasas altas de mejora y recuperación), construida sobre la teoría del apego adulto. Este es el libro puente entre Apegados (el mapa) y la práctica conversacional.',
+  related: ['apegados', 'gottman', 'cnv']
+},
+
+{
+  id: 'hablar-ninos', type: 'libro', emoji: '🧒', cat: 'relaciones',
+  title: 'Cómo hablar para que los niños escuchen', author: 'Adele Faber y Elaine Mazlish', year: 1980,
+  meta: ['368 páginas', 'Resumen: 6 min'],
+  one: 'El manual de comunicación con hijos más influyente: valida los sentimientos (todos), limita las conductas (algunas), describe en vez de acusar y sustituye el castigo por la reparación.',
+  ideas: [
+    '<strong>Los sentimientos se aceptan; las conductas se limitan.</strong> «Estás muy enfadado con tu hermano Y no se pega»: negar la emoción («no es para tanto») la intensifica; nombrarla la calma y enseña vocabulario emocional.',
+    '<strong>Describe, no acuses.</strong> «Veo una toalla mojada en la cama» moviliza; «eres un desastre» etiqueta y paraliza. La descripción deja al niño la oportunidad de resolver.',
+    '<strong>Alternativas al castigo.</strong> Expresar tu enfado sin insultar, señalar la expectativa, mostrar cómo reparar, dar a elegir y dejar consecuencias naturales: el castigo enseña a no ser pillado; la reparación, a responsabilizarse.',
+    '<strong>Autonomía.</strong> Deja que elijan (opciones cerradas), que se esfuercen antes de rescatar, no respondas todas las preguntas al instante: la competencia se construye practicándola.',
+    '<strong>Elogio descriptivo.</strong> Describe lo que ves y lo que se puede nombrar («guardaste todas las piezas: eso es orden») en lugar de evaluar («qué bueno eres»): el niño se atribuye la cualidad él mismo (anticipa a Mueller y Dweck).'
+  ],
+  actions: [
+    'Esta semana, nombra el sentimiento antes de corregir: «estás frustrado» antes de «recoge eso».',
+    'Cambia tres acusaciones por descripciones («veo X» / «falta Y»).',
+    'Sustituye un castigo por reparación: ¿cómo puede arreglar lo que hizo?',
+    'Elogia describiendo el proceso, no evaluando a la persona.'
+  ],
+  quote: { t: 'Cuando los sentimientos se niegan, se intensifican; cuando se aceptan, se calman.', a: 'Faber y Mazlish (tesis del libro)' },
+  science: 'Nacido de los talleres del psicólogo Haim Ginott, no de ensayos: pero sus principios coinciden con lo que la investigación validó después — validación emocional, estilo autoritativo (afecto + límites) y elogio de proceso (Mueller y Dweck, 1998, en esta biblioteca).',
+  related: ['mueller-dweck-1998', 'cerebro-del-nino', 'cnv']
+},
+
+{
+  id: 'cerebro-del-nino', type: 'libro', emoji: '🪁', cat: 'relaciones',
+  title: 'El cerebro del niño', author: 'Daniel Siegel y Tina Payne Bryson', year: 2011,
+  meta: ['192 páginas', 'Resumen: 6 min'],
+  one: 'Doce estrategias de crianza basadas en cómo madura el cerebro: conectar antes de corregir, nombrar para dominar e integrar las partes (emocional/racional) que en los niños aún no trabajan juntas.',
+  ideas: [
+    '<strong>Cerebro de arriba, cerebro de abajo.</strong> El «piso de arriba» (razonar, regular) está en obras hasta los veintitantos: exigir lógica a un niño secuestrado por su «piso de abajo» (emoción, supervivencia) es pedir lo imposible en ese momento.',
+    '<strong>Conecta y redirige.</strong> Primero conexión con la emoción (tono, contacto, validación: hemisferio derecho con derecho); solo después, cuando baja la ola, la lección o el límite (izquierdo).',
+    '<strong>Nómbralo para dominarlo.</strong> Ayudar al niño a contar la historia de lo que le pasó (y le asustó) integra los hemisferios y reduce la carga emocional: narrar es regular.',
+    '<strong>Activa, no enfurezcas.</strong> Apela al piso de arriba con preguntas y opciones («¿cómo lo resolvemos?») en lugar de detonar el de abajo con órdenes y amenazas.',
+    '<strong>Las emociones pasan como el tiempo.</strong> Enseña que los sentimientos son estados, no rasgos («SIENTES miedo» ≠ «ERES miedoso»), y el cuerpo como herramienta (moverse para cambiar el estado).'
+  ],
+  actions: [
+    'En la próxima rabieta: conecta primero (agáchate, valida, tono suave) y deja la lección para después.',
+    'Ayúdale a narrar el episodio difícil («¿y luego qué pasó?»): contar la historia integra y calma.',
+    'Sustituye una orden por una pregunta que active su piso de arriba («¿qué se te ocurre?»).',
+    'Enseña el lenguaje de estados: «sientes rabia ahora» en vez de etiquetas permanentes.'
+  ],
+  quote: { t: 'Conecta primero, redirige después.', a: 'Siegel y Payne Bryson' },
+  caveat: 'Las metáforas neuro (pisos, hemisferios) simplifican bastante la neurociencia real — los propios autores lo admiten como modelo didáctico. Las estrategias en sí (validación, narración, co-regulación) están alineadas con la evidencia en desarrollo infantil y apego.',
+  related: ['hablar-ninos', 'inteligencia-emocional', 'abrazame-fuerte']
+},
+
+{
+  id: 'camino-caracter', type: 'libro', emoji: '🧗', cat: 'bienestar',
+  title: 'El camino del carácter', author: 'David Brooks', year: 2015,
+  meta: ['320 páginas', 'Resumen: 6 min'],
+  one: 'Vivimos optimizando las «virtudes del currículum» (logros, brillo) y descuidando las «del panegírico» (las que se dicen en tu funeral): ocho biografías muestran cómo se forja un carácter — peleando contra el propio defecto.',
+  ideas: [
+    '<strong>Adán I y Adán II.</strong> Conviven en nosotros el yo que quiere conquistar el mundo (carrera, éxito) y el que quiere servir y tener raíces (carácter, vocación): la cultura alimenta al primero y deja al segundo en silencio.',
+    '<strong>De la «pequeña yo» a la humildad.</strong> Las personas que admiramos por su solidez suelen haber pasado de «¿qué quiero de la vida?» a «¿qué me pide la vida?» (eco directo de Frankl).',
+    '<strong>El camino pasa por el defecto central.</strong> Cada biografía del libro (Eisenhower y su ira, Day y su dispersión, Marshall y su ego) gira sobre identificar el propio «pecado» dominante y organizarse la vida para domarlo.',
+    '<strong>La derrota como puerta.</strong> El descenso (fracaso, vergüenza, pérdida) precede a la madurez: el carácter rara vez se construye en racha ganadora.',
+    '<strong>Contra la cultura del «Gran Yo».</strong> Más autopromoción no ha traído más solidez: la alternativa es el compromiso largo con personas, instituciones y oficios que te trascienden.'
+  ],
+  actions: [
+    'Escribe tus virtudes del panegírico: ¿qué querrías que se dijera de ti, y qué estás haciendo esta semana al respecto?',
+    'Identifica tu defecto central (ira, vanidad, dispersión, complacencia) y un sistema concreto para domarlo.',
+    'Elige un compromiso largo (persona, comunidad, oficio) y renuévalo activamente este mes.',
+    'Reequilibra una decisión actual entre Adán I y Adán II: ¿a cuál está sirviendo?'
+  ],
+  quote: { t: 'Las virtudes del currículum traen éxito; las del panegírico traen sentido — y solo cultivamos las primeras.', a: 'David Brooks (tesis del libro)' },
+  caveat: 'Ensayo biográfico-moral, no ciencia, con nostalgia ocasional de épocas más duras de lo que admite. Su distinción currículum/panegírico es de las más útiles del estante de propósito, y dialoga directamente con Frankl y con El ego es el enemigo.',
+  related: ['hombre-busca-sentido', 'ego-enemigo', 'brevedad-de-la-vida']
+},
+
+{
+  id: 'despierta-demello', type: 'libro', emoji: '🪔', cat: 'bienestar',
+  title: 'Despierta (Awareness)', author: 'Anthony de Mello', year: 1990,
+  meta: ['192 páginas', 'Resumen: 5 min'],
+  one: 'Un jesuita formado en oriente y en psicoterapia sacude al lector: vivimos dormidos, programados por apegos y etiquetas — y despertar empieza por observarse sin arreglarse.',
+  ideas: [
+    '<strong>Dormidos sin saberlo.</strong> Reaccionamos en automático según programaciones (familia, cultura, heridas) que confundimos con «yo»: el primer paso no es cambiar nada, es VERLO.',
+    '<strong>La felicidad no se consigue: se descubre.</strong> No es añadir (logros, personas, aprobación) sino soltar las creencias de que los necesitas para estar bien — «la gente no quiere despertar: quiere que le arreglen el sueño».',
+    '<strong>No eres tus etiquetas.</strong> Cargo, nacionalidad, éxito, opiniones: ropajes del «mí» que defendemos a muerte; la conciencia que los observa no necesita defensa.',
+    '<strong>Observación sin condena.</strong> Mirarse con curiosidad y sin juicio («ahí está mi envidia») transforma más que la guerra interior: lo que se acepta se puede soltar, lo que se combate se atrinchera.',
+    '<strong>Las emociones ajenas no son tu amo.</strong> Gran parte del sufrimiento es vivir pendiente de la aprobación: «nadie puede herirte sin tu cooperación» — eco estoico en clave contemplativa.'
+  ],
+  actions: [
+    'Practica la auto-observación neutral: tres veces al día, nombra qué automatismo acaba de actuar (sin corregirlo aún).',
+    'Lista tus 5 etiquetas más defendidas y pregúntate qué queda de ti sin ellas (ejercicio de identidad ligera).',
+    'Detecta una dependencia de aprobación esta semana y haz algo pequeño sin contarlo a nadie.',
+    'Ante una emoción incómoda, pruébala como observador: «ahí está la ira» en vez de «estoy furioso».'
+  ],
+  quote: { t: 'La gente no quiere despertar: quiere que le arreglen el juguete.', a: 'Anthony de Mello (paráfrasis de su tesis)' },
+  caveat: 'Espiritualidad contemplativa (con provocación deliberada), no psicología empírica; algunas frases suenan a desapego radical que mal leído justifica frialdad. Sus prácticas son primas del mindfulness y la defusión, con siglos de tradición y carisma propio.',
+  related: ['poder-del-ahora', 'liberacion-alma', 'mindfulness-cotidiana']
+},
+
+{
+  id: 'biografia-silencio', type: 'libro', emoji: '🤍', cat: 'bienestar',
+  title: 'Biografía del silencio', author: 'Pablo d’Ors', year: 2012,
+  meta: ['112 páginas', 'Resumen: 4 min'],
+  one: 'Un sacerdote y novelista español cuenta, sin técnica ni dogma, qué le pasó tras años de sentarse en silencio media hora al día: el ensayo sobre meditación más leído en español.',
+  ideas: [
+    '<strong>Sentarse y punto.</strong> Sin app, sin método elaborado: sentarse quieto, en silencio, a diario. La sencillez es el método; las expectativas son el obstáculo.',
+    '<strong>Los primeros meses son decepcionantes.</strong> Aburrimiento, picores, lista de la compra mental: d’Ors lo narra sin adorno — y explica por qué quedarse precisamente ahí es la práctica.',
+    '<strong>Meditar es aceptar lo que llega.</strong> No combatir pensamientos ni fabricar paz: dejar que todo pase, como el que mira un río. De tanto mirar, uno deja de identificarse con cada barco.',
+    '<strong>El silencio reordena la vida entera.</strong> Con los meses, lo de fuera cambia porque cambia el que mira: menos ruido elegido, menos prisa, más presencia en lo ordinario (comer, andar, escuchar).',
+    '<strong>Fidelidad sobre intensidad.</strong> Media hora cada día vence a retiros heroicos esporádicos: la transformación es acumulativa y discreta, como la del agua sobre la piedra.'
+  ],
+  actions: [
+    'Siéntate 10-15 minutos diarios en silencio, sin objetivo ni app, un mes entero antes de evaluar.',
+    'Cuando llegue el aburrimiento o la lista mental, quédate: es el momento exacto de la práctica.',
+    'Añade un acto cotidiano en silencio real al día (comer sin pantalla, caminar sin auriculares).',
+    'Lleva un registro mínimo: una línea tras cada sesión (sin calificarla de buena o mala).'
+  ],
+  quote: { t: 'Siéntate, guarda silencio y escucha: el resto viene solo.', a: 'Pablo d’Ors (tesis del libro)' },
+  caveat: 'Es literatura contemplativa de raíz cristiana-zen, no un manual ni un estudio: no esperes protocolos ni citas. Como puerta de entrada hispana a la práctica silenciosa —y antídoto contra el mindfulness de consumo— es difícil de superar.',
+  related: ['mindfulness-cotidiana', 'despierta-demello', 'goyal-2014']
+},
+
+{
+  id: 'arte-buena-vida', type: 'libro', emoji: '🏺', cat: 'bienestar',
+  title: 'El arte de la buena vida', author: 'William B. Irvine', year: 2009,
+  meta: ['336 páginas', 'Resumen: 6 min'],
+  one: 'Un filósofo académico reconstruye el estoicismo como sistema de vida utilizable hoy: visualización negativa, tricotomía del control y técnicas concretas contra la insatisfacción crónica.',
+  ideas: [
+    '<strong>El gran descubrimiento estoico: la adaptación hedónica.</strong> Nos acostumbramos a todo lo que conseguimos y volvemos a desear más; la visualización negativa (imaginar perder lo que tienes) revierte el proceso y renueva el aprecio — gratitud por ingeniería inversa.',
+    '<strong>La tricotomía del control.</strong> Irvine refina a Epicteto: hay cosas que controlas del todo (tus juicios, metas), nada en absoluto (el clima, el pasado) y PARCIALMENTE (un partido, un examen). Para estas: internaliza la meta — «jugar lo mejor posible», no «ganar».',
+    '<strong>Fatalismo del pasado y del presente.</strong> Lo ocurrido es inamovible: lamentarlo es pelear con una piedra. Acepta lo que ya es; trabaja sobre lo que aún puede ser.',
+    '<strong>Autodisciplina como juego.</strong> Convertirse en «observador de uno mismo» y puntuar los propios avances (¿me perturbó hoy menos que ayer?) hace del estoicismo un deporte interior.',
+    '<strong>El precio de la fama y el lujo.</strong> Buscar estatus es entregar tu tranquilidad a jueces externos; los estoicos practicaban la indiferencia deliberada a la opinión y el confort superfluo.'
+  ],
+  actions: [
+    'Practica la visualización negativa 2 minutos al día: imagina brevemente perder algo que tienes (salud, persona, trabajo) y siente el reencuentro.',
+    'Internaliza una meta parcialmente controlable esta semana: redefine «ganar/lograr X» como «ejecutar mi mejor proceso».',
+    'Caza una pelea con el pasado y suéltala explícitamente: «esto ya es piedra; ¿qué construyo encima?».',
+    'Puntúa tu serenidad al final del día (1-10) y anota qué la movió: el juego del observador.'
+  ],
+  quote: { t: 'Aprende a desear lo que ya tienes y tendrás todo lo que deseas.', a: 'William B. Irvine (síntesis estoica)' },
+  science: 'La mejor sistematización moderna del estoicismo práctico (más ordenada que Holiday, más accesible que las fuentes): sus técnicas anticipan lo que la psicología valida — la visualización negativa es primo riguroso de la gratitud (Emmons) y el saboreo (Lyubomirsky), y la tricotomía evita el error que Brickman documentó.',
+  related: ['meditaciones', 'manual-de-vida', 'brickman-1978']
+},
+
+{
+  id: 'defensa-comida', type: 'libro', emoji: '🥦', cat: 'salud',
+  title: 'En defensa de la comida', author: 'Michael Pollan', year: 2008,
+  meta: ['256 páginas', 'Resumen: 5 min'],
+  one: 'Siete palabras resumen un siglo de ciencia nutricional: «Come comida. No demasiada. Sobre todo plantas» — y una crítica al «nutricionismo» que convirtió el comer en química de laboratorio.',
+  ideas: [
+    '<strong>El nutricionismo como ideología.</strong> Reducir la comida a nutrientes (grasas, omega-3, antioxidantes) permitió vender productos procesados «saludables» mientras la salud poblacional empeoraba: la parte no es el todo.',
+    '<strong>«Comida» vs «sustancias comestibles».</strong> Pollan propone heurísticas: no comas nada que tu bisabuela no reconocería, evita productos con más de cinco ingredientes o ingredientes impronunciables, no compres comida donde compras gasolina.',
+    '<strong>Sobre todo plantas.</strong> El patrón (verduras, legumbres, fruta, poco procesado) importa más que cualquier nutriente estrella: las culturas con dietas tradicionales variadas enferman menos que la dieta occidental, sea cual sea su composición exacta.',
+    '<strong>No demasiada.</strong> Cómo comemos también cuenta: en mesa, despacio, en compañía, sin pantallas, parando antes de estar llenos (el hara hachi bu de Ikigai).',
+    '<strong>Cocinar es la política de salud personal más simple:</strong> quien cocina controla ingredientes, cantidades y cultura alimentaria de su casa.'
+  ],
+  actions: [
+    'Aplica la regla de los 5 ingredientes en tu próxima compra: lo que no la pase, fuera del carro.',
+    'Llena medio plato de plantas en las comidas principales de esta semana.',
+    'Come una vez al día en mesa, sin pantallas, masticando de verdad.',
+    'Cocina 2-3 comidas más por semana de las que cocinas ahora (simple cuenta).'
+  ],
+  quote: { t: 'Come comida. No demasiada. Sobre todo plantas.', a: 'Michael Pollan' },
+  caveat: 'Periodismo con tesis: simplifica debates nutricionales reales y romantiza algo las dietas tradicionales. Pero sus heurísticas son robustas justo porque no apuestan por ningún nutriente de moda: coinciden con el consenso sobre patrones alimentarios y ultraprocesados.',
+  related: ['glucosa', 'comer-moverse-dormir', 'outlive']
+},
+
+{
+  id: 'intestino-feliz', type: 'libro', emoji: '🦠', cat: 'salud',
+  title: 'La digestión es la cuestión (Gut)', author: 'Giulia Enders', year: 2014,
+  meta: ['288 páginas', 'Resumen: 5 min'],
+  one: 'El bestseller que hizo simpático al intestino: cómo funciona el órgano más infravalorado, qué hace tu microbiota y por qué el eje intestino-cerebro conecta digestión con ánimo e inmunidad.',
+  ideas: [
+    '<strong>El intestino es un sistema nervioso con órgano propio.</strong> Millones de neuronas («segundo cerebro») y la mayor parte de tu sistema inmune viven ahí: lo que pasa abajo informa arriba constantemente (nervio vago mediante).',
+    '<strong>La microbiota como ecosistema.</strong> Billones de bacterias entrenan tu inmunidad, fabrican vitaminas y compiten contra patógenos: la diversidad es salud, y se cultiva comiendo variado y con fibra.',
+    '<strong>El eje intestino-cerebro.</strong> Estrés y digestión se afectan mutuamente; la investigación en animales muestra que la microbiota influye en conducta y ánimo — en humanos, el campo es joven y prometedor, no concluyente.',
+    '<strong>Higiene sí, esterilidad no.</strong> El exceso de desinfección empobrece el ecosistema: limpiar no es esterilizar, y la exposición razonable (suelo, mascotas, fermentados) educa la inmunidad.',
+    '<strong>Lo práctico y aburrido funciona:</strong> fibra variada (verdura, legumbre, integral), fermentados, dormir, moverse y manejar el estrés — los probióticos milagro, todavía no.'
+  ],
+  actions: [
+    'Aumenta la variedad vegetal semanal: apunta cuántas plantas distintas comes y súbelo (objetivo ~30/semana).',
+    'Añade fermentados regulares (yogur, kéfir, chucrut) si te sientan bien.',
+    'No automediques tu intestino con suplementos de moda: prioriza fibra, sueño y estrés.',
+    'Si hay síntomas persistentes, médico — la divulgación no diagnostica.'
+  ],
+  quote: { t: 'El intestino no es el órgano de las vergüenzas: es el más diligente y leal que tienes.', a: 'Giulia Enders (tesis del libro)' },
+  caveat: 'Divulgación encantadora y mayormente rigurosa, pero el campo de la microbiota avanza rápido y se sobreinterpreta con facilidad (sobre todo el eje intestino-cerebro en humanos). Quédate el patrón fibra+diversidad y el escepticismo ante probióticos genéricos.',
+  related: ['defensa-comida', 'cebras-ulcera', 'cuerpo-lleva-cuenta']
+},
+
+{
+  id: 'comer-moverse-dormir', type: 'libro', emoji: '🥗', cat: 'salud',
+  title: 'Comer, moverse, dormir (Eat Move Sleep)', author: 'Tom Rath', year: 2013,
+  meta: ['256 páginas', 'Resumen: 5 min'],
+  one: 'Tres palancas que se multiplican entre sí: pequeñas decisiones diarias de comida, movimiento y sueño — elegidas a la vez, no por separado — componen salud a largo plazo.',
+  ideas: [
+    '<strong>El trío es sinérgico.</strong> Dormir mal te hace comer peor y moverte menos; moverte mejora el sueño y las elecciones de comida: trabajar las tres a la vez rinde más que perfeccionar una.',
+    '<strong>Decisiones, no dietas.</strong> Rath (con una enfermedad genética que lo obliga a optimizar) propone micro-elecciones acumulativas: cada comida, cada hora sentado, cada hora de acostarse es un voto.',
+    '<strong>Sentarse es el nuevo riesgo silencioso.</strong> Romper el sedentarismo cada 30-60 minutos (levantarse, andar 2 minutos) importa además del ejercicio formal (ver Ekelund: el ejercicio compensa, pero muévete también durante el día).',
+    '<strong>Comida: lo simple primero.</strong> Más planta y proteína de calidad, menos azúcar y ultraprocesado; atención a la primera y última hora del día (desayuno y picoteo nocturno marcan la pauta).',
+    '<strong>El sueño como multiplicador.</strong> Una hora menos de sueño no es una hora más de vida útil: es rendimiento, ánimo y elecciones peores al día siguiente (Van Dongen lo midió).'
+  ],
+  actions: [
+    'Elige UNA mejora por palanca este mes: p. ej., verdura en cada comida + pausa activa por hora + hora fija de acostarte.',
+    'Pon una alarma o regla para levantarte cada 45-60 minutos de silla.',
+    'Protege la última hora del día: sin pantallas brillantes ni picoteo, rumbo a tu hora fija.',
+    'Encadena las palancas: paseo tras la comida (movimiento) que además mejora glucosa y sueño.'
+  ],
+  quote: { t: 'Las pequeñas decisiones de hoy —qué comes, cuánto te mueves, cómo duermes— deciden tus próximos 30 años.', a: 'Tom Rath (tesis del libro)' },
+  science: 'Síntesis divulgativa honesta de evidencia epidemiológica (sedentarismo, sueño, dieta) en formato de consejos breves; no aporta investigación propia pero cita bien y no promete milagros. Buen «libro paraguas» de esta categoría.',
+  related: ['por-que-dormimos', 'ekelund-2016', 'defensa-comida']
+},
+
+{
+  id: 'habito-creativo', type: 'libro', emoji: '💃', cat: 'creatividad',
+  title: 'El hábito creativo', author: 'Twyla Tharp', year: 2003,
+  meta: ['256 páginas', 'Resumen: 5 min'],
+  one: 'Una de las grandes coreógrafas del siglo XX desmonta el mito de la inspiración: la creatividad es un hábito con rituales de entrada, preparación obsesiva y rutinas que protegen el trabajo del estado de ánimo.',
+  ideas: [
+    '<strong>El ritual de comienzo.</strong> Tharp no «decide» entrenar cada día a las 5:30: su ritual es subirse al taxi al gimnasio — automatizar el arranque elimina la negociación diaria con uno mismo.',
+    '<strong>Una caja por proyecto.</strong> Cada obra empieza con una caja física donde cae todo (recortes, música, notas, objetos): la creatividad necesita un lugar donde acumular antes de saber qué será.',
+    '<strong>«Scratching»: arañar en busca de ideas.</strong> Las ideas no llegan: se buscan activamente en lecturas, paseos, conversaciones, archivo propio — con la humildad de empezar por ideas mediocres que llaman a las buenas.',
+    '<strong>Conoce tu ADN creativo.</strong> Cada creador tiene una distancia focal natural (detalle vs gran angular): conocer la tuya evita pelear contra tu naturaleza y te dice qué colaboradores te complementan.',
+    '<strong>La columna vertebral.</strong> Toda obra necesita una espina (la intención privada que la sostiene): cuando te pierdas, vuelve a ella; si la cambias, que sea a propósito.'
+  ],
+  actions: [
+    'Diseña tu ritual de entrada de 2 minutos (misma música, mismo café, mismo gesto) y úsalo toda la semana.',
+    'Abre una caja (física o digital) para tu proyecto actual y alimenta con todo lo que roce el tema.',
+    'Practica scratching 20 minutos: busca ideas activamente en tu archivo, en un museo, en un paseo — apunta sin filtrar.',
+    'Escribe la columna vertebral de tu proyecto en una frase y pégala donde trabajes.'
+  ],
+  quote: { t: 'La creatividad no es un don: es el resultado de buenos hábitos de trabajo.', a: 'Twyla Tharp' },
+  science: 'Memoria de oficio de élite, no ciencia — pero su tesis (ritual + preparación + rutina vencen a la inspiración) coincide con la literatura de hábitos y con lo que muestran las biografías de creadores prolíficos (la cantidad de Originals, la Resistencia de Pressfield).',
+  related: ['guerra-arte', 'camino-artista', 'habitos-atomicos']
+},
+
+{
+  id: 'buenas-ideas', type: 'libro', emoji: '☕', cat: 'creatividad',
+  title: 'Las buenas ideas: una historia natural de la innovación', author: 'Steven Johnson', year: 2010,
+  meta: ['336 páginas', 'Resumen: 6 min'],
+  one: 'De dónde salen las ideas, mirando 600 años de innovación: no de eurekas solitarios sino de lo adyacente posible, redes líquidas, corazonadas lentas y choques fértiles entre disciplinas.',
+  ideas: [
+    '<strong>Lo adyacente posible.</strong> Cada época solo puede inventar lo que sus piezas permiten combinar: las buenas ideas exploran las puertas contiguas, no saltan diez habitaciones. Amplía tus piezas y ampliarás tus puertas.',
+    '<strong>Redes líquidas.</strong> Las ideas nacen donde las mentes se mezclan sin rigidez (el café de la Ilustración, el laboratorio compartido): los entornos que favorecen el choque casual superan al genio aislado y al comité formal.',
+    '<strong>La corazonada lenta.</strong> Las grandes ideas suelen incubarse AÑOS como intuiciones vagas (Darwin y la selección natural): el truco es mantenerlas vivas (escribirlas, revisitarlas) hasta que choquen con su otra mitad — a menudo la corazonada de otro.',
+    '<strong>Serendipia organizada.</strong> Paseos, lecturas dispersas, archivos releídos: el azar favorece a quien le da superficies de contacto.',
+    '<strong>Exaptación y plataformas.</strong> Las soluciones brincan de dominio (la imprenta usa la prensa de vino): las ideas robadas de otro campo (Range, Kleon) y las plataformas abiertas multiplican lo posible.'
+  ],
+  actions: [
+    'Lleva un cuaderno único de corazonadas y reléelo cada mes buscando colisiones entre notas viejas.',
+    'Diseña tu red líquida: una conversación semanal con alguien de un campo distinto al tuyo.',
+    'Antes de perseguir la idea «revolucionaria», mapea lo adyacente posible: ¿qué combinación está a UNA puerta de tus piezas actuales?',
+    'Dale superficies al azar: pasea sin rumbo intelectual una vez por semana (lecturas fuera de tu tema, museos, archivos).'
+  ],
+  quote: { t: 'El azar favorece a la mente conectada.', a: 'Steven Johnson' },
+  science: 'Historia de la innovación con patrón argumentado (casos de Darwin a la web), coherente con la investigación sobre creatividad como recombinación y con la incubación (Baird). No es experimento, pero es de lo más sólido conceptualmente del estante creativo.',
+  related: ['amplitud-range', 'roba-artista', 'baird-2012']
+},
+
 /* ===================== ESTUDIOS CIENTÍFICOS ===================== */
 {
   id: 'gollwitzer-2006', type: 'paper', emoji: '📝', cat: 'habitos',
@@ -4131,6 +4869,357 @@ const LIBRARY = [
     design: 'Serie de experimentos midiendo y manipulando las creencias sobre la fuerza de voluntad (limitada vs no limitada) y su efecto en tareas sucesivas de autocontrol, más un estudio de campo en estudiantes.'
   },
   related: ['autocontrol-willpower', 'mischel-1972', 'mindset']
+},
+
+{
+  id: 'scullin-2018', type: 'paper', emoji: '🛌', cat: 'salud',
+  title: 'Escribe tu lista de pendientes y duérmete antes', author: 'Scullin, Krueger, Ballard, Pruett y Bliwise', year: 2018,
+  meta: ['Polisomnografía · laboratorio', 'Resumen: 4 min'],
+  one: 'Cinco minutos escribiendo la lista de tareas de mañana antes de apagar la luz aceleraron el sueño medido con polisomnografía — más detalle en la lista, más rápido dormirse.',
+  ideas: [
+    '<strong>El diseño.</strong> Participantes durmiendo en laboratorio: la mitad escribió 5 minutos su lista de pendientes de los próximos días; la otra mitad, las tareas YA completadas. Sueño medido con polisomnografía, no autoinforme.',
+    '<strong>El resultado.</strong> El grupo de pendientes se durmió ~9 minutos antes — y cuanto más específica y larga la lista, más rápido. El grupo de logros mostró el patrón inverso.',
+    '<strong>El mecanismo.</strong> Es Masicampo aplicado a la almohada: las tareas sin plan rondan la mente (Zeigarnik); externalizarlas con detalle las «aparca» y apaga la rumiación de cierre del día.',
+    '<strong>Barato y sin efectos secundarios.</strong> Nueve minutos parece poco, pero es comparable a fármacos suaves para conciliar — con coste cero.'
+  ],
+  actions: [
+    'Pon papel y boli en la mesilla: 5 minutos de lista de pendientes de mañana, con detalle (qué, cuándo, primer paso).',
+    'Si te desvelas rumiando tareas, enciende la luz mínima y vuelca lo que ronda: es más eficaz que «intentar no pensar».',
+    'No repases logros ni pantallas: el efecto fue de los pendientes externalizados, no de la reflexión general.',
+    'Combínalo con horario regular: la técnica suma, no sustituye la higiene básica.'
+  ],
+  quote: { t: 'Cinco minutos de lista de tareas al acostarse ayudaron a conciliar el sueño más que repasar lo ya hecho.', a: 'Conclusión del estudio' },
+  study: {
+    ref: 'Scullin, M. K., Krueger, M. L., Ballard, H. K., Pruett, N. y Bliwise, D. L. (2018). The effects of bedtime writing on difficulty falling asleep. Journal of Experimental Psychology: General, 147(1), 139-146.',
+    design: 'Ensayo aleatorizado en laboratorio (n=57) con polisomnografía: escritura de 5 minutos de tareas pendientes vs tareas completadas antes de dormir, midiendo latencia de inicio del sueño.'
+  },
+  related: ['masicampo-2011', 'por-que-dormimos', 'gtd-organizate']
+},
+
+{
+  id: 'baird-2012', type: 'paper', emoji: '🚿', cat: 'creatividad',
+  title: 'Inspirados por la distracción: la incubación funciona', author: 'Baird, Smallwood, Mrazek, Kam, Franklin y Schooler', year: 2012,
+  meta: ['Experimento · 4 condiciones', 'Resumen: 4 min'],
+  one: 'Tras atascarte en un problema creativo, una pausa con una tarea FÁCIL (que deje divagar la mente) mejoró las soluciones ~40% — más que descansar sin hacer nada, hacer algo exigente o seguir empujando.',
+  ideas: [
+    '<strong>El diseño fino.</strong> Problemas de usos creativos, luego pausa de 12 minutos en cuatro condiciones: tarea fácil (mucha divagación), tarea exigente (poca), descanso total o sin pausa. Solo la tarea fácil disparó la mejora al volver.',
+    '<strong>La divagación es el ingrediente.</strong> La mejora se concentró en quienes más divagaron durante la pausa — y solo en los problemas YA encontrados antes (incubación real, no creatividad general).',
+    '<strong>Explica las ideas de la ducha.</strong> Ducha, paseo, fregar: tareas que ocupan poco y dejan a la mente vagar son incubadoras naturales (el «scatterfocus» de Hyperfocus y el modo difuso de Oakley, con datos).',
+    '<strong>Matiz honesto.</strong> La divagación no es gratis (Killingsworth la liga a peor ánimo): la versión útil es elegida y acotada — pausas deliberadas, no vida entera en bucle.'
+  ],
+  actions: [
+    'Atascado en algo creativo: cambia 10-15 minutos a una tarea mecánica fácil (ordenar, caminar, platos) y vuelve.',
+    'Carga el problema antes de la pausa: trabaja en él en serio primero; la incubación solo opera sobre lo sembrado.',
+    'Protege una «tarea tonta» diaria sin podcast ni móvil: es tu hueco de incubación.',
+    'Captura al volver: las soluciones post-pausa se evaporan; ten dónde anotarlas.'
+  ],
+  quote: { t: 'Las pausas con tareas poco exigentes, que favorecen la divagación, facilitaron la incubación creativa.', a: 'Conclusión del estudio' },
+  study: {
+    ref: 'Baird, B., Smallwood, J., Mrazek, M. D., Kam, J. W. Y., Franklin, M. S. y Schooler, J. W. (2012). Inspired by distraction: Mind wandering facilitates creative incubation. Psychological Science, 23(10), 1117-1122.',
+    design: 'Experimento (n=145) con tarea de usos alternativos, pausa de 12 minutos en 4 condiciones (tarea fácil, exigente, descanso, sin pausa) y re-test de los problemas originales y nuevos.'
+  },
+  related: ['descansa-rest', 'oppezzo-2014', 'buenas-ideas']
+},
+
+{
+  id: 'wood-2005', type: 'paper', emoji: '📦', cat: 'habitos',
+  title: 'Mudarse rompe hábitos: la ventana de los contextos nuevos', author: 'Wood, Tam y Guerrero Witt', year: 2005,
+  meta: ['Estudio natural · transferencia universitaria', 'Resumen: 4 min'],
+  one: 'Siguiendo a estudiantes que cambiaron de universidad: sus hábitos (ejercicio, TV, prensa) solo sobrevivieron si el nuevo contexto se parecía al viejo — el cambio de entorno devuelve la conducta al control consciente.',
+  ideas: [
+    '<strong>El experimento natural.</strong> La transferencia de universidad cambia de golpe señales, lugares y rutinas: el escenario perfecto para ver qué pasa con los hábitos cuando se les quita su contexto.',
+    '<strong>Los hábitos viven de sus señales.</strong> Quien entrenaba «porque sí» (automatismo ligado a gimnasio/horario) dejó de hacerlo si el contexto cambió; sobrevivió quien tenía intención fuerte o contextos equivalentes.',
+    '<strong>La ventana de la disrupción.</strong> Con el automatismo roto, la conducta vuelve a depender de intenciones: por unas semanas eres «libre» de tus hábitos — para bien (instalar buenos) y para mal (perder los que tenías).',
+    '<strong>Aplicación de doble filo.</strong> Mudanzas, trabajos nuevos, vueltas de vacaciones: momentos óptimos para rediseñar rutinas… y de máximo riesgo para que se cuelen las malas.'
+  ],
+  actions: [
+    'Aprovecha tu próximo cambio de contexto (mudanza, trabajo, septiembre) para instalar 1-2 hábitos deseados: la resistencia está en mínimos.',
+    'Protege los hábitos buenos en transiciones: replica sus señales (misma hora, equivalente del lugar, mismo previo).',
+    'Para romper un mal hábito sin esperar mudanzas: cambia su micro-contexto (ruta, sala, orden) y añade fricción.',
+    'Tras vacaciones, reinstala a propósito: la primera semana decide qué automatismos vuelven.'
+  ],
+  quote: { t: 'Los hábitos se mantuvieron solo cuando los contextos de ejecución permanecieron estables.', a: 'Conclusión del estudio' },
+  study: {
+    ref: 'Wood, W., Tam, L. y Guerrero Witt, M. (2005). Changing circumstances, disrupting habits. Journal of Personality and Social Psychology, 88(6), 918-933.',
+    design: 'Estudio longitudinal natural con estudiantes transferidos de universidad, midiendo ejercicio, televisión y lectura de prensa antes y después del cambio de contexto, según fuerza del hábito e intenciones.'
+  },
+  related: ['habitos-atomicos', 'poder-habitos', 'lally-2010']
+},
+
+{
+  id: 'kross-2013', type: 'paper', emoji: '📉', cat: 'bienestar',
+  title: 'Facebook predice caídas de bienestar (uso pasivo)', author: 'Kross, Verduyn y colaboradores', year: 2013,
+  meta: ['Muestreo de experiencia · 2 semanas', 'Resumen: 4 min'],
+  one: 'Avisando al móvil 5 veces al día durante dos semanas: cuanto más Facebook usaba la gente en un intervalo, peor se sentía después — mientras que el contacto directo hacía lo contrario.',
+  ideas: [
+    '<strong>El diseño temporal importa.</strong> No es una foto correlacional: se midió uso y ánimo repetidamente, y el uso de FB predecía DECLIVES posteriores de afecto y de satisfacción vital a las 2 semanas — la dirección temporal apunta de la red al ánimo.',
+    '<strong>El contacto real, al revés.</strong> La interacción directa (en persona, teléfono) predecía sentirse mejor después: el problema no es «lo social», es el sucedáneo.',
+    '<strong>El mecanismo sospechoso: comparación y pasividad.</strong> Trabajos posteriores del mismo equipo (Verduyn 2015) lo afinan: el uso PASIVO (mirar vidas ajenas) daña vía envidia y comparación; el activo (hablar, publicar con vínculo) apenas.',
+    '<strong>Matiz de tamaño.</strong> Efectos modestos y muestra pequeña (n=82): no es «la red te destruye», es una fuga pequeña y constante — coherente con el panorama Goldilocks de Przybylski.'
+  ],
+  actions: [
+    'Convierte tu uso pasivo en activo o en nada: si solo miras, cierra; si entras, interactúa con personas concretas.',
+    'Sustituye un rato de scroll diario por contacto directo (mensaje de voz, llamada, quedar).',
+    'Quita las apps de redes del móvil y déjalas en el navegador con fricción (el truco de Make Time).',
+    'Hazte la auditoría de salida: tras 10 minutos de red, ¿mejor o peor que al entrar? Decide con ese dato.'
+  ],
+  quote: { t: 'Cuanto más usaban Facebook, peor se sentían después; la interacción directa mostraba el patrón opuesto.', a: 'Conclusión del estudio' },
+  study: {
+    ref: 'Kross, E., Verduyn, P., Demiralp, E., et al. (2013). Facebook use predicts declines in subjective well-being in young adults. PLoS ONE, 8(8), e69841.',
+    design: 'Muestreo de experiencia (n=82, 5 avisos diarios, 14 días) midiendo uso de Facebook, contacto directo, afecto momentáneo y satisfacción vital antes/después.'
+  },
+  related: ['minimalismo-digital', 'valor-atencion', 'przybylski-2017']
+},
+
+{
+  id: 'przybylski-2017', type: 'paper', emoji: '🎚️', cat: 'psicologia',
+  title: 'La hipótesis Ricitos de Oro: pantallas con moderación', author: 'Przybylski y Weinstein', year: 2017,
+  meta: ['120.115 adolescentes · preinscrito', 'Resumen: 4 min'],
+  one: 'Con datos de 120.000 adolescentes: el uso moderado de pantallas NO se asocia a peor bienestar (incluso algo mejor que cero), y el daño de los usos altos es real pero sorprendentemente pequeño.',
+  ideas: [
+    '<strong>La curva en U invertida.</strong> Bienestar máximo en usos moderados (1-2 h diarias según pantalla y día); por debajo, ligeramente peor (coste de oportunidad social); por encima, declive suave.',
+    '<strong>El tamaño del «daño» sorprende.</strong> Incluso en usos altos, el efecto es pequeño comparado con dormir bien o desayunar: el pánico moral va muy por delante de los datos.',
+    '<strong>Metodología ejemplar.</strong> Hipótesis y análisis preinscritos (sin pescar resultados), muestra enorme y representativa: el tipo de estudio que debería anclar este debate.',
+    '<strong>Lo que NO dice.</strong> No mide contenido ni casos clínicos ni a niños pequeños, y es transversal: la dosis no es lo único que importa (el QUÉ y el CUÁNDO — p. ej., robar sueño — pueden importar más).'
+  ],
+  actions: [
+    'Cambia la pregunta familiar de «¿cuántas horas?» a «¿qué desplaza?»: si roba sueño, deporte o quedadas, sobra; si no, respira.',
+    'Aplica Ricitos de Oro a ti: define tu franja moderada y vigila los extremos (ni ermitaño digital ni maratones).',
+    'Prioriza las reglas de momento sobre las de cantidad: pantallas fuera del dormitorio y de la mesa rinden más que contar minutos.',
+    'Desconfía del pánico y del «no pasa nada»: ambos extremos ignoran los datos.'
+  ],
+  quote: { t: 'El uso moderado de pantallas no es perjudicial y los efectos de los usos altos son menores de lo que se teme.', a: 'Conclusión del estudio' },
+  study: {
+    ref: 'Przybylski, A. K. y Weinstein, N. (2017). A large-scale test of the Goldilocks Hypothesis. Psychological Science, 28(2), 204-215.',
+    design: 'Estudio preinscrito con 120.115 adolescentes ingleses, modelando la relación entre horas de pantalla (4 tipos, días de diario y de fin de semana) y bienestar mental.'
+  },
+  related: ['kross-2013', 'valor-atencion', 'minimalismo-digital']
+},
+
+{
+  id: 'ebbinghaus-1885', type: 'paper', emoji: '📐', cat: 'aprendizaje',
+  title: 'La curva del olvido: el experimento fundacional', author: 'Hermann Ebbinghaus', year: 1885,
+  meta: ['Clásico · replicado en 2015', 'Resumen: 4 min'],
+  one: 'Memorizándose a sí mismo miles de sílabas sin sentido, Ebbinghaus midió por primera vez cómo olvidamos: una caída brutal en horas que se aplana con los días — y que cada repaso reinicia más arriba.',
+  ideas: [
+    '<strong>El olvido es rápido y luego clemente.</strong> Gran parte de lo memorizado se pierde en las primeras 24 horas; lo que sobrevive unos días decae mucho más despacio: la batalla por la memoria se juega temprano.',
+    '<strong>El método del ahorro.</strong> Su genialidad: medir cuánto MENOS costaba reaprender la lista (aunque pareciera olvidada) — el aprendizaje deja huella incluso cuando el recuerdo falla.',
+    '<strong>Cada repaso aplana la curva.</strong> Releer/recuperar en el momento justo reinicia el olvido desde más arriba y con caída más lenta: la base teórica del repaso espaciado (Cepeda) y de Anki.',
+    '<strong>Replicado 130 años después.</strong> Murre y Dros (2015) repitieron el experimento con el protocolo original: la curva salió esencialmente igual. Pocas cosas en psicología envejecen tan bien.'
+  ],
+  actions: [
+    'Repasa (recuperando, no releyendo) dentro de las primeras 24 horas de aprender algo importante.',
+    'Programa los repasos siguientes a intervalos crecientes (1 día → 1 semana → 1 mes).',
+    'No te fíes de la sensación de «lo sé ahora»: la curva castiga la confianza del primer día.',
+    'Confía en el ahorro: reaprender lo «olvidado» cuesta mucho menos — retomar siempre sale a cuenta.'
+  ],
+  quote: { t: 'El olvido empieza de inmediato y avanza primero deprisa, luego cada vez más despacio.', a: 'Hermann Ebbinghaus (síntesis de su hallazgo)' },
+  study: {
+    ref: 'Ebbinghaus, H. (1885). Über das Gedächtnis. (Réplica: Murre, J. M. J. y Dros, J., 2015, Replication and analysis of Ebbinghaus forgetting curve, PLoS ONE 10(7), e0120644.)',
+    design: 'Autoexperimentación sistemática con listas de sílabas sin sentido, midiendo el «ahorro» de tiempo al reaprender tras intervalos de minutos a un mes; replicado con éxito en 2015.'
+  },
+  related: ['cepeda-2006', 'roediger-2006', 'fluent-forever']
+},
+
+{
+  id: 'karpicke-2011', type: 'paper', emoji: '🎴', cat: 'aprendizaje',
+  title: 'Recuperar vence incluso a los mapas conceptuales', author: 'Karpicke y Blunt', year: 2011,
+  meta: ['Experimentos · Science', 'Resumen: 4 min'],
+  one: 'Contra el favorito de los docentes: practicar la recuperación produjo más aprendizaje que hacer mapas conceptuales con el texto delante — también en preguntas de inferencia, y los estudiantes predijeron lo contrario.',
+  ideas: [
+    '<strong>El duelo.</strong> Estudiar una vez, releer varias veces, hacer mapa conceptual o practicar recuperación (escribir lo recordado y volver a estudiar). Una semana después: la recuperación ganó a todas — incluida la elaboración «activa» del mapa.',
+    '<strong>También en lo profundo.</strong> La ventaja no fue solo memorística: se mantuvo en preguntas de inferencia y al pedir... construir mapas conceptuales de memoria. Recuperar construye comprensión, no solo retención.',
+    '<strong>La metacognición volvió a fallar.</strong> Los participantes predijeron que releer y mapear funcionaría mejor: la fluidez con el texto delante engaña sistemáticamente (la ilusión de Apréndetelo).',
+    '<strong>El matiz.</strong> Los mapas conceptuales no son inútiles: hechos DE MEMORIA se convierten en práctica de recuperación — el problema es hacerlos copiando.'
+  ],
+  actions: [
+    'Tras estudiar, cierra todo y escribe/dibuja lo que recuerdes; luego comprueba y repite lo flojo.',
+    'Si te gustan los mapas conceptuales, hazlos con el libro CERRADO: así suman.',
+    'Desconfía de la sensación de dominio con el material delante: ponte a prueba sin él.',
+    'En grupo o clase: sustituye la sesión de repaso por mini-tests sin nota.'
+  ],
+  quote: { t: 'La práctica de recuperación produjo más aprendizaje que el estudio elaborativo con mapas conceptuales.', a: 'Título y hallazgo del estudio' },
+  study: {
+    ref: 'Karpicke, J. D. y Blunt, J. R. (2011). Retrieval practice produces more learning than elaborative studying with concept mapping. Science, 331(6018), 772-775.',
+    design: 'Dos experimentos (n=200) comparando estudio simple, re-estudio, mapas conceptuales y práctica de recuperación sobre textos científicos, con evaluación demorada de memoria e inferencia.'
+  },
+  related: ['roediger-2006', 'dunlosky-2013', 'aprendetelo']
+},
+
+/* ---- tanda final de estudios ---- */
+{
+  id: 'debloom-2009', type: 'paper', emoji: '🏖️', cat: 'productividad',
+  title: '¿Nos recuperamos de verdad en vacaciones?', author: 'De Bloom, Kompier y colaboradores', year: 2009,
+  meta: ['Metaanálisis · salud y bienestar', 'Resumen: 4 min'],
+  one: 'Las vacaciones mejoran salud y bienestar de forma clara… y el efecto se evapora en 2-4 semanas de vuelta al trabajo: mejor frecuentes y bien diseñadas que largas y única-anuales.',
+  ideas: [
+    '<strong>El efecto existe.</strong> Durante y justo después de vacacionar: menos quejas de salud, menos agotamiento, mejor ánimo y sueño. El descanso real funciona.',
+    '<strong>Pero decae rápido.</strong> La mayoría de beneficios vuelve a línea base en 2-4 semanas (a veces días): las vacaciones son una ducha, no una vacuna.',
+    '<strong>Implicación de diseño.</strong> A igualdad de días, varias pausas repartidas superan a un único bloque anual; y la recuperación diaria/semanal (desconexión real, sueño, ocio activo) sostiene lo que las vacaciones solo reinician.',
+    '<strong>Qué las hace funcionar.</strong> Trabajos posteriores del equipo: desconexión psicológica (no mirar el correo), autonomía sobre el tiempo, dominio (aprender algo) y relax — el dónde importa menos que el cómo.'
+  ],
+  actions: [
+    'Reparte tus días: varias escapadas al año mejor que un único bloque heroico.',
+    'Protege la desconexión: fuera correo del trabajo; define un protocolo de emergencias real y olvídate.',
+    'Construye recuperación semanal (un día sin trabajo de verdad) y diaria (cierre + ocio activo): es lo que dura.',
+    'Planifica la re-entrada: primer día sin reuniones, lista de prioridades hecha ANTES de irte.'
+  ],
+  quote: { t: 'Las vacaciones funcionan — y sus efectos se desvanecen en pocas semanas: la recuperación hay que repartirla.', a: 'Síntesis del metaanálisis' },
+  study: {
+    ref: 'De Bloom, J., Kompier, M., Geurts, S., De Weerth, C., Taris, T. y Sonnentag, S. (2009). Do we recover from vacation? Meta-analysis of vacation effects on health and well-being. Journal of Occupational Health, 51(1), 13-25.',
+    design: 'Metaanálisis de estudios longitudinales sobre efectos de las vacaciones en salud y bienestar, midiendo magnitud y duración del efecto tras la reincorporación.'
+  },
+  related: ['descansa-rest', 'sin-esfuerzo', 'cuatro-mil-semanas']
+},
+
+{
+  id: 'mueller-dweck-1998', type: 'paper', emoji: '🏅', cat: 'aprendizaje',
+  title: 'Elogiar la inteligencia sale caro', author: 'Mueller y Dweck', year: 1998,
+  meta: ['6 experimentos · +400 niños', 'Resumen: 4 min'],
+  one: 'Decir «qué lista eres» tras un acierto volvió a los niños evitadores de retos, frágiles ante el fallo y más propensos a mentir sobre sus resultados; elogiar el esfuerzo produjo exactamente lo contrario.',
+  ideas: [
+    '<strong>El diseño.</strong> Tras una primera tanda de problemas, elogio por inteligencia («debes de ser muy listo»), por esfuerzo («has trabajado muy bien») o neutro. Luego: elección de tarea, una tanda difícil y la opción de informar sus puntuaciones.',
+    '<strong>Resultados demoledores.</strong> Los elogiados por listos eligieron tareas fáciles (proteger la etiqueta), disfrutaron menos, rindieron PEOR tras el tropiezo… y el 38% mintió sobre su puntuación (vs ~13%).',
+    '<strong>El mecanismo.</strong> El elogio de inteligencia enseña que el resultado MIDE un rasgo fijo: el fallo pasa a ser diagnóstico de incapacidad. El de esfuerzo enseña que el resultado responde a estrategia: el fallo pide cambiar de método.',
+    '<strong>Aplicación más allá de niños.</strong> Feedback a equipos, alumnos y a uno mismo: elogia proceso, estrategia y progreso concretos — no atributos.'
+  ],
+  actions: [
+    'Cambia el elogio por defecto: de «qué bueno eres» a «cómo se nota el trabajo en X» (concreto y de proceso).',
+    'Tras un fallo (tuyo o ajeno), pregunta por estrategia: «¿qué probamos distinto?», nunca «¿será que no valgo?».',
+    'Cuidado con el elogio de esfuerzo vacío («al menos lo intentaste»): debe ir atado a estrategia y progreso reales.',
+    'Autoaplícatelo: registra cómo te hablas tras aciertos y errores una semana.'
+  ],
+  quote: { t: 'El elogio a la inteligencia puede socavar la motivación y el rendimiento que pretende premiar.', a: 'Título y hallazgo del estudio' },
+  study: {
+    ref: 'Mueller, C. M. y Dweck, C. S. (1998). Praise for intelligence can undermine childrens motivation and performance. Journal of Personality and Social Psychology, 75(1), 33-52.',
+    design: 'Seis experimentos con más de 400 niños de 10-12 años, manipulando el tipo de elogio tras el éxito inicial y midiendo elección de retos, persistencia, rendimiento y honestidad al informar resultados.'
+  },
+  related: ['mindset', 'blackwell-2007', 'hablar-ninos']
+},
+
+{
+  id: 'grant-gino-2010', type: 'paper', emoji: '💌', cat: 'relaciones',
+  title: 'Un poco de gratitud llega muy lejos', author: 'Grant y Gino', year: 2010,
+  meta: ['4 experimentos · campo y laboratorio', 'Resumen: 4 min'],
+  one: 'Un simple «gracias» del supervisor duplicó (de 25% a 55%) la disposición de los recaudadores a hacer más llamadas: la gratitud expresada multiplica la ayuda porque hace sentir al otro socialmente valorado.',
+  ideas: [
+    '<strong>El experimento de campo.</strong> Recaudadores de fondos universitarios: la mitad recibió la visita de una directora agradeciendo sinceramente su trabajo. La semana siguiente, ese grupo hizo ~50% más llamadas voluntarias.',
+    '<strong>El mecanismo no es el ego.</strong> No funcionó vía autoeficacia («soy competente») sino vía valía social («lo que hago importa a alguien»): la gratitud comunica que el otro y su esfuerzo son vistos.',
+    '<strong>Se contagia a terceros.</strong> Quien recibe gratitud ayuda más después… incluso a OTRAS personas distintas del agradecido: el «gracias» recarga la batería prosocial general.',
+    '<strong>Barato, específico, sincero.</strong> El efecto viene de gratitud genuina y concreta — no de fórmulas automáticas ni elogios genéricos.'
+  ],
+  actions: [
+    'Agradece específicamente una ayuda recibida esta semana: qué hizo la persona y qué cambió para ti.',
+    'Si lideras: agradece en persona y en concreto el trabajo invisible de tu equipo (no solo los hitos).',
+    'Cierra tus peticiones con gratitud anticipada sincera: aumenta la disposición futura, no solo la presente.',
+    'No lo automatices: tres gracias concretos valen más que treinta «¡mil gracias!» de plantilla.'
+  ],
+  quote: { t: 'La gratitud aumenta la conducta prosocial porque hace que las personas se sientan socialmente valoradas.', a: 'Conclusión del estudio' },
+  study: {
+    ref: 'Grant, A. M. y Gino, F. (2010). A little thanks goes a long way: Explaining why gratitude expressions motivate prosocial behavior. Journal of Personality and Social Psychology, 98(6), 946-955.',
+    design: 'Cuatro experimentos (incluido campo con recaudadores de fondos) manipulando expresiones de gratitud y midiendo conducta de ayuda posterior y mediadores (valía social vs autoeficacia).'
+  },
+  related: ['como-ganar-amigos', 'emmons-2003', 'drive-motivacion']
+},
+
+{
+  id: 'epley-2014', type: 'paper', emoji: '🚆', cat: 'relaciones',
+  title: 'Hablar con desconocidos: el placer que nadie predice', author: 'Epley y Schroeder', year: 2014,
+  meta: ['9 experimentos · transporte real', 'Resumen: 4 min'],
+  one: 'Viajeros de tren y bus asignados a conversar con un desconocido disfrutaron el trayecto MÁS que los que fueron en silencio — exactamente lo contrario de lo que todos predijeron.',
+  ideas: [
+    '<strong>El experimento.</strong> En trenes y buses de Chicago: conversar con un extraño, ir en silencio o viajar como siempre. Conversar ganó en disfrute — incluso entre introvertidos, e incluso sin perder productividad percibida.',
+    '<strong>El error de predicción.</strong> Antes de viajar, la gente anticipaba que hablar sería lo peor: sobreestimamos el rechazo ajeno y subestimamos lo agradable de conectar (pluralistic ignorance: todos callan porque creen que los demás no quieren hablar).',
+    '<strong>El otro también gana.</strong> Las parejas «abordadas» disfrutaron igualmente: el miedo a molestar resultó infundado en los datos.',
+    '<strong>La sociabilidad mínima como bienestar barato.</strong> Junto a Mehl (conversaciones sustantivas) y Holt-Lunstad (vínculos y salud): los micro-contactos diarios son una fuente de ánimo sistemáticamente desaprovechada.'
+  ],
+  actions: [
+    'Haz el experimento una vez esta semana: inicia conversación real con un desconocido de contexto seguro (cola, tren, cafetería).',
+    'Empieza fácil: una pregunta situacional genuina supera a cualquier frase ingeniosa.',
+    'Sube un nivel los contactos rutinarios: del «buenos días» automático a una frase humana con el barista o el vecino.',
+    'Recuerda el dato cuando tu predicción diga «no molestes»: la otra persona probablemente también disfrutará.'
+  ],
+  quote: { t: 'Buscamos la soledad por error: conectar con un desconocido resulta más agradable de lo que nadie espera.', a: 'Síntesis del estudio' },
+  study: {
+    ref: 'Epley, N. y Schroeder, J. (2014). Mistakenly seeking solitude. Journal of Experimental Psychology: General, 143(5), 1980-1999.',
+    design: 'Nueve experimentos en transporte público y laboratorio, asignando a conversar, ir en silencio o rutina habitual, midiendo experiencia real frente a predicciones propias y ajenas.'
+  },
+  related: ['mehl-2010', 'holt-lunstad-2010', 'supercomunicadores']
+},
+
+{
+  id: 'ekelund-2016', type: 'paper', emoji: '🪑', cat: 'salud',
+  title: '¿Puede el ejercicio compensar 8 horas sentado?', author: 'Ekelund, Steene-Johannessen y colaboradores', year: 2016,
+  meta: ['Metaanálisis armonizado · +1 millón', 'Resumen: 4 min'],
+  one: 'Sobre un millón de personas: 60-75 minutos diarios de actividad moderada eliminaron el exceso de mortalidad asociado a estar sentado 8 horas — el sedentarismo no es destino si te mueves lo suficiente.',
+  ideas: [
+    '<strong>El hallazgo central.</strong> El riesgo de estar muchas horas sentado desaparece en el grupo más activo (60-75 min/día de actividad moderada, p. ej. caminar a buen paso): la silla castiga sobre todo a quien además no se mueve.',
+    '<strong>La dosis es mayor de la famosa.</strong> Los 150 min/semana estándar ayudan pero no neutralizan del todo jornadas muy sedentarias: para escritorios de 8h, apunta más alto (o trocea la silla).',
+    '<strong>La tele es peor que la silla de trabajo.</strong> Ver TV 5+ horas mostró riesgo incluso en activos (combina inmovilidad + picoteo + horario nocturno): no todo sedentarismo es igual.',
+    '<strong>Mensaje doble.</strong> Muévete a diario con volumen serio Y rompe el sentado: las dos palancas suman (coherente con Eat Move Sleep).'
+  ],
+  actions: [
+    'Si trabajas sentado 8h: suma 60+ minutos de movimiento moderado diario (vale repartido: 3 paseos de 20).',
+    'Rompe la silla cada 30-60 min: ponte de pie, 2 minutos andando, llamadas caminando.',
+    'Recorta la tele-maratón nocturna: es el sedentarismo con peor perfil.',
+    'Usa desplazamientos como dosis: bajar una parada antes, escaleras, recados a pie.'
+  ],
+  quote: { t: 'Niveles altos de actividad moderada parecen eliminar el mayor riesgo de muerte asociado a muchas horas sentado.', a: 'Conclusión del metaanálisis' },
+  study: {
+    ref: 'Ekelund, U., Steene-Johannessen, J., Brown, W. J., et al. (2016). Does physical activity attenuate, or even eliminate, the detrimental association of sitting time with mortality? The Lancet, 388(10051), 1302-1310.',
+    design: 'Metaanálisis armonizado de 16 cohortes (n>1.000.000, seguimiento 2-18 años) cruzando horas sentado y de TV con niveles de actividad física y mortalidad por todas las causas.'
+  },
+  related: ['comer-moverse-dormir', 'hillman-2008', 'oppezzo-2014']
+},
+
+{
+  id: 'seligman-2005', type: 'paper', emoji: '🌟', cat: 'bienestar',
+  title: 'Tres cosas buenas: las intervenciones positivas, a prueba', author: 'Seligman, Steen, Park y Peterson', year: 2005,
+  meta: ['RCT online · 411 personas · placebo', 'Resumen: 4 min'],
+  one: 'El ensayo fundacional de la psicología positiva: contra placebo, escribir «tres cosas buenas y por qué» cada noche y usar tus fortalezas de forma nueva elevaron la felicidad y bajaron síntomas depresivos durante 6 meses.',
+  ideas: [
+    '<strong>El diseño serio.</strong> Asignación aleatoria, grupo placebo (escribir recuerdos tempranos) y seguimiento a 1 semana, 1, 3 y 6 meses: el listón que casi ningún consejo de felicidad pasa.',
+    '<strong>Las dos ganadoras duraderas.</strong> «Tres cosas buenas» (anotar cada noche tres cosas que fueron bien Y su porqué, una semana) y «usar una fortaleza personal de un modo nuevo»: efectos aún visibles a los 6 meses — sobre todo en quienes siguieron practicando.',
+    '<strong>La carta de gratitud: pico y descenso.</strong> Escribir y entregar en persona una carta de agradecimiento produjo el subidón más grande… que se desvaneció hacia el mes: ideal como inyección, no como rutina.',
+    '<strong>El ingrediente es el porqué.</strong> Atribuir y explicar las cosas buenas (no solo listarlas) parece ser lo que reentrena la atención (el efecto Tetris de Achor, con datos).'
+  ],
+  actions: [
+    'Haz «tres cosas buenas» 7 noches seguidas: tres hechos del día que fueron bien + por qué ocurrieron.',
+    'Identifica tus fortalezas principales (curiosidad, humor, perseverancia…) y usa una de forma NUEVA cada día de una semana.',
+    'Guarda la carta de gratitud para momentos señalados: máxima potencia, efecto transitorio.',
+    'Si funciona, no lo conviertas en trámite diario eterno: mejor semanal y variado (Lyubomirsky).'
+  ],
+  quote: { t: 'Ejercicios sencillos y autoadministrados produjeron aumentos duraderos de felicidad y descensos de síntomas depresivos.', a: 'Conclusión del estudio' },
+  study: {
+    ref: 'Seligman, M. E. P., Steen, T. A., Park, N. y Peterson, C. (2005). Positive psychology progress: Empirical validation of interventions. American Psychologist, 60(5), 410-421.',
+    design: 'Ensayo aleatorizado online (n=411) comparando cinco ejercicios de psicología positiva contra placebo, con medidas de felicidad y depresión hasta 6 meses.'
+  },
+  related: ['emmons-2003', 'ciencia-felicidad', 'felicidad-ventaja']
+},
+
+{
+  id: 'locke-latham-2002', type: 'paper', emoji: '🥅', cat: 'productividad',
+  title: 'Metas específicas y difíciles: 35 años de evidencia', author: 'Locke y Latham', year: 2002,
+  meta: ['Síntesis · cientos de estudios', 'Resumen: 4 min'],
+  one: 'La teoría más sólida de la motivación laboral: las metas específicas y difíciles producen mejor rendimiento que «hazlo lo mejor que puedas» — con condiciones precisas que casi nadie respeta.',
+  ideas: [
+    '<strong>El hallazgo nuclear.</strong> En cientos de estudios y decenas de tareas: meta concreta y exigente («reduce los tiempos un 15% este trimestre») bate sistemáticamente a la meta vaga («mejora lo que puedas»). Lo vago invita al mínimo aceptable.',
+    '<strong>Por qué funciona.</strong> Las metas dirigen la atención, energizan, alargan la persistencia y activan la búsqueda de estrategias: cuatro mecanismos medidos, no mística.',
+    '<strong>Los moderadores que se olvidan.</strong> Exigen compromiso (participar en fijarlas ayuda), feedback de progreso (sin marcador no hay efecto) y capacidad suficiente.',
+    '<strong>La excepción crucial.</strong> En tareas COMPLEJAS y nuevas, las metas de resultado agresivas pueden empeorar el desempeño (estrechan el foco): ahí funcionan mejor metas de APRENDIZAJE («descubre 3 estrategias para…»). El antídoto al lado oscuro de los objetivos.'
+  ],
+  actions: [
+    'Convierte tu meta vaga actual en específica + difícil + con fecha, y define su marcador de progreso visible.',
+    'Si la tarea es nueva o compleja, formula metas de aprendizaje («probar/identificar N estrategias»), no de resultado.',
+    'Pide o construye feedback frecuente: meta sin marcador es decoración.',
+    'Revisa el compromiso: ¿la meta es tuya o impuesta? Renegóciala o apropiátela antes de empezar.'
+  ],
+  quote: { t: 'Las metas específicas y difíciles conducen a mayor rendimiento que pedir el mejor esfuerzo posible.', a: 'Locke y Latham' },
+  study: {
+    ref: 'Locke, E. A. y Latham, G. P. (2002). Building a practically useful theory of goal setting and task motivation: A 35-year odyssey. American Psychologist, 57(9), 705-717.',
+    design: 'Síntesis de 35 años de investigación experimental y de campo (cientos de estudios, decenas de miles de participantes) sobre fijación de metas, mecanismos y moderadores.'
+  },
+  related: ['gollwitzer-2006', 'stadler-2009', 'lo-unico']
 }
 ];
 
@@ -4204,7 +5293,7 @@ function cardHTML(item, idx) {
   const done = (store.acciones[item.id] || []).filter(Boolean).length;
   const typeLabel = item.type === 'libro' ? '📖 LIBRO' : '🔬 ESTUDIO';
   return '' +
-  '<article class="card" data-id="' + item.id + '" tabindex="0" role="button" aria-label="' + item.title + '" style="animation-delay:' + Math.min((idx || 0) * 28, 320) + 'ms">' +
+  '<article class="card" data-id="' + item.id + '" tabindex="0" role="button" aria-label="' + item.title + '" style="animation-delay:' + Math.min((idx || 0) * 28, 320) + 'ms; border-top-color:' + c.color + '">' +
     '<div class="cover" style="background: linear-gradient(135deg, ' + c.color + '33, ' + c.color + '14); border-bottom: 1px solid ' + c.color + '55;">' +
       '<span class="type-badge">' + typeLabel + '</span>' +
       '<button class="fav-btn' + (isFav(item.id) ? ' on' : '') + '" data-fav="' + item.id + '" aria-label="Favorito" title="Favorito">★</button>' +
