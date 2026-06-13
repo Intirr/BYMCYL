@@ -17,8 +17,24 @@
     --accent-3: #5b8def;
     --accent-4: #a78bfa;
     --danger: #e0606a;
+    --text-2: var(--text-2);
+    --toolbar-bg: rgba(15,17,21,.92);
+    --pill-bg: var(--pill-bg);
+    --shadow: rgba(0,0,0,.38);
     --radius: 14px;
     font-size: 16px;
+  }
+  html[data-theme="light"] {
+    --bg: #f3f5f9;
+    --surface: #ffffff;
+    --surface-2: #e9ecf3;
+    --border: #d7dce6;
+    --text: #1d2230;
+    --muted: #5e6880;
+    --text-2: #39425a;
+    --toolbar-bg: rgba(243,245,249,.92);
+    --pill-bg: rgba(255,255,255,.88);
+    --shadow: rgba(30,40,70,.16);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -27,7 +43,12 @@
     background: var(--bg);
     color: var(--text);
     line-height: 1.65;
+    transition: background .3s ease, color .3s ease;
   }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
   a { color: var(--accent-3); }
   .wrap { max-width: 1140px; margin: 0 auto; padding: 0 1.4rem; }
 
@@ -59,7 +80,7 @@
   /* ---------- Toolbar ---------- */
   .toolbar {
     position: sticky; top: 0; z-index: 50;
-    background: rgba(15,17,21,.92); backdrop-filter: blur(8px);
+    background: var(--toolbar-bg); backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border);
     padding: .9rem 0;
   }
@@ -77,6 +98,25 @@
     background: var(--surface); border: 1px solid var(--border); color: var(--text);
     border-radius: 10px; padding: .6rem .8rem; font-size: .88rem; cursor: pointer; outline: none;
   }
+  .icon-btn {
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    border-radius: 10px; padding: .6rem .8rem; font-size: .95rem; cursor: pointer;
+    transition: border-color .15s;
+  }
+  .icon-btn:hover { border-color: var(--accent); }
+  .results-count { font-size: .76rem; color: var(--muted); }
+  .to-top {
+    position: fixed; right: 1.2rem; bottom: 1.2rem; z-index: 60;
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    border-radius: 99px; width: 2.7rem; height: 2.7rem; cursor: pointer;
+    font-size: 1.15rem; display: none; box-shadow: 0 6px 18px var(--shadow);
+  }
+  .to-top.show { display: block; }
+  .ghost-btn {
+    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    border-radius: 10px; padding: .5rem .95rem; font-size: .82rem; cursor: pointer;
+  }
+  .ghost-btn:hover { border-color: var(--accent); color: var(--text); }
   .chips { display: flex; gap: .45rem; flex-wrap: wrap; }
   .chip {
     background: var(--surface); border: 1px solid var(--border); color: var(--muted);
@@ -84,7 +124,7 @@
     transition: all .15s;
   }
   .chip:hover { color: var(--text); border-color: var(--muted); }
-  .chip.active { color: #0f1115; font-weight: 700; border-color: transparent; }
+  .chip.active { color: var(--bg); font-weight: 700; border-color: transparent; }
 
   /* ---------- Grid ---------- */
   main { padding: 1.8rem 0 4rem; }
@@ -96,21 +136,27 @@
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius); overflow: hidden; cursor: pointer;
     display: flex; flex-direction: column;
-    transition: transform .15s, border-color .15s;
+    transition: transform .15s, border-color .15s, box-shadow .2s;
+    animation: cardIn .4s ease backwards;
   }
-  .card:hover { transform: translateY(-3px); border-color: var(--muted); }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .card:hover { transform: translateY(-4px); border-color: var(--muted); box-shadow: 0 12px 30px var(--shadow); }
   .cover {
     height: 104px; display: flex; align-items: center; justify-content: center;
-    font-size: 2.6rem; position: relative;
+    font-size: 2.6rem; position: relative; overflow: hidden;
+  }
+  .cover .deco {
+    position: absolute; right: -16px; bottom: -26px; font-size: 5.4rem;
+    opacity: .13; transform: rotate(-14deg); pointer-events: none; user-select: none;
   }
   .cover .type-badge {
     position: absolute; top: .6rem; left: .6rem;
-    background: rgba(15,17,21,.78); color: var(--text);
+    background: var(--pill-bg); color: var(--text);
     border-radius: 99px; padding: .12rem .6rem; font-size: .68rem; font-weight: 600;
     letter-spacing: .5px;
   }
   .cover .fav-btn {
-    position: absolute; top: .45rem; right: .5rem; background: rgba(15,17,21,.78);
+    position: absolute; top: .45rem; right: .5rem; background: var(--pill-bg);
     border: none; border-radius: 99px; width: 1.9rem; height: 1.9rem;
     font-size: .95rem; cursor: pointer; color: var(--muted); line-height: 1;
   }
@@ -119,7 +165,7 @@
   .card-body h3 { font-size: 1.02rem; line-height: 1.3; }
   .card-body .author { font-size: .78rem; color: var(--muted); }
   .card-body .one {
-    font-size: .82rem; color: #cdd3e0;
+    font-size: .82rem; color: var(--text-2);
     display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
   }
   .card-foot {
@@ -187,7 +233,7 @@
   }
 
   .detail h3 { font-size: 1.18rem; margin: 2rem 0 .8rem; color: var(--accent); }
-  .detail p { margin-bottom: 1rem; color: #cdd3e0; }
+  .detail p { margin-bottom: 1rem; color: var(--text-2); }
   .detail strong { color: var(--text); }
 
   .one-liner {
@@ -199,14 +245,14 @@
     display: block; font-size: .7rem; font-weight: 700; text-transform: uppercase;
     letter-spacing: 1.5px; color: var(--accent); margin-bottom: .3rem;
   }
-  ol.ideas { margin: 0 0 1rem 1.4rem; color: #cdd3e0; }
+  ol.ideas { margin: 0 0 1rem 1.4rem; color: var(--text-2); }
   ol.ideas li { margin-bottom: .75rem; }
 
   .checklist { display: flex; flex-direction: column; gap: .55rem; margin: 1rem 0; }
   .check-item {
     display: flex; gap: .75rem; align-items: flex-start; background: var(--surface);
     border: 1px solid var(--border); border-radius: 10px; padding: .75rem .95rem;
-    cursor: pointer; font-size: .92rem; color: #cdd3e0;
+    cursor: pointer; font-size: .92rem; color: var(--text-2);
   }
   .check-item input { margin-top: .28rem; accent-color: var(--accent-2); cursor: pointer; flex-shrink: 0; }
   .check-item.done { opacity: .65; }
@@ -238,7 +284,7 @@
 
   .related-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
   .related-chips button {
-    background: var(--surface); border: 1px solid var(--border); color: #cdd3e0;
+    background: var(--surface); border: 1px solid var(--border); color: var(--text-2);
     border-radius: 99px; padding: .4rem .9rem; font-size: .8rem; cursor: pointer;
   }
   .related-chips button:hover { border-color: var(--accent); color: var(--text); }
@@ -278,6 +324,7 @@
       <div class="stat">✅ <b id="statRead">0</b> leídos</div>
       <div class="stat">📖 <b id="statReading">0</b> leyendo</div>
       <div class="stat">⭐ <b id="statFav">0</b> favoritos</div>
+      <div class="stat">☑️ <b id="statActions">0</b> acciones hechas</div>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
@@ -305,8 +352,18 @@
         <option value="leido">Leídos</option>
         <option value="fav">⭐ Favoritos</option>
       </select>
+      <select id="sortSelect" aria-label="Ordenar">
+        <option value="default">Orden original</option>
+        <option value="titulo">Título A–Z</option>
+        <option value="autor">Autor A–Z</option>
+        <option value="anio">Año (recientes)</option>
+        <option value="anio-asc">Año (antiguos)</option>
+      </select>
+      <button class="icon-btn" id="randomBtn" title="Abrir un recurso al azar">🎲</button>
+      <button class="icon-btn" id="themeBtn" title="Cambiar tema claro/oscuro">🌗</button>
     </div>
     <div class="chips" id="catChips"></div>
+    <div class="results-count" id="resultsCount"></div>
   </div>
 </div>
 
@@ -323,11 +380,17 @@
 <footer>
   <div class="wrap">
     <p>Estos resúmenes son síntesis orientativas con fines educativos: no sustituyen la lectura de las obras originales ni asesoramiento profesional. Donde la evidencia tiene matices o controversias, se indican expresamente.</p>
-    <p style="margin-top:.6rem;">¿Quieres profundizar? Empieza por la <a href="habitos-atomicos.html">guía interactiva completa de Hábitos Atómicos</a>.</p>
+    <p style="margin-top:.6rem;">¿Quieres profundizar? Hay guías interactivas completas de <a href="habitos-atomicos.html">Hábitos Atómicos</a>, <a href="por-que-dormimos.html">Por qué dormimos</a> y <a href="meditaciones.html">Meditaciones</a>.</p>
+    <p style="margin-top:.6rem;">💾 Tu progreso vive en este navegador: <a href="#" id="exportBtn">exportar mis datos</a> · <a href="#" id="importBtn">importar</a><input type="file" id="importFile" accept="application/json" style="display:none"></p>
   </div>
 </footer>
 
+<button class="to-top" id="toTop" title="Volver arriba" aria-label="Volver arriba">↑</button>
+
 <script>
+/* ---------- Tema (claro/oscuro) ---------- */
+try { if (localStorage.getItem('bp_theme') === 'light') document.documentElement.dataset.theme = 'light'; } catch (e) {}
+
 /* =====================================================================
    DATOS — categorías y biblioteca
    ===================================================================== */
@@ -335,6 +398,7 @@ const CATS = {
   habitos:       { name: 'Hábitos',                 color: '#f5b942', emoji: '🔁' },
   productividad: { name: 'Productividad y foco',    color: '#5b8def', emoji: '🎯' },
   aprendizaje:   { name: 'Aprendizaje',             color: '#4fc08d', emoji: '🧠' },
+  creatividad:   { name: 'Creatividad',             color: '#f08a4b', emoji: '🎨' },
   psicologia:    { name: 'Psicología y decisiones', color: '#a78bfa', emoji: '🧭' },
   relaciones:    { name: 'Relaciones y comunicación', color: '#ec77ab', emoji: '🤝' },
   bienestar:     { name: 'Propósito y bienestar',   color: '#3ec6c0', emoji: '🧘' },
@@ -1737,6 +1801,817 @@ const LIBRARY = [
   related: ['cebras-ulcera', 'por-que-dormimos', 'mindfulness-cotidiana']
 },
 
+{
+  id: 'semana-4-horas', type: 'libro', emoji: '🏝️', cat: 'productividad',
+  title: 'La semana laboral de 4 horas', author: 'Tim Ferriss', year: 2007,
+  meta: ['384 páginas', 'Resumen: 7 min'],
+  one: 'Cuestiona el guion «trabaja 40 años y luego vive»: elimina lo inútil, automatiza lo repetible y diseña tu estilo de vida ahora, con mini-retiros en lugar de una jubilación diferida.',
+  ideas: [
+    '<strong>El método DEAL.</strong> Definición (qué quieres de verdad y cuánto cuesta), Eliminación (el 80/20 aplicado sin piedad), Automatización (delegar, sistematizar, externalizar) y Liberación (desligar trabajo de lugar y horario).',
+    '<strong>Pareto como navaja.</strong> ¿Qué 20% de clientes, tareas o fuentes produce el 80% de tus resultados — y qué 20% produce el 80% de tus problemas? Duplica lo primero, corta lo segundo.',
+    '<strong>La dieta de información.</strong> Consumir noticias y correo sin filtro es trabajo falso: revisa el correo en ventanas fijas y pregunta «¿usaré esta información hoy?» antes de leer.',
+    '<strong>Parkinson a tu favor.</strong> El trabajo se expande hasta llenar el tiempo disponible: plazos cortos y artificiales fuerzan foco en lo esencial.',
+    '<strong>Mini-retiros.</strong> En lugar de aplazar la vida a la jubilación, distribuye «jubilaciones» de semanas o meses a lo largo de los años: el coste real suele ser menor del que imaginas (miedo mal calculado).'
+  ],
+  actions: [
+    'Haz el ejercicio de definición de miedos (fear-setting): define el peor escenario de tu cambio deseado, cómo prevenirlo y cómo repararlo; puntúa su impacto real.',
+    'Aplica 80/20 a tu semana: identifica las 2 tareas que producen la mayoría de tu valor y las 2 fuentes de la mayoría de tus interrupciones.',
+    'Pon el correo en 2 ventanas diarias con autorespuesta que lo explique.',
+    'Da un plazo agresivo a tu próxima tarea grande (la mitad del habitual) y observa qué recortas para cumplirlo.',
+    'Diseña un mini-retiro de 1-2 semanas para los próximos 12 meses con presupuesto real.'
+  ],
+  quote: { t: 'Algún día es una enfermedad que se llevará tus sueños a la tumba.', a: 'Tim Ferriss' },
+  caveat: 'Las promesas del título son marketing y los casos tienen sesgo de supervivencia (la musa de Ferriss no es replicable a voluntad); algunas tácticas de outsourcing envejecieron mal. Lo aprovechable y vigente: fear-setting, 80/20, plazos de Parkinson, dieta de información y la idea de mini-retiros.',
+  related: ['esencialismo', 'cuatro-mil-semanas', 'gtd-organizate']
+},
+
+{
+  id: 'cuando-pink', type: 'libro', emoji: '🕑', cat: 'productividad',
+  title: '¿Cuándo? La ciencia de encontrar el momento preciso', author: 'Daniel Pink', year: 2018,
+  meta: ['272 páginas', 'Resumen: 6 min'],
+  one: 'El rendimiento no es plano a lo largo del día: hay un pico, un valle y una recuperación — y mover cada tarea a su franja correcta es una mejora gratuita.',
+  ideas: [
+    '<strong>Pico, valle y recuperación.</strong> Para la mayoría: pico por la mañana (trabajo analítico), valle a primera hora de la tarde (tareas administrativas) y recuperación al final del día (trabajo creativo y de asociación libre).',
+    '<strong>Cronotipos.</strong> Alondras, búhos y «terceros pájaros»: el patrón se desplaza según tu biología. Los búhos invierten el orden: su pico analítico llega por la tarde-noche.',
+    '<strong>El valle es peligroso.</strong> Las anestesias, las sentencias y los errores médicos empeoran a primera hora de la tarde: programa ahí lo trivial, nunca lo crítico — o vacúnate con descansos.',
+    '<strong>Los descansos son parte del rendimiento.</strong> Mejor frecuentes y breves; en compañía mejor que solos; en movimiento mejor que sentados; en naturaleza mejor que dentro; y totalmente desconectados del trabajo.',
+    '<strong>Comienzos, mitades y finales.</strong> El «efecto del comienzo nuevo» (lunes, día 1 de mes, cumpleaños) facilita arrancar hábitos; las mitades nos hunden o nos espabilan (el «uh-oh effect»); los finales energizan y editan lo que recordamos.'
+  ],
+  actions: [
+    'Determina tu cronotipo: ¿a qué hora dormirías y despertarías sin obligaciones? Calcula tu punto medio de sueño.',
+    'Reordena una semana: analítico en tu pico, administrativo en el valle, creativo en la recuperación.',
+    'Programa un «descanso de vigilancia» antes de cualquier tarea crítica de tarde: 10 minutos de pausa real.',
+    'Usa el próximo comienzo natural (lunes, día 1) para lanzar el hábito que llevas posponiendo.',
+    'Haz micro-descansos 5/55: cinco minutos de movimiento por hora trabajada.'
+  ],
+  quote: { t: 'El momento oportuno no es un arte: es una ciencia.', a: 'Daniel Pink (tesis del libro)' },
+  science: 'Síntesis de cronobiología y psicología del rendimiento (análisis de 500 millones de tuits, resultados escolares según hora del examen, datos de juicios y quirófanos). Algunos efectos individuales son modestos, pero la estructura pico-valle-recuperación está bien documentada.',
+  related: ['por-que-dormimos', 'deep-work', 'descansa-rest']
+},
+
+{
+  id: 'bullet-journal', type: 'libro', emoji: '📓', cat: 'productividad',
+  title: 'El método Bullet Journal', author: 'Ryder Carroll', year: 2018,
+  meta: ['336 páginas', 'Resumen: 6 min'],
+  one: 'Un cuaderno y un sistema de registro rápido bastan para organizar tareas, eventos y notas — y la migración mensual a mano es el filtro que obliga a preguntarse si algo merece tu tiempo.',
+  ideas: [
+    '<strong>Registro rápido (rapid logging).</strong> Todo se anota en frases cortas con símbolos: • tarea, ○ evento, — nota; ✕ completada, > migrada, < programada. Mínima fricción, máxima captura.',
+    '<strong>Las colecciones.</strong> Registro diario, registro mensual, registro futuro y colecciones temáticas (proyectos, listas): módulos que creas solo cuando los necesitas.',
+    '<strong>La migración es la magia.</strong> Al cerrar el mes reescribes a mano lo pendiente: si algo no merece ni el esfuerzo de reescribirlo, no merece tu tiempo — táchalo sin culpa.',
+    '<strong>Productividad con intención.</strong> El objetivo no es hacer más sino hacer lo que importa: el cuaderno es también un diario de reflexión (¿por qué está esto en mi lista?).',
+    '<strong>Analógico a propósito.</strong> Escribir a mano ralentiza lo justo para pensar, y el cuaderno no tiene notificaciones.'
+  ],
+  actions: [
+    'Monta el esqueleto en 15 minutos: índice, registro futuro (6 meses), registro mensual y tu primer registro diario.',
+    'Usa el registro diario como bandeja única de captura durante una semana.',
+    'Haz tu primera migración mensual y tacha conscientemente al menos 3 pendientes que ya no merecen reescribirse.',
+    'Añade una reflexión de 2 líneas al cierre de cada día: qué importó, qué sobró.'
+  ],
+  quote: { t: 'Tu cuaderno es un espejo: te muestra en qué estás invirtiendo realmente tu vida.', a: 'Ryder Carroll (tesis del libro)' },
+  science: 'Sin estudios propios, pero bien alineado: la captura externa libera memoria de trabajo (Zeigarnik/Masicampo), la escritura a mano favorece el procesamiento reflexivo y la revisión periódica es el corazón de cualquier sistema GTD-like.',
+  related: ['gtd-organizate', 'esencialismo', 'cuatro-mil-semanas']
+},
+
+{
+  id: 'descansa-rest', type: 'libro', emoji: '🛋️', cat: 'productividad',
+  title: 'Descansa (Rest: Why You Get More Done When You Work Less)', author: 'Alex Soojung-Kim Pang', year: 2016,
+  meta: ['320 páginas', 'Resumen: 6 min'],
+  one: 'El descanso no es la ausencia de trabajo sino su socio: las mentes más productivas de la historia trabajaban ~4 horas intensas y descansaban en serio el resto.',
+  ideas: [
+    '<strong>Las cuatro horas de los grandes.</strong> Darwin, Dickens, Poincaré: jornadas de 4-5 horas de trabajo concentrado por la mañana y tardes de paseos, cartas y siestas. No a pesar de su producción: gracias a ella.',
+    '<strong>El descanso es activo a nivel cerebral.</strong> La red por defecto sigue trabajando los problemas en segundo plano (incubación): por eso las ideas llegan en la ducha y en el paseo.',
+    '<strong>Descanso deliberado.</strong> No es scroll ni sofá pasivo: paseos, siestas cortas, ejercicio, juego profundo (hobbies serios con reto y progreso) y sueño. Se programa, no se deja al azar.',
+    '<strong>Parar a mitad de cuesta.</strong> Detener la jornada sabiendo cuál es el siguiente paso (truco de Hemingway) hace que retomar sea fácil y que la incubación trabaje de noche.',
+    '<strong>Los sabáticos y vacaciones reales</strong> restauran y generan los saltos creativos que el goteo diario no permite.'
+  ],
+  actions: [
+    'Comprime tu trabajo exigente a 4 horas protegidas y trata el resto como apoyo y recuperación.',
+    'Termina cada sesión «a mitad de cuesta»: deja escrita la siguiente frase o paso concreto.',
+    'Camina 20-30 minutos sin móvil cuando estés atascado: es incubación, no pereza.',
+    'Adopta un «juego profundo»: un hobby con habilidad y progreso (música, escalada, ajedrez, jardín).',
+    'Siesta de 20 minutos antes de las 15:00 los días duros.'
+  ],
+  quote: { t: 'El descanso no es el rival del trabajo: es su compañero de equipo.', a: 'Alex Soojung-Kim Pang (tesis del libro)' },
+  science: 'Combina historia de la ciencia con neurociencia real (red por defecto, incubación, siestas y consolidación). Las biografías están seleccionadas, pero la literatura sobre descanso y rendimiento apunta consistentemente en la misma dirección.',
+  related: ['deep-work', 'por-que-dormimos', 'cuatro-mil-semanas']
+},
+
+{
+  id: 'traguese-sapo', type: 'libro', emoji: '🐸', cat: 'productividad',
+  title: 'Tráguese ese sapo', author: 'Brian Tracy', year: 2001,
+  meta: ['144 páginas', 'Resumen: 5 min'],
+  one: 'Si lo primero que haces cada mañana es tragarte un sapo —tu tarea más importante y más incómoda—, el resto del día solo puede mejorar.',
+  ideas: [
+    '<strong>El sapo primero.</strong> Tu tarea de más impacto suele ser la que más pereza da: hazla a primera hora, con la energía intacta y antes de que el día decida por ti.',
+    '<strong>Planifica la noche anterior.</strong> Diez minutos de lista escrita ahorran horas de deriva: el subconsciente además trabaja la lista mientras duermes.',
+    '<strong>El método ABCDE.</strong> A = consecuencias serias si no se hace; B = consecuencias leves; C = agradable pero sin consecuencias; D = delegable; E = eliminable. Nunca hagas una B con una A pendiente.',
+    '<strong>La ley de las tres.</strong> Tres tareas explican la mayor parte de tu contribución: identifícalas y dales la mañana.',
+    '<strong>No hay tiempo para todo.</strong> La gestión del tiempo es en realidad gestión de prioridades: siempre estarás atrasado en algo — que sea en lo que importa menos.'
+  ],
+  actions: [
+    'Esta noche escribe la lista de mañana y marca el sapo (la A más fea).',
+    'Mañana, trágate el sapo antes de abrir correo o mensajería.',
+    'Aplica ABCDE a tu lista actual y elimina o delega al menos 2 elementos.',
+    'Identifica tus «tres grandes»: las 3 tareas que justifican tu puesto o tu proyecto.'
+  ],
+  quote: { t: 'Si tienes que tragarte dos sapos, trágate primero el más feo.', a: 'Brian Tracy' },
+  caveat: 'Clásico motivacional sin estudios: son máximas, no ciencia. Pero coinciden con lo que la investigación de la procrastinación sugiere: empezar por lo aversivo cuando hay más energía y autocontrol disponible (ver el metaanálisis de Steel en esta biblioteca).',
+  related: ['steel-2007', 'gtd-organizate', 'cuando-pink']
+},
+
+{
+  id: 'efecto-compuesto', type: 'libro', emoji: '📈', cat: 'habitos',
+  title: 'El efecto compuesto', author: 'Darren Hardy', year: 2010,
+  meta: ['192 páginas', 'Resumen: 5 min'],
+  one: 'Las decisiones pequeñas, repetidas con constancia en el tiempo, producen diferencias enormes: el éxito es interés compuesto aplicado a la conducta diaria.',
+  ideas: [
+    '<strong>Pequeñas decisiones, grandes curvas.</strong> Un 1% diario apenas se nota durante meses — y luego la curva se dispara. La trampa: abandonar justo antes de la inflexión porque «no funciona».',
+    '<strong>Todo empieza por medir.</strong> No puedes cambiar lo que no rastreas: registrar gastos, comida o tiempo durante 3 semanas revela las fugas invisibles.',
+    '<strong>El momentum (Big Mo).</strong> Arrancar cuesta el 90% del esfuerzo: las rutinas protegen la constancia para que el impulso trabaje a tu favor.',
+    '<strong>Las influencias cuentan como hábitos.</strong> Lo que consumes (medios), con quién andas (asociaciones) y tu entorno componen igual que tus actos: cúralos.',
+    '<strong>Responsabilidad del 100%.</strong> Asumir la propiedad total de tus resultados (suerte incluida) es la postura que permite ajustar el rumbo.'
+  ],
+  actions: [
+    'Elige UN área y rastrea cada decisión relacionada durante 21 días (libreta o app).',
+    'Define tu rutina de arranque matinal y tu rutina de cierre nocturna: los dos «raíles» del día.',
+    'Audita tus 5 influencias principales (personas y medios): ¿componen a favor o en contra?',
+    'Escribe tu «por qué» del hábito clave: la constancia sin propósito se agota.'
+  ],
+  quote: { t: 'Pequeñas elecciones inteligentes + constancia + tiempo = diferencia radical.', a: 'Darren Hardy' },
+  caveat: 'Anécdotas y aritmética motivacional, sin estudios: es «Hábitos Atómicos antes de Hábitos Atómicos», con menos ciencia. Si tienes que elegir uno, elige el de Clear; este suma por el énfasis en rastrear y en las influencias.',
+  related: ['habitos-atomicos', 'poder-habitos', 'psicologia-dinero']
+},
+
+{
+  id: 'ego-enemigo', type: 'libro', emoji: '🪞', cat: 'bienestar',
+  title: 'El ego es el enemigo', author: 'Ryan Holiday', year: 2016,
+  meta: ['256 páginas', 'Resumen: 6 min'],
+  one: 'En cada etapa —aspirar, tener éxito, fracasar— el ego es el saboteador silencioso: hablar de más, creerse el relato, no poder aprender ni delegar ni encajar un golpe.',
+  ideas: [
+    '<strong>Aspira sin ruido.</strong> Hablar del objetivo da una recompensa que sustituye al trabajo: hacer > anunciar. La pregunta del aspirante: ¿para qué lo quiero — el trabajo o el reconocimiento?',
+    '<strong>Sé siempre el estudiante.</strong> El que se cree maestro deja de aprender: busca alguien mejor que tú de quien aprender, alguien a tu nivel con quien medirte y alguien a quien enseñar.',
+    '<strong>Con éxito, sobriedad.</strong> El éxito infla el relato («todo fue mérito mío») y mata la disciplina que lo creó: mantén la rutina, delega de verdad y desconfía de tu propia leyenda.',
+    '<strong>El fracaso es el examen del carácter.</strong> Cuando llegue el golpe (llegará): ¿culpas, te hundes o conviertes el momento en información? El «momento de la verdad» define la siguiente etapa.',
+    '<strong>Hechos, no narrativa.</strong> El ego ama las historias (de futuro grandioso o de víctima): vuelve a lo concreto — qué toca hacer hoy.'
+  ],
+  actions: [
+    'Próximo proyecto: cuenta el plan a 0 personas durante el primer mes; deja que el trabajo hable.',
+    'Monta tu triángulo de aprendizaje: un mentor, un par que te rete y alguien a quien enseñar.',
+    'Tras tu próximo logro, escribe la lista honesta de ayudas y azares que lo hicieron posible.',
+    'Tras tu próximo golpe, escribe el informe sin culpas: hechos, mi parte, siguiente acción.'
+  ],
+  quote: { t: 'No es que la humildad sea bonita: es que funciona.', a: 'Ryan Holiday (tesis del libro)' },
+  caveat: 'Como El obstáculo es el camino: anécdotas históricas escogidas, no evidencia. Conecta bien con la investigación sobre sobreconfianza (Kahneman) y con el hallazgo de que anunciar metas puede sustituir al progreso real (Gollwitzer 2009, «identidad simbólica»).',
+  related: ['obstaculo-camino', 'meditaciones', 'piensalo-otra-vez']
+},
+
+{
+  id: 'moonwalking', type: 'libro', emoji: '🏰', cat: 'aprendizaje',
+  title: 'Los desafíos de la memoria (Moonwalking with Einstein)', author: 'Joshua Foer', year: 2011,
+  meta: ['320 páginas', 'Resumen: 6 min'],
+  one: 'Un periodista con memoria corriente gana el campeonato de memoria de EE. UU. en un año: las técnicas milenarias (palacios de memoria) funcionan porque convierten lo abstracto en espacial y vívido.',
+  ideas: [
+    '<strong>La memoria excepcional se fabrica.</strong> Los campeones no nacen distintos: usan codificación elaborada — los estudios de neuroimagen muestran que activan áreas espaciales, no «más memoria».',
+    '<strong>El palacio de memoria (método de loci).</strong> Coloca imágenes absurdas y vívidas de lo que quieres recordar en lugares de un recorrido que conoces (tu casa): el cerebro recuerda espacios y escenas mucho mejor que listas.',
+    '<strong>Cuanto más ridículo, más memorable.</strong> Humor, exageración, movimiento y emoción son pegamento: la elaboración es la clave, no la repetición.',
+    '<strong>La meseta OK.</strong> Dejamos de mejorar cuando automatizamos «suficiente» (mecanografía, conducción): se sale practicando al borde del fallo, cronometrando y analizando errores — práctica deliberada.',
+    '<strong>Memoria y vida.</strong> Recordar es construir significado: una vida con experiencias memorables se siente más larga; externalizarlo todo tiene un coste.'
+  ],
+  actions: [
+    'Construye tu primer palacio: 10 ubicaciones de tu casa en orden fijo, y memoriza con él la lista de la compra de esta semana.',
+    'Convierte 5 datos áridos que necesites (cifras, fechas) en imágenes absurdas y colócalas en el palacio.',
+    'Para salir de tu meseta en cualquier habilidad: sesiones cronometradas al borde del fallo + registro de errores.',
+    'Antes de externalizar un dato al móvil, pregúntate si te compensa tenerlo en la cabeza (idiomas, nombres, ideas clave).'
+  ],
+  quote: { t: 'Aprendemos a recordar cuando hacemos que las cosas signifiquen algo.', a: 'Joshua Foer (tesis del libro)' },
+  science: 'El método de loci está validado experimentalmente (Maguire et al., 2003: los campeones tienen cerebros normales que usan rutas espaciales; estudios posteriores muestran que novatos entrenados duplican su recuerdo). Ojo: mnemotecnia retiene, no comprende — combínala con elaboración (ver Apréndetelo).',
+  related: ['aprendetelo', 'ericsson-1993', 'mente-numeros']
+},
+
+{
+  id: 'peak-ericsson', type: 'libro', emoji: '🏔️', cat: 'aprendizaje',
+  title: 'Número uno (Peak): secretos de la nueva ciencia de la pericia', author: 'Anders Ericsson y Robert Pool', year: 2016,
+  meta: ['336 páginas', 'Resumen: 7 min'],
+  one: 'El creador del concepto explica la práctica deliberada de primera mano: la pericia es entrenamiento estructurado de representaciones mentales, no talento — y desmonta los mitos de su propia regla.',
+  ideas: [
+    '<strong>Práctica naive vs deliberada.</strong> Repetir lo que ya sabes no mejora nada (puedes conducir 30 años igual de mal). La deliberada: objetivo específico, foco total, feedback inmediato, salir de la zona de confort.',
+    '<strong>Representaciones mentales.</strong> Lo que distingue al experto es la calidad de sus modelos mentales (el ajedrecista «ve» estructuras, el médico patrones): la práctica deliberada existe para construirlas y refinarlas.',
+    '<strong>La regla de las 10.000 horas es un mito… de Gladwell.</strong> Ericsson lo aclara: el número era un promedio a cierta edad, no un umbral mágico, y la CALIDAD de la práctica importa más que la cantidad.',
+    '<strong>El cuerpo y el cerebro se adaptan a lo que se les exige.</strong> Homeostasis: sin demanda nueva no hay adaptación; la mejora vive justo fuera del confort (ni dentro, ni demasiado lejos).',
+    '<strong>Si no hay maestro:</strong> el método de las «tres F»: focus, feedback, fix it — descompón la habilidad, mide, aísla el error, repite.'
+  ],
+  actions: [
+    'Define la habilidad en sub-habilidades y elige la que más te limita: esa es tu práctica de este mes.',
+    'Diseña ejercicios con feedback inmediato (grabarte, métricas, un revisor) y sesiones de 45-60 min de foco total.',
+    'Busca al mejor maestro/material a tu alcance y copia cómo entrenan los mejores de tu campo (no qué hacen, cómo practican).',
+    'Cuando dejes de fallar, sube la dificultad: el error al 20-30% es señal de zona correcta.'
+  ],
+  quote: { t: 'No practicas hasta que te salga bien: practicas hasta que no pueda salirte mal.', a: 'Anders Ericsson (tesis del libro)' },
+  science: 'Es la fuente primaria: el autor del paper de 1993 de esta biblioteca corrige aquí las simplificaciones populares. Mantén el matiz de Macnamara et al. (2014): la práctica deliberada explica mucho, no todo (genética, edad de inicio y azar también cuentan).',
+  related: ['ericsson-1993', 'grit', 'amplitud-range']
+},
+
+{
+  id: 'arte-de-aprender', type: 'libro', emoji: '♟️', cat: 'aprendizaje',
+  title: 'El arte de aprender', author: 'Josh Waitzkin', year: 2007,
+  meta: ['288 páginas', 'Resumen: 6 min'],
+  one: 'Un prodigio del ajedrez convertido en campeón mundial de tai chi destila los principios que le sirvieron en ambos mundos: profundidad sobre amplitud, usar las derrotas y rendir bajo presión.',
+  ideas: [
+    '<strong>Aprender es una habilidad transferible.</strong> Waitzkin no domina dos disciplinas por talento doble: domina el proceso de aprender (meta-aprendizaje encarnado).',
+    '<strong>Círculos más pequeños.</strong> Domina un movimiento simple hasta la profundidad máxima antes de acumular técnicas: la esencia comprimida luego se expande a todo (profundidad > amplitud).',
+    '<strong>Invertir en la pérdida.</strong> Exponerse a perder contra mejores —sin protegerte— es donde está la información: quien evita perder, deja de aprender.',
+    '<strong>Mentalidad incremental vs de entidad.</strong> Su versión vivida de Dweck: los niños «soy listo» colapsan ante la dificultad; los «puedo aprenderlo» la buscan.',
+    '<strong>La zona blanda y el disparador.</strong> Rendir bajo caos se entrena: construye una rutina corta (respiración, música, gesto) asociada a tu mejor estado y dispárala antes de los momentos clave.'
+  ],
+  actions: [
+    'Elige el «movimiento» más básico de tu disciplina y dedícale 2 semanas de profundidad exclusiva.',
+    'Busca activamente rivales/proyectos que te ganen: registra qué te enseñó cada derrota.',
+    'Construye tu rutina-disparador de 5 minutos (luego acórtala) para entrar en foco a demanda.',
+    'Tras cada error grave, practica la «recuperación del presente»: respira, suelta el error, juega la posición que hay (no la que había).'
+  ],
+  quote: { t: 'El arte de aprender es el arte de perder el miedo a perder.', a: 'Josh Waitzkin (tesis del libro)' },
+  science: 'Memoria autobiográfica de un practicante de élite, no ciencia — pero sus principios encajan con la práctica deliberada (Ericsson), la mentalidad de crecimiento (Dweck) y las rutinas pre-desempeño documentadas en psicología del deporte.',
+  related: ['peak-ericsson', 'mindset', 'fluir']
+},
+
+{
+  id: 'predeciblemente-irracional', type: 'libro', emoji: '🃏', cat: 'psicologia',
+  title: 'Las trampas del deseo (Predeciblemente irracional)', author: 'Dan Ariely', year: 2008,
+  meta: ['368 páginas', 'Resumen: 6 min'],
+  one: 'No somos irracionales al azar sino de forma sistemática y predecible: conocer los patrones (relatividad, gratis, anclas, normas sociales) permite diseñar contra ellos.',
+  ideas: [
+    '<strong>Todo es relativo (y el señuelo lo explota).</strong> No sabemos cuánto vale algo: comparamos. Una opción «señuelo» claramente peor que otra empuja la elección hacia la cara (el menú del Economist).',
+    '<strong>El poder irracional de lo GRATIS.</strong> Gratis no es un precio más: desactiva el análisis coste-beneficio (elegimos el bombón gratis peor antes que el excelente a 1 céntimo).',
+    '<strong>Normas sociales vs normas de mercado.</strong> Pedir un favor y pagar mal son mundos distintos: introducir dinero en una relación social la reconfigura (y a veces la arruina — guarderías que multan retrasos).',
+    '<strong>El efecto dotación y las puertas abiertas.</strong> Sobrevaloramos lo nuestro y nos cuesta cerrar opciones, aunque mantenerlas abiertas nos empobrezca.',
+    '<strong>Precompromiso contra la procrastinación.</strong> Sus estudiantes con plazos autoimpuestos y rígidos rindieron mejor que los de plazo libre: átate al mástil por adelantado.'
+  ],
+  actions: [
+    'Antes de comprar, elimina el señuelo: compara solo las dos opciones que de verdad considerarías.',
+    'Cuando algo sea «gratis», calcula su precio real en tiempo, datos o compras arrastradas.',
+    'No mezcles sin querer normas: si pides como amigo, agradece como amigo; si pagas, paga bien.',
+    'Usa precompromisos con coste real para tus plazos (entregas parciales, dinero en juego, testigos).'
+  ],
+  quote: { t: 'Somos peones en un juego cuyas fuerzas no vemos: la buena noticia es que esas fuerzas son predecibles.', a: 'Dan Ariely (tesis del libro)' },
+  caveat: 'Aviso necesario: en 2021 se detectó fraude de datos en UN estudio firmado por Ariely (el de las aseguradoras, ajeno a este libro), y varias réplicas del campo han salido más débiles. Los fenómenos centrales del libro (señuelo, gratis, dotación, precompromiso) tienen apoyo independiente; léelo igualmente con el escepticismo que él mismo enseña.',
+  related: ['pensar-rapido', 'nudge', 'influencia']
+},
+
+{
+  id: 'nudge', type: 'libro', emoji: '👉', cat: 'psicologia',
+  title: 'Un pequeño empujón (Nudge)', author: 'Richard Thaler y Cass Sunstein', year: 2008,
+  meta: ['464 páginas', 'Resumen: 6 min'],
+  one: 'No existe el diseño neutral: cómo se presentan las opciones (el orden, el defecto, el esfuerzo) decide tanto como las opciones mismas — y puede usarse para facilitar las buenas decisiones sin prohibir nada.',
+  ideas: [
+    '<strong>Arquitectura de la elección.</strong> Quien diseña el formulario, el menú o la app decide en parte el resultado: la pregunta no es «¿influir o no?» (siempre influyes) sino «¿hacia dónde?».',
+    '<strong>El poder del defecto.</strong> La opción por omisión gana casi siempre (donación de órganos, planes de pensiones): la inercia es la fuerza conductual más fiable que existe.',
+    '<strong>Save More Tomorrow.</strong> Comprometerse HOY a ahorrar parte de las subidas FUTURAS esquiva la aversión a la pérdida: el programa multiplicó tasas de ahorro reales.',
+    '<strong>Mapear y dar feedback.</strong> Buenas decisiones requieren ver las consecuencias: traducir megavatios a euros y calorías a minutos de paseo es arquitectura de elección.',
+    '<strong>Paternalismo libertario.</strong> Facilitar la opción buena dejando todas abiertas: empujar, no obligar. (Y su reverso oscuro: el «sludge», la fricción deliberada para que no canceles la suscripción.)'
+  ],
+  actions: [
+    'Auto-nudge: rediseña tus propios defectos — ahorro automático, fruta a la vista, móvil en escala de grises, suscripciones que caducan.',
+    'Aplica Save More Tomorrow a tu economía: comprométete por escrito a destinar la mitad de tu próxima subida a inversión.',
+    'Si diseñas para otros (productos, formularios, equipos): revisa qué defecto estás imponiendo y si va a favor del usuario.',
+    'Detecta el sludge en tu vida: 2 procesos con fricción hostil (cancelaciones, reembolsos) y resuélvelos de una vez.'
+  ],
+  quote: { t: 'No hay diseño neutral: pequeños y aparentemente insignificantes detalles tienen gran impacto en la conducta.', a: 'Thaler y Sunstein' },
+  science: 'Thaler ganó el Nobel de Economía (2017) por esta línea. Los nudges funcionan, con matiz: el metaanálisis de implementaciones gubernamentales reales (DellaVigna y Linos, 2022) encuentra efectos positivos pero bastante menores que los de los papers académicos. Los defectos siguen siendo el rey.',
+  related: ['pensar-rapido', 'predeciblemente-irracional', 'habitos-atomicos']
+},
+
+{
+  id: 'antifragil', type: 'libro', emoji: '🌪️', cat: 'psicologia',
+  title: 'Antifrágil: las cosas que se benefician del desorden', author: 'Nassim Taleb', year: 2012,
+  meta: ['656 páginas', 'Resumen: 7 min'],
+  one: 'Más allá de lo robusto (resiste el caos) existe lo antifrágil (mejora con él): diseña tu vida, salud y finanzas para ganar con la volatilidad en lugar de rezarle a la estabilidad.',
+  ideas: [
+    '<strong>La tríada.</strong> Frágil (se rompe con el estrés: la copa), robusto (lo aguanta: la roca), antifrágil (lo aprovecha: el músculo, el sistema inmune, la hidra). Pregunta clave para todo: ¿en cuál categoría está esto?',
+    '<strong>Hormesis.</strong> Dosis pequeñas de estresor fortalecen (ejercicio, ayuno, frío, críticas): privar a un sistema de volatilidad lo vuelve frágil (el pavo de Acción de Gracias, los bosques sin incendios pequeños).',
+    '<strong>La estrategia barbell.</strong> Extremadamente conservador en el 85-90% (ahorro seguro, empleo estable) + extremadamente agresivo en el 10-15% (apuestas con pérdida limitada y ganancia ilimitada). Nada en el medio tibio.',
+    '<strong>Opcionalidad.</strong> Colecciona opciones asimétricas: situaciones donde perder cuesta poco y ganar puede ser enorme (proyectos paralelos, conocer gente, experimentos baratos).',
+    '<strong>Via negativa.</strong> La mejora más segura es quitar: deudas, fragilidades, hábitos tóxicos, ruido. Lo que sobrevive milenios (Lindy) suele valer más que la novedad.'
+  ],
+  actions: [
+    'Clasifica tus 5 pilares (ingresos, salud, ahorro, relaciones, habilidades) en frágil/robusto/antifrágil y refuerza el más frágil.',
+    'Monta tu barbell financiero: colchón ultraseguro + un % pequeño en apuestas asimétricas que puedas perder por completo.',
+    'Añade un estresor hormético semanal (ya lo hace Invicto: frío, ayuno, esfuerzo) y elimina un frágilizador (una deuda, una dependencia).',
+    'Antes de optimizar nada, aplica via negativa: ¿qué puedo QUITAR que mejore el sistema?'
+  ],
+  quote: { t: 'El viento apaga una vela y aviva una hoguera. Quieres ser la hoguera.', a: 'Nassim Taleb' },
+  caveat: 'Marco conceptual brillante con estilo combativo y generalizaciones; no es ciencia experimental (aunque la hormesis biológica es real). Su valor: una lente para decisiones bajo incertidumbre que complementa los sesgos de Kahneman.',
+  related: ['pensar-rapido', 'psicologia-dinero', 'invicto']
+},
+
+{
+  id: 'ruido-kahneman', type: 'libro', emoji: '📢', cat: 'psicologia',
+  title: 'Ruido: un fallo en el juicio humano', author: 'Daniel Kahneman, Olivier Sibony y Cass Sunstein', year: 2021,
+  meta: ['464 páginas', 'Resumen: 6 min'],
+  one: 'Donde hay juicio hay ruido: dos jueces, médicos o evaluadores ante el mismo caso dan veredictos muy distintos — y ese error aleatorio, invisible y enorme, se puede medir y reducir.',
+  ideas: [
+    '<strong>Ruido ≠ sesgo.</strong> El sesgo es error sistemático (todos se desvían igual); el ruido es dispersión (cada uno se desvía a su manera). En la diana: sesgo = tiros agrupados fuera del centro; ruido = tiros dispersos.',
+    '<strong>El ruido es escandalosamente grande.</strong> Mismos expedientes: condenas de 1 a 10 años según el juez; primas de seguros que varían 5 veces según el analista — y las organizaciones ni lo miden.',
+    '<strong>Tres ruidos.</strong> De nivel (jueces duros vs blandos), de patrón (a cada cual le activan cosas distintas) y de ocasión (el mismo experto decide distinto según el día, el hambre o el partido de ayer).',
+    '<strong>Higiene de decisiones.</strong> Juicios independientes antes de deliberar (la discusión sincroniza y amplifica), descomponer el juicio en dimensiones, escalas relativas en vez de absolutas, agregar varias estimaciones.',
+    '<strong>Reglas y modelos simples</strong> superan al juicio experto caso a caso con una frecuencia incómoda: si no puedes usar una regla, al menos estructura el juicio.'
+  ],
+  actions: [
+    'Haz una mini-auditoría de ruido: pide a 2-3 personas evaluar lo mismo por separado (un candidato, un presupuesto) y mide la dispersión antes de discutir.',
+    'En decisiones importantes recurrentes, define 3-5 dimensiones y puntúalas por separado antes del veredicto global.',
+    'Recoge opiniones por escrito ANTES de la reunión que las discuta.',
+    'Para tus propias decisiones: no decidas lo mismo dos veces en estados muy distintos sin darte cuenta (registra fecha y estado al decidir).'
+  ],
+  quote: { t: 'Donde hay juicio, hay ruido — y más del que crees.', a: 'Kahneman, Sibony y Sunstein' },
+  science: 'Continuación natural de Pensar rápido: aquí el enemigo no es el sesgo sino la varianza. Se apoya en auditorías reales (justicia, seguros, medicina) y en la vieja literatura de predicción clínica vs estadística (Meehl). Sólido y accionable para organizaciones.',
+  related: ['pensar-rapido', 'piensalo-otra-vez', 'decidete-heath']
+},
+
+{
+  id: 'paradoja-eleccion', type: 'libro', emoji: '🛒', cat: 'psicologia',
+  title: 'La paradoja de la elección (Por qué más es menos)', author: 'Barry Schwartz', year: 2004,
+  meta: ['304 páginas', 'Resumen: 6 min'],
+  one: 'A partir de cierto punto, más opciones no liberan: paralizan, elevan expectativas y fabrican arrepentimiento — elegir «suficientemente bien» te hace más feliz que buscar lo óptimo.',
+  ideas: [
+    '<strong>La sobrecarga de opciones.</strong> El famoso experimento de las mermeladas: con 24 variedades se prueba más, con 6 se compra más. Decidir entre demasiado parecido agota y pospone.',
+    '<strong>Maximizadores vs satisfacers.</strong> El maximizador necesita lo MEJOR (compara todo, sigue mirando tras comprar); el satisfacer define criterios y toma lo primero que los cumple. Mismos resultados objetivos, mucha más satisfacción para el satisfacer.',
+    '<strong>Los costes de oportunidad envenenan.</strong> Cada alternativa considerada resta brillo a la elegida: cuanto más comparas, menos disfrutas lo que tienes.',
+    '<strong>Expectativas infladas.</strong> Con tanto donde elegir, lo «bastante bueno» parece fracaso, y cualquier defecto es culpa tuya por elegir mal: la elección convierte la decepción en autoinculpación.',
+    '<strong>Las decisiones reversibles satisfacen menos.</strong> Poder cambiar de opinión mantiene la mente comparando (enlaza con Gilbert): cerrar puertas es un regalo psicológico.'
+  ],
+  actions: [
+    'Decide en qué dominios merece la pena maximizar (2-3 a lo sumo) y satisface en todo lo demás.',
+    'Define los criterios ANTES de mirar opciones, y compra lo primero que los cumpla.',
+    'Pon límites de exploración: máximo 3 presupuestos, 30 minutos de comparativas, 1 página de resultados.',
+    'Tras elegir, prohíbete mirar alternativas (desuscríbete de las alertas de precio).',
+    'Practica gratitud sobre lo elegido: contrarresta el coste de oportunidad imaginario.'
+  ],
+  quote: { t: 'El secreto de la felicidad son las bajas expectativas.', a: 'Barry Schwartz (con ironía solo parcial)' },
+  caveat: 'El efecto «sobrecarga de opciones» tiene réplicas mixtas (metaanálisis de Scheibehenne 2010: promedio cercano a cero; Chernev 2015: real bajo condiciones concretas — opciones similares, sin preferencias previas, decisión difícil). La distinción maximizador/satisfacer sí es robusta y es lo más útil del libro.',
+  related: ['esencialismo', 'tropezar-felicidad', 'pensar-rapido']
+},
+
+{
+  id: 'switch-heath', type: 'libro', emoji: '💡', cat: 'psicologia',
+  title: 'Cambia el chip (Switch)', author: 'Chip Heath y Dan Heath', year: 2010,
+  meta: ['320 páginas', 'Resumen: 6 min'],
+  one: 'Todo cambio difícil es un jinete racional sobre un elefante emocional recorriendo un camino: dirige al jinete, motiva al elefante y allana el camino — las tres cosas, no una.',
+  ideas: [
+    '<strong>El marco jinete-elefante-camino.</strong> Si el cambio fracasa, no es (solo) falta de voluntad: o el jinete no tiene dirección clara, o el elefante no tiene ganas, o el camino está lleno de fricción.',
+    '<strong>Dirige al jinete.</strong> Busca las excepciones brillantes (¿dónde YA funciona esto? — los niños bien nutridos de Vietnam), prescribe movimientos críticos concretos (no «come sano»: «leche desnatada») y señala el destino con una postal vívida.',
+    '<strong>Motiva al elefante.</strong> Los datos no mueven; las emociones sí (ver-sentir-cambiar). Encoge el cambio (empezar con la tarjeta de fidelidad ya sellada 2 veces) y cultiva identidad («soy de los que…»).',
+    '<strong>Allana el camino.</strong> Cambia el entorno antes que a la persona (palomitas en cubo pequeño), construye hábitos y agrupa al rebaño: la conducta es contagiosa.',
+    '<strong>Lo que parece resistencia suele ser falta de claridad,</strong> y lo que parece pereza suele ser agotamiento del elefante.'
+  ],
+  actions: [
+    'Para tu cambio pendiente, escribe el diagnóstico triple: ¿qué le falta al jinete (claridad), al elefante (emoción) y al camino (entorno)?',
+    'Encuentra tus excepciones brillantes: ¿cuándo NO ocurre el problema? Copia esas condiciones.',
+    'Convierte la meta en 2 movimientos críticos concretos y observables.',
+    'Encoge el primer paso hasta que dé pereza decir que no, y modifica una pieza del entorno hoy.'
+  ],
+  quote: { t: 'Lo que parece un problema de personas suele ser un problema de situación.', a: 'Chip y Dan Heath' },
+  science: 'El marco del jinete y el elefante viene de Haidt (La hipótesis de la felicidad, en esta biblioteca); el libro lo convierte en método con casos reales y literatura de cambio organizacional. Divulgación seria, muy aplicable.',
+  related: ['hipotesis-felicidad', 'habitos-atomicos', 'poder-habitos']
+},
+
+{
+  id: 'decidete-heath', type: 'libro', emoji: '🔀', cat: 'psicologia',
+  title: 'Decídete (Decisive)', author: 'Chip Heath y Dan Heath', year: 2013,
+  meta: ['336 páginas', 'Resumen: 6 min'],
+  one: 'Cuatro villanos arruinan las decisiones (marco estrecho, confirmación, emoción del momento, exceso de confianza) y el proceso WRAP los desactiva uno a uno.',
+  ideas: [
+    '<strong>Villano 1: el marco estrecho → amplía tus opciones (W).</strong> «¿Hago X o no?» es casi siempre la pregunta equivocada. Prueba el test de la desaparición de opciones: si X no existiera, ¿qué harías? Y busca el «Y» en lugar del «O».',
+    '<strong>Villano 2: el sesgo de confirmación → contrasta con la realidad (R).</strong> Haz preguntas que puedan desmentirte, busca la tasa base (vista externa) y haz «ooching»: experimentos pequeños antes de apostar (prácticas antes de carrera).',
+    '<strong>Villano 3: la emoción del momento → toma distancia (A).</strong> La regla 10/10/10: ¿cómo lo verás en 10 minutos, 10 meses y 10 años? Y la pregunta mágica: ¿qué le dirías a tu mejor amigo en tu situación?',
+    '<strong>Villano 4: el exceso de confianza → prepárate para estar equivocado (P).</strong> Haz un premortem (imagina el fracaso y explícalo) y un «preparade» (imagina el éxito desbordante), y pon tripwires: señales pactadas que fuerzan revisión («si en 3 meses no hay N clientes, replanteamos»).',
+    '<strong>Los procesos baten al análisis.</strong> Un buen proceso de decisión vale más que más datos: las organizaciones que usan procesos deciden mejor sistemáticamente.'
+  ],
+  actions: [
+    'Tu próxima decisión binaria: genera al menos una tercera y cuarta opción reales antes de decidir (test de desaparición).',
+    'Diseña un «ooch»: la versión de prueba barata de tu gran decisión (1 semana, 1 cliente, 1 módulo).',
+    'Aplica 10/10/10 por escrito a la decisión que te tiene atascado.',
+    'Pon un tripwire con fecha y métrica a tu proyecto actual, y compártelo con alguien.'
+  ],
+  quote: { t: 'No elijas entre opciones: pregúntate primero si estás viendo todas las opciones.', a: 'Chip y Dan Heath (tesis del libro)' },
+  science: 'WRAP empaqueta hallazgos sólidos de la literatura de decisión: marco estrecho (Nutt), vista externa y premortem (Kahneman/Klein), distancia psicológica (Trope) y tripwires. Probablemente el manual de decisiones más práctico del estante.',
+  related: ['pensar-rapido', 'ruido-kahneman', 'piensalo-otra-vez']
+},
+
+{
+  id: 'algoritmos-vivir', type: 'libro', emoji: '🤖', cat: 'psicologia',
+  title: 'Algoritmos para vivir', author: 'Brian Christian y Tom Griffiths', year: 2016,
+  meta: ['368 páginas', 'Resumen: 7 min'],
+  one: 'Los problemas humanos (cuándo dejar de buscar piso, qué ordenar, cuánto explorar) son problemas de computación con soluciones óptimas conocidas — y usarlas quita ansiedad además de tiempo.',
+  ideas: [
+    '<strong>Parada óptima: la regla del 37%.</strong> Si tienes que elegir secuencialmente (piso, secretaria, aparcamiento), dedica el primer 37% del tiempo/candidatos solo a calibrar sin elegir, y quédate con el primero que supere todo lo visto.',
+    '<strong>Explorar vs explotar.</strong> ¿Restaurante nuevo o el favorito? Depende del tiempo restante: con mucho futuro por delante, explora (el valor de la información es alto); con poco, explota lo conocido. Por eso los niños exploran y los mayores van a lo seguro: ambos aciertan.',
+    '<strong>Caching: el desorden óptimo.</strong> LRU (lo usado más recientemente, más a mano) es matemáticamente excelente: el montón de papeles donde lo último queda encima no es caos, es un caché bien diseñado.',
+    '<strong>Scheduling sin culpa.</strong> Si todo es «lo más importante», nada lo es: elige una métrica (minimizar retrasos máximos, o tareas tardías) y el orden óptimo sale solo. Cambiar de tarea tiene coste de contexto: agrupa.',
+    '<strong>Sobreajuste vital.</strong> Pulir demasiado para el examen equivocado (CV perfecto, plan perfecto) empeora el resultado real: ante incertidumbre, modelos y planes más simples generalizan mejor.',
+    '<strong>Relajación computacional.</strong> Cuando el problema perfecto es imposible, resuelve la versión relajada: «¿qué haría si no pudiera fallar?» no es autoayuda — es una técnica formal para encontrar por dónde empezar.'
+  ],
+  actions: [
+    'Aplica el 37% a tu próxima búsqueda secuencial (piso, contratación): calibra sin comprometerte el primer tercio, luego toma el primero que supere lo visto.',
+    'Decide tu ratio explorar/explotar según horizonte: ¿cuánto tiempo te queda en esta ciudad/etapa? Ajusta novedad en consecuencia.',
+    'Ordena tu escritorio/archivos por LRU y deja de sentirte culpable por el montón.',
+    'Elige UNA métrica para tu lista de tareas de esta semana y ordénala por ella (sin renegociar a cada hora).'
+  ],
+  quote: { t: 'Las mejores soluciones a los problemas humanos no exigen más cálculo, sino saber cuándo dejar de calcular.', a: 'Christian y Griffiths (tesis del libro)' },
+  science: 'Las matemáticas son reales (investigación operativa, ciencia computacional cognitiva de Griffiths); la aplicación a la vida es analógica pero honesta sobre sus supuestos. De lo más original del estante de decisiones.',
+  related: ['decidete-heath', 'paradoja-eleccion', 'pensar-rapido']
+},
+
+{
+  id: 'conversaciones-cruciales', type: 'libro', emoji: '🗣️', cat: 'relaciones',
+  title: 'Conversaciones cruciales', author: 'Patterson, Grenny, McMillan y Switzler', year: 2002,
+  meta: ['304 páginas', 'Resumen: 7 min'],
+  one: 'Cuando hay opiniones opuestas, emociones fuertes y mucho en juego, la calidad de tu vida depende de hablar sin huir (silencio) ni arrasar (violencia): seguridad psicológica + honestidad total.',
+  ideas: [
+    '<strong>Qué hace crucial una conversación.</strong> Opiniones opuestas + emociones intensas + consecuencias importantes. Son los 10 minutos que definen carreras, parejas y equipos — y justo ahí lo hacemos peor.',
+    '<strong>El fondo común de significado.</strong> El objetivo no es ganar sino llenar el fondo común: que toda la información relevante (tuya y suya) esté sobre la mesa antes de decidir.',
+    '<strong>Vigila la seguridad, no solo el contenido.</strong> Cuando alguien se calla o ataca, no proceses sus palabras: restaura la seguridad (propósito mutuo + respeto) y vuelve al tema. El contraste ayuda: «no quiero decir X; sí quiero decir Y».',
+    '<strong>Domina tus historias.</strong> Entre lo que veo y lo que siento hay un relato que yo fabrico (víctima, villano, indefenso): vuelve a los hechos observables y pregúntate qué historia alternativa los explicaría.',
+    '<strong>STATE para temas delicados.</strong> Comparte los hechos, cuenta tu historia como historia, pregunta por la del otro, habla tentativamente, estimula la prueba contraria.',
+    '<strong>Cierra con decisión.</strong> Diálogo no es consenso eterno: acordad cómo se decidirá (mando, consulta, voto, consenso) y quién hace qué para cuándo.'
+  ],
+  actions: [
+    'Identifica tu conversación crucial pendiente y tu patrón bajo presión: ¿silencio (evitar, sarcasmo) o violencia (imponer, etiquetar)?',
+    'Prepárala por escrito: hechos observables → tu historia provisional → tu pregunta para la historia del otro.',
+    'Empieza con contraste: «No quiero que parezca que no valoro X. Sí quiero resolver Y.»',
+    'Cuando notes inseguridad (la tuya o la suya), nómbrala y restaura propósito común antes de seguir con el contenido.',
+    'Termina SIEMPRE con quién-hace-qué-para-cuándo y cómo haréis seguimiento.'
+  ],
+  quote: { t: 'Cuando más importa, peor lo hacemos: la maestría está en hablar cuando las apuestas son altas.', a: 'Patterson, Grenny, McMillan y Switzler (tesis del libro)' },
+  science: 'Basado en observación de campo de «comunicadores excepcionales» en empresas (metodología propia, no experimental); sus piezas coinciden con la investigación: seguridad psicológica (Edmondson), hechos vs atribuciones, y compromisos explícitos.',
+  related: ['rompe-barrera-no', 'como-ganar-amigos', 'inteligencia-emocional']
+},
+
+{
+  id: 'cinco-lenguajes', type: 'libro', emoji: '💕', cat: 'relaciones',
+  title: 'Los 5 lenguajes del amor', author: 'Gary Chapman', year: 1992,
+  meta: ['208 páginas', 'Resumen: 5 min'],
+  one: 'Cada persona siente el afecto por canales distintos —palabras, tiempo, regalos, servicio, contacto—: amar en TU idioma y no en el del otro es la fuente más común de desencuentro bienintencionado.',
+  ideas: [
+    '<strong>Los cinco canales.</strong> Palabras de afirmación, tiempo de calidad, regalos, actos de servicio y contacto físico: cinco formas distintas de decir y de oír «me importas».',
+    '<strong>El desajuste silencioso.</strong> Él friega y organiza (servicio); ella esperaba conversación sin pantallas (tiempo). Ambos dan amor; ninguno lo recibe. El esfuerzo no se percibe si llega por el canal equivocado.',
+    '<strong>Descubrir el lenguaje del otro.</strong> Pistas: ¿de qué se queja? («nunca me dices…» = palabras), ¿qué pide?, ¿cómo expresa él/ella el afecto a otros?',
+    '<strong>El tanque emocional.</strong> Las quejas y la irritabilidad suelen ser síntoma de tanque vacío: antes de procesar el conflicto, pregunta qué deposito está faltando.',
+    '<strong>El amor maduro es a voluntad.</strong> Pasada la fase de enamoramiento, amar es elegir hablar el idioma del otro aunque no sea el tuyo — precisamente porque no te sale solo.'
+  ],
+  actions: [
+    'Identifica tu lenguaje principal y el de tu pareja/personas clave (quejas y peticiones son el mejor test).',
+    'Durante 2 semanas, haz 3 «depósitos» semanales deliberados en el lenguaje del otro (no en el tuyo).',
+    'Pregunta directamente: «¿qué hago yo que más te hace sentir querido/a? ¿y qué echas de menos?»',
+    'Antes de escalar una discusión recurrente, comprueba el tanque: ¿cuándo fue el último depósito real?'
+  ],
+  quote: { t: 'Tu lenguaje del amor y el de tu cónyuge pueden ser tan distintos como el chino y el español.', a: 'Gary Chapman' },
+  caveat: 'Marco pastoral basado en consejería, no en ciencia, y la investigación reciente (Impett et al., 2024) desmonta sus supuestos literales: no hay 5 canales discretos ni un «lenguaje primario» estable — las parejas felices alimentan TODOS los canales. Útil como heurística de atención al otro; falso como tipología.',
+  related: ['arte-de-amar', 'apegados', 'como-ganar-amigos']
+},
+
+{
+  id: 'supercomunicadores', type: 'libro', emoji: '📡', cat: 'relaciones',
+  title: 'Supercomunicadores', author: 'Charles Duhigg', year: 2024,
+  meta: ['320 páginas', 'Resumen: 6 min'],
+  one: 'Toda conversación es en realidad una de tres (práctica, emocional o social) y la conexión ocurre cuando ambos están en la misma: los supercomunicadores detectan cuál toca y se alinean.',
+  ideas: [
+    '<strong>Las tres conversaciones.</strong> «¿De qué va esto realmente?»: ¿resolver (práctica), desahogar (emocional) o pertenecer/identidad (social)? El desencuentro clásico: uno pide consuelo y el otro entrega soluciones.',
+    '<strong>El principio de emparejamiento.</strong> Conectar = detectar el tipo de conversación + señalar que estás en ella (energía, tono, tipo de respuesta). No imitar: sintonizar.',
+    '<strong>Preguntas profundas.</strong> Las que invitan a hablar de valores, creencias y experiencias («¿qué es lo que más te gusta de tu trabajo?» en vez de «¿dónde trabajas?»): aceleran la conexión más que años de small talk.',
+    '<strong>Bucle de comprensión (looping).</strong> Pregunta → resume con tus palabras → comprueba («¿lo he entendido bien?»). Demostrar escucha vale más que declararla.',
+    '<strong>En conflictos de identidad,</strong> reconoce la experiencia del otro sin exigir acuerdo: la gente cede en contenido cuando no siente amenazada su pertenencia.'
+  ],
+  actions: [
+    'En tu próxima conversación tensa, diagnostica en silencio: ¿práctica, emocional o social? Pregunta si dudas: «¿quieres ideas o desahogarte?»',
+    'Prepara 3 preguntas profundas para tu próxima comida social y úsalas.',
+    'Practica el looping una vez al día: resume lo que te han dicho antes de responder.',
+    'En desacuerdos: di primero qué entiendes y respetas de su posición, luego la tuya.'
+  ],
+  quote: { t: 'Para comunicar de verdad, primero hay que saber qué conversación estamos teniendo.', a: 'Charles Duhigg (tesis del libro)' },
+  science: 'Duhigg sintetiza investigación reciente de conexión conversacional (Epley, Huang sobre preguntas, estudios de neurosincronía) con casos narrativos. Divulgación periodística de calidad, posterior y complementaria a Cómo ganar amigos.',
+  related: ['como-ganar-amigos', 'conversaciones-cruciales', 'rompe-barrera-no']
+},
+
+{
+  id: 'apegados', type: 'libro', emoji: '🧷', cat: 'relaciones',
+  title: 'Apegados (Attached)', author: 'Amir Levine y Rachel Heller', year: 2010,
+  meta: ['304 páginas', 'Resumen: 6 min'],
+  one: 'Tu forma de vincularte en pareja sigue uno de tres estilos —seguro, ansioso o evitativo— y conocer el tuyo (y el del otro) explica la mayoría de tus patrones románticos repetidos.',
+  ideas: [
+    '<strong>Tres estilos de apego adulto.</strong> Seguro (~50%: cómodo con la intimidad y la autonomía), ansioso (~20%: anhela cercanía, hipervigila señales de rechazo) y evitativo (~25%: equipara intimidad con pérdida de independencia y pone distancia).',
+    '<strong>La trampa ansioso-evitativo.</strong> Se atraen y se torturan: la necesidad de cercanía de uno activa la huida del otro, cuya distancia dispara la «conducta de protesta» del primero (llamadas, celos, dramas). El conflicto es el del sistema, no de las personas.',
+    '<strong>La paradoja de la dependencia.</strong> La «codependencia» está mal entendida: tener una base segura que responde te hace MÁS autónomo y explorador, no menos (igual que en los niños de Bowlby y Ainsworth).',
+    '<strong>La comunicación efectiva como filtro.</strong> Expresar necesidades pronto y claro («necesito saber si buscas algo serio») no espanta a los adecuados: hace visible cómo gestiona el otro tus necesidades — la información más valiosa que existe.',
+    '<strong>El apego cambia.</strong> Los estilos son tendencias, no condenas: las relaciones con seguros «aseguran», y la conciencia del patrón propio es el primer movimiento.'
+  ],
+  actions: [
+    'Identifica tu estilo (y el de tu pareja) con las listas de señales del libro: ¿qué te activa y cómo protestas o huyes?',
+    'Si eres ansioso: sustituye la conducta de protesta por comunicación efectiva — una frase directa sobre la necesidad, no señuelos.',
+    'Si eres evitativo: detecta tus «estrategias de desactivación» (idealizar al ex, fijarte en defectos, fantasear con libertad) y nómbralas cuando aparezcan.',
+    'En citas nuevas, evalúa pronto: ¿cómo responde esta persona cuando expreso una necesidad? Esa es la variable, no su perfil.'
+  ],
+  quote: { t: 'Una base segura no te ata: es la plataforma desde la que te atreves.', a: 'Levine y Heller (tesis del libro)' },
+  science: 'La teoría del apego adulto (Hazan y Shaver, 1987, sobre Bowlby/Ainsworth) es de lo más sólido de la psicología relacional; el libro la simplifica y exagera algo los porcentajes y la fijeza de los tipos. Como mapa de patrones propios, muy útil.',
+  related: ['cinco-lenguajes', 'arte-de-amar', 'fragil-vulnerabilidad']
+},
+
+{
+  id: 'arte-de-amar', type: 'libro', emoji: '❤️', cat: 'relaciones',
+  title: 'El arte de amar', author: 'Erich Fromm', year: 1956,
+  meta: ['192 páginas', 'Resumen: 6 min'],
+  one: 'Amar no es un sentimiento que te ocurre ni un objeto que se encuentra: es un arte que se aprende y se practica — con disciplina, concentración, paciencia y conocimiento.',
+  ideas: [
+    '<strong>El error de base.</strong> Creemos que el problema del amor es ser amados (volvernos deseables) o encontrar al objeto correcto: Fromm lo invierte — el problema es la capacidad de amar, una facultad que se desarrolla.',
+    '<strong>Amar es dar, no recibir.</strong> Y dar no es sacrificarse: es la expresión máxima de la propia vitalidad. Quien da comparte su alegría, interés, comprensión — y enriquece al otro sin empobrecerse.',
+    '<strong>Los cuatro elementos.</strong> Cuidado (interés activo por el crecimiento del otro), responsabilidad (responder a sus necesidades), respeto (verlo como es, no como lo necesitas) y conocimiento (penetrar más allá de la superficie).',
+    '<strong>Amor inmaduro vs maduro.</strong> «Te amo porque te necesito» (fusión por carencia) frente a «te necesito porque te amo» (unión que preserva la integridad de ambos).',
+    '<strong>El autoamor no es egoísmo.</strong> El egoísta no se ama demasiado sino demasiado poco; quien no puede amarse no puede amar a nadie. Y la práctica del arte exige lo que cualquier arte: disciplina, concentración (saber estar solo), paciencia y preocupación suprema.'
+  ],
+  actions: [
+    'Cambia la pregunta durante un mes: de «¿me quieren bien?» a «¿estoy amando bien?» — registra qué cambia.',
+    'Practica la concentración que el amor exige: 15 minutos diarios de presencia total con alguien (sin móvil, sin agenda).',
+    'Aplica los 4 elementos a una relación clave: ¿dónde flaqueo — cuidado, responsabilidad, respeto o conocimiento?',
+    'Entrena el estar solo sin huir (la capacidad de soledad es prerrequisito de la unión madura).'
+  ],
+  quote: { t: 'El amor inmaduro dice: te amo porque te necesito. El amor maduro dice: te necesito porque te amo.', a: 'Erich Fromm' },
+  science: 'Filosofía humanista (psicoanálisis social), no ciencia empírica — pero su distinción entre amor como capacidad y amor como suerte anticipa hallazgos modernos: las conductas de cuidado y respuesta predicen la estabilidad de pareja mucho más que la «compatibilidad» inicial.',
+  related: ['cinco-lenguajes', 'apegados', 'hombre-busca-sentido']
+},
+
+{
+  id: 'manual-de-vida', type: 'libro', emoji: '📜', cat: 'bienestar',
+  title: 'Manual de vida (Enquiridión)', author: 'Epicteto', year: '~125 d. C.',
+  meta: ['96 páginas', 'Resumen: 5 min'],
+  one: 'El esclavo que enseñó a emperadores, en 53 aforismos: distingue lo que depende de ti de lo que no, y pon toda tu energía solo en lo primero — el manual estoico original.',
+  ideas: [
+    '<strong>La primera línea lo es todo.</strong> «De las cosas, unas dependen de nosotros y otras no.» Juicios, impulsos, deseos: tuyos. Cuerpo, fama, cargos, los demás: no. La libertad empieza en esa contabilidad.',
+    '<strong>No son las cosas.</strong> «No nos perturban las cosas, sino las opiniones sobre las cosas» (cap. 5): la frase que Ellis y Beck convirtieron en terapia 19 siglos después.',
+    '<strong>El papel y el actor.</strong> No eliges la obra ni el papel (pobre, cojo, gobernante): eliges interpretarlo bien. Compite solo en el torneo del carácter, el único donde nadie puede vencerte sin tu permiso.',
+    '<strong>Desear menos, no obtener más.</strong> No pidas que las cosas sucedan como quieres: quiere que sucedan como suceden, y fluirás. La práctica: empezar por cosas pequeñas (la taza rota) antes que por las grandes.',
+    '<strong>Ensaya la pérdida.</strong> Al besar a tu hijo, recuerda que besas a un mortal (memento crudo pero deliberado): el ensayo de la pérdida convierte el pánico en presencia y gratitud.'
+  ],
+  actions: [
+    'Memoriza la primera línea del Enquiridión y úsala como triaje ante cada disgusto de esta semana.',
+    'Empieza por lo pequeño: la próxima taza rota, atasco o plan cancelado es tu gimnasio («es el precio de la serenidad: barato»).',
+    'Escribe tu papel actual (rol, circunstancias no elegidas) y 3 formas concretas de interpretarlo con excelencia.',
+    'Práctica de deseo: durante un día, en lugar de pedir que pase X, pregunta «¿cómo quiero responder si no pasa?».'
+  ],
+  quote: { t: 'No nos perturban las cosas, sino las opiniones que tenemos de las cosas.', a: 'Epicteto, Enquiridión, 5' },
+  science: 'Como Meditaciones: filosofía práctica, no ciencia — y fuente directa reconocida de la terapia cognitiva. Si Meditaciones es el diario, el Enquiridión es la chuleta: cabe en un bolsillo y se relee entero en una tarde.',
+  related: ['meditaciones', 'obstaculo-camino', 'sentirse-bien']
+},
+
+{
+  id: 'brevedad-de-la-vida', type: 'libro', emoji: '⌛', cat: 'bienestar',
+  title: 'De la brevedad de la vida', author: 'Séneca', year: '~49 d. C.',
+  meta: ['128 páginas', 'Resumen: 5 min'],
+  one: 'La vida no es corta: la hacemos corta desperdiciándola — en ocupaciones ajenas, en posponer el vivir y en custodiar la fortuna mientras regalamos el tiempo.',
+  ideas: [
+    '<strong>El diagnóstico.</strong> «No tenemos poco tiempo: perdemos mucho.» La vida es larga si se usa; la queja sobre su brevedad es la confesión de cómo la gastamos.',
+    '<strong>Los ocupados (occupati).</strong> Séneca retrata al que organiza su porvenir sin vivir su presente, al esclavo de su agenda y sus clientes, al que se jubila «para empezar a vivir» a los 60: la procrastinación vital tiene 2.000 años.',
+    '<strong>La paradoja del tiempo.</strong> Nadie te quita una moneda sin pelea, pero regalamos horas a cualquiera que las pida: somos tacaños con el dinero (recuperable) y pródigos con el tiempo (irrecuperable).',
+    '<strong>Posponer es el gran robo.</strong> «La mayor pérdida de la vida es la dilación: arranca el día de hoy y te promete el de mañana.» Vivir de expectativas es perder el único tiempo que existe.',
+    '<strong>El único ocio digno.</strong> Para Séneca, el tiempo bien usado incluye filosofar: conversar con los grandes muertos (leer) anexiona sus vidas a la tuya — el lector vive todas las épocas.'
+  ],
+  actions: [
+    'Haz tu auditoría senequista: una semana registrando a qué se va tu tiempo; etiqueta cada bloque «mío / de otros / de nadie».',
+    'Recupera una hora diaria «tuya» y blíndala a primera hora (lo que se deja para el final, se deja).',
+    'Caza tus aplazamientos vitales: ¿qué estás posponiendo a «cuando…»? Programa su versión mínima este mes.',
+    'Lee 20 minutos diarios a un clásico: es la «anexión de vidas» de Séneca en práctica.'
+  ],
+  quote: { t: 'No es que tengamos poco tiempo: es que perdemos mucho.', a: 'Séneca, De la brevedad de la vida' },
+  science: 'Filosofía, no ciencia — pero es el ancestro directo de Cuatro mil semanas (Burkeman lo cita): la psicología moderna del «time affluence» confirma la intuición de que percibir el tiempo como propio y finito cambia su uso.',
+  related: ['cuatro-mil-semanas', 'meditaciones', 'manual-de-vida']
+},
+
+{
+  id: 'agilidad-emocional', type: 'libro', emoji: '🤸', cat: 'bienestar',
+  title: 'Agilidad emocional', author: 'Susan David', year: 2016,
+  meta: ['288 páginas', 'Resumen: 6 min'],
+  one: 'Ni reprimir las emociones ni obedecerlas: la agilidad emocional es mostrarte ante ellas, despegarte, conectar con tus valores y hacer micro-ajustes — psicología de Harvard sobre base ACT.',
+  ideas: [
+    '<strong>Enganchados.</strong> El problema no son las emociones sino quedar enganchado a las historias que las acompañan («soy un fraude», «no puedo con esto»), tratándolas como hechos u órdenes.',
+    '<strong>Paso 1: muéstrate.</strong> Acepta la emoción con curiosidad y compasión: las emociones son datos (señalan lo que te importa), no directivas. La «positividad forzada» es otra forma de rigidez.',
+    '<strong>Paso 2: despégate.</strong> Crea espacio: «estoy notando que tengo el pensamiento de que…», etiquetado fino (no «estresado»: ¿decepcionado?, ¿agobiado?, ¿resentido?), escribir 20 minutos sobre lo que pesa (Pennebaker).',
+    '<strong>Paso 3: camina tu porqué.</strong> Los valores son cualidades de acción elegidas (no metas): ante cada bifurcación, ¿esto me acerca o me aleja de la persona que quiero ser? («toward moves» vs «away moves»).',
+    '<strong>Paso 4: sigue adelante.</strong> El principio del balancín: ajusta el reto para estar al borde de tu capacidad (ni abrumado ni cómodo), y usa micro-ajustes de mentalidad, motivación y hábitos en lugar de revoluciones.'
+  ],
+  actions: [
+    'Etiqueta fino 3 veces al día: sustituye «bien/mal/estresado» por la palabra emocional exacta.',
+    'Practica el despegue verbal una semana: antepón «estoy notando el pensamiento de que…» a tu historia más pegajosa.',
+    'Escritura Pennebaker: 20 minutos, 3 días seguidos, sobre lo que más te pesa — sin censura ni relectura inmediata.',
+    'Define 3 valores como verbos (crear, cuidar, aprender) y revisa cada noche: ¿mis movimientos de hoy fueron hacia ellos o de huida?'
+  ],
+  quote: { t: 'El coraje no es la ausencia de miedo: es el miedo caminando.', a: 'Susan David' },
+  science: 'Psicóloga de Harvard Medical School; el libro operacionaliza la flexibilidad psicológica de ACT (Hayes) y la escritura expresiva de Pennebaker, ambas con buena evidencia. Versión rigurosa y laboral de lo que La trampa de la felicidad hace en clave clínica.',
+  related: ['trampa-felicidad', 'inteligencia-emocional', 'se-amable-contigo']
+},
+
+{
+  id: 'monje-ferrari', type: 'libro', emoji: '🏎️', cat: 'bienestar',
+  title: 'El monje que vendió su Ferrari', author: 'Robin Sharma', year: 1997,
+  meta: ['256 páginas', 'Resumen: 5 min'],
+  one: 'La fábula del abogado estrella que colapsa de un infarto y vuelve del Himalaya con un sistema de vida: mente cuidada, propósito escrito, kaizen diario y presente habitado.',
+  ideas: [
+    '<strong>La fábula de los siete símbolos.</strong> Un jardín (la mente: custodia lo que entra), un faro (propósito: metas escritas), un luchador de sumo (kaizen: mejora continua de uno mismo), un cable rosa (disciplina: pequeños actos de voluntad), un reloj de oro (el tiempo como bien supremo), rosas (servir a otros) y un camino de diamantes (vivir el presente).',
+    '<strong>La mente como jardín.</strong> No dejes entrar cualquier pensamiento o estímulo: la calidad de tu vida es la calidad de tus pensamientos sostenidos (eco estoico y cognitivo).',
+    '<strong>La regla del 21 y la hora del amanecer.</strong> Rituales diarios (silencio, ejercicio, lectura, visualización) instalados con constancia — Sharma populariza aquí lo que luego sería el club de las 5.',
+    '<strong>Sirve para ser feliz.</strong> La felicidad llega haciendo crecer a otros: la versión fábula del hallazgo real de que dar produce bienestar.'
+  ],
+  actions: [
+    'Custodia tu jardín: define qué NO entra en tu mente a primera hora (noticias, redes) y qué sí (lectura, silencio).',
+    'Escribe tu «faro»: 5 metas de vida y el porqué de cada una; revísalas cada domingo.',
+    'Instala un micro-ritual matinal de 15 minutos: 5 de silencio, 5 de movimiento, 5 de lectura.',
+    'Un acto de servicio deliberado al día (pequeño y concreto).'
+  ],
+  quote: { t: 'No dejes que tu pasado controle tu futuro: la vida de tus sueños se construye con los pensamientos y actos de hoy.', a: 'Robin Sharma (tesis de la fábula)' },
+  caveat: 'Fábula motivacional sin evidencia ni pretensión de tenerla; «la regla de los 21 días» es folclore (ver Lally: 66 de media). Su valor es narrativo: empaqueta prácticas razonables (rituales, propósito escrito, servicio) en una historia que se recuerda.',
+  related: ['club-5-manana', 'habitos-atomicos', 'hombre-busca-sentido']
+},
+
+{
+  id: 'pensar-como-monje', type: 'libro', emoji: '🕉️', cat: 'bienestar',
+  title: 'Piensa como un monje', author: 'Jay Shetty', year: 2020,
+  meta: ['352 páginas', 'Resumen: 6 min'],
+  one: 'Un exmonje vedanta traduce la vida de ashram a la ciudad: suelta las etiquetas ajenas, limpia la negatividad, encuentra tu dharma y entrena la mente como se entrena un músculo.',
+  ideas: [
+    '<strong>Identidad: el espejo con polvo.</strong> Vivimos según etiquetas que otros pegaron (padres, likes, cargos): limpiar el polvo es distinguir entre tu imagen y tus valores elegidos.',
+    '<strong>Auditoría de negatividad.</strong> Queja, comparación y crítica son hábitos contagiosos: se reducen con conciencia (registrarlas), distancia (no eres tu emoción) y sustitución (gratitud específica).',
+    '<strong>El miedo como mapa.</strong> Detrás de cada miedo hay un apego (a estatus, control, comodidad): la pregunta monje no es «¿cómo lo evito?» sino «¿qué me señala?».',
+    '<strong>Dharma.</strong> El cruce entre pasión, habilidad y servicio (parecido al ikigai): no preguntes «¿qué quiero ser?» sino «¿qué necesita de mí lo que sé hacer con gusto?».',
+    '<strong>Rutina y mente de mono.</strong> Levantarse antes, una cosa cada vez, rituales con intención: el auriga (mente entrenada) guiando a los caballos (sentidos), no al revés.'
+  ],
+  actions: [
+    'Haz la auditoría de valores: lista tus 10 actividades más frecuentes y comprueba qué valores reales revelan (vs los declarados).',
+    'Una semana de registro de quejas/comparaciones: marca, respira, reformula una de cada tres en petición o gratitud.',
+    'Escribe tu dharma provisional: pasión + habilidad + a quién sirve, en una frase.',
+    'Adopta un ritual con intención: la misma acción diaria (té, paseo, vela) hecha con atención completa como ancla del día.'
+  ],
+  quote: { t: 'Tu identidad es un espejo cubierto de polvo: límpialo y verás quién eres en realidad.', a: 'Jay Shetty (parafraseando la tradición vedanta)' },
+  caveat: 'Mezcla tradición védica, anécdotas personales y coaching con citas sueltas de estudios: inspirador pero poco sistemático, y el personaje «monje» es parte del marketing. Las prácticas nucleares (gratitud, atención, servicio, rutina) sí tienen respaldo independiente en esta biblioteca.',
+  related: ['ikigai', 'mindfulness-cotidiana', 'meditaciones']
+},
+
+{
+  id: 'alquimista', type: 'libro', emoji: '✨', cat: 'bienestar',
+  title: 'El alquimista', author: 'Paulo Coelho', year: 1988,
+  meta: ['192 páginas', 'Resumen: 5 min'],
+  one: 'La fábula del pastor Santiago en busca de un tesoro: persigue tu «leyenda personal», lee las señales del camino y descubre que el viaje —no el cofre— es lo que te transforma.',
+  ideas: [
+    '<strong>La leyenda personal.</strong> Eso que siempre quisiste hacer y fuiste posponiendo por miedo y costumbre: la tesis de la novela es que abandonarla tiene un precio silencioso mayor que intentarla.',
+    '<strong>«Cuando quieres algo, el universo conspira».</strong> Leído sin magia: el compromiso público y la atención enfocada hacen visible lo relevante (sesgo de atención) y atraen colaboradores — las «señales» son oportunidades que antes no veías.',
+    '<strong>El miedo al fracaso es el único obstáculo real.</strong> Santiago pierde todo dos veces y cada pérdida resulta ser el siguiente capítulo: el fracaso como peaje, no como veredicto.',
+    '<strong>La rutina disfraza la renuncia.</strong> El vendedor de cristales que siempre soñó con La Meca y prefiere soñarla a arriesgarla: el retrato más citado del libro.',
+    '<strong>El tesoro estaba en casa… pero solo lo encuentras tras el viaje.</strong> El sentido no estaba en el destino sino en quién te volviste yendo.'
+  ],
+  actions: [
+    'Escribe tu leyenda personal en una frase (eso que siempre vuelve). Sin compromiso aún: solo nómbrala.',
+    'Identifica tu «vendedor de cristales» interior: ¿qué sueño mantienes deliberadamente como sueño para no arriesgarlo? Decide si lo intentas o lo sueltas en paz.',
+    'Da el primer paso reversible este mes (curso, viaje corto, conversación) y registra qué «señales» aparecen al estar en movimiento.',
+    'Relee tus dos últimos fracasos como capítulos: ¿qué te dieron que ahora usas?'
+  ],
+  quote: { t: 'Solo una cosa vuelve un sueño imposible: el miedo a fracasar.', a: 'Paulo Coelho' },
+  caveat: 'Es una novela-fábula, no un método, y su «conspiración del universo» es pensamiento mágico si se toma literal. Se incluye porque es la puerta de entrada al género para millones de lectores en español: tómala como inspiración narrativa y busca la mecánica real en Frankl (sentido) y Gollwitzer (planes).',
+  related: ['hombre-busca-sentido', 'monje-ferrari', 'libera-tu-magia']
+},
+
+{
+  id: 'camino-artista', type: 'libro', emoji: '🖌️', cat: 'creatividad',
+  title: 'El camino del artista', author: 'Julia Cameron', year: 1992,
+  meta: ['272 páginas', 'Resumen: 6 min'],
+  one: 'Un programa de 12 semanas para desbloquear la creatividad: páginas matutinas a diario, una «cita con el artista» semanal y el desmontaje sistemático del censor interno.',
+  ideas: [
+    '<strong>Las páginas matutinas.</strong> Tres páginas a mano, nada más despertar, de flujo de conciencia sin censura ni relectura: drenan el ruido mental, sacan al censor a la luz y desentierran deseos enterrados. No es literatura: es desagüe.',
+    '<strong>La cita con el artista.</strong> Dos horas semanales, a solas, de juego que te nutra (mercadillo, museo, paseo nuevo): la creatividad es un pozo que se llena con imágenes y experiencias, no solo se extrae.',
+    '<strong>El censor no eres tú.</strong> La voz que dice «esto es ridículo» es un personaje aprendido (profesores, padres, fracasos viejos): nombrarlo y esperarlo le quita el mando.',
+    '<strong>Los «artistas en la sombra».</strong> Muchos críticos, gestores y parejas de artistas son creadores bloqueados: la envidia es un mapa — señala exactamente lo que te gustaría hacer.',
+    '<strong>Pequeño y diario vence a épico y nunca.</strong> La recuperación creativa son gestos minúsculos sostenidos, no el gran salto al vacío.'
+  ],
+  actions: [
+    'Empieza mañana las páginas matutinas: 3 páginas a mano (o 20 minutos), prohibido releerlas las primeras 8 semanas.',
+    'Agenda tu primera cita con el artista esta semana: 2 horas, a solas, sin productividad.',
+    'Lista 5 envidias creativas concretas: son tu brújula de deseos.',
+    'Escribe las 3 frases favoritas de tu censor y ponles autor real (¿de quién las aprendiste?).'
+  ],
+  quote: { t: 'El perfeccionismo no es búsqueda de lo mejor: es persecución de lo peor de nosotros mismos.', a: 'Julia Cameron' },
+  caveat: 'El lenguaje es espiritual («el Gran Creador») y el programa no tiene ensayos clínicos: pero las páginas matutinas funcionan como escritura expresiva (Pennebaker) y la cita del artista como exploración deliberada — dos mecanismos con apoyo. El programa de 12 semanas sigue siendo el estándar de los bloqueos creativos.',
+  related: ['roba-artista', 'libera-tu-magia', 'agilidad-emocional']
+},
+
+{
+  id: 'roba-artista', type: 'libro', emoji: '🖼️', cat: 'creatividad',
+  title: 'Roba como un artista', author: 'Austin Kleon', year: 2012,
+  meta: ['160 páginas', 'Resumen: 4 min'],
+  one: 'Nada es original y eso es liberador: estudia a tus héroes, copia (transforma, no plagies), trabaja con las manos y comparte el proceso — diez consejos breves que desbloquean más que mil teorías.',
+  ideas: [
+    '<strong>Roba bien.</strong> Toda obra nueva es remezcla de influencias: la pregunta no es «¿es original?» sino «¿a quién vale la pena robar y qué hago con ello?». Copiar a uno es plagio; a muchos, investigación.',
+    '<strong>Empieza antes de saber quién eres.</strong> No esperes a «encontrarte»: haces para descubrirte, no al revés. Escribe el libro que quieres leer.',
+    '<strong>Manos antes que pantalla.</strong> El trabajo analógico (papel, tijeras, pizarra) piensa distinto que el digital: monta dos mesas, una sin ordenador.',
+    '<strong>Los proyectos paralelos son el jardín.</strong> Las aficiones «inútiles» y los side projects se polinizan entre sí: la procrastinación productiva es parte del método.',
+    '<strong>Sé aburrido para ser creativo.</strong> Cuida el dinero, el cuerpo y el horario: el caos vital roba la energía que el trabajo creativo necesita (la versión Kleon de «sé regular y ordenado en tu vida…», Flaubert).'
+  ],
+  actions: [
+    'Elige a tu héroe creativo y estudia su árbol: a quién robó él/ella; roba a los tres.',
+    'Arranca el proyecto que esperaba a que «estuvieras listo»: versión fea esta semana.',
+    'Monta tu mesa analógica (papel, nada de pantallas) y úsala para la fase de ideas.',
+    'Mantén un side project pequeño sin objetivo comercial: es el laboratorio.'
+  ],
+  quote: { t: 'Empieza a copiar lo que amas. Copia, copia, copia. Al final de la copia te encontrarás a ti mismo.', a: 'Yohji Yamamoto (citado por Kleon)' },
+  science: 'Manifiesto breve, no ciencia — pero alineado: la creatividad como recombinación es la visión estándar en la investigación (pensamiento analógico de Range), y el trabajo manual/caminar como incubadora tiene apoyo experimental (ver Oppezzo y Schwartz en esta biblioteca).',
+  related: ['camino-artista', 'libera-tu-magia', 'amplitud-range']
+},
+
+{
+  id: 'libera-tu-magia', type: 'libro', emoji: '🪄', cat: 'creatividad',
+  title: 'Libera tu magia (Big Magic)', author: 'Elizabeth Gilbert', year: 2015,
+  meta: ['288 páginas', 'Resumen: 5 min'],
+  one: 'Vivir creativamente es elegir la curiosidad por encima del miedo: el miedo puede venir en el coche, pero no conduce — y tu arte no tiene la obligación de pagarte las facturas.',
+  ideas: [
+    '<strong>El miedo viaja, pero no conduce.</strong> No se trata de eliminar el miedo (imposible: aparece ante toda incertidumbre) sino de quitarle el volante y los mapas: «puedes venir, pero no eliges la ruta».',
+    '<strong>Permiso: nadie va a dártelo.</strong> No necesitas credenciales, máster ni bendición para crear: la autorización es un acto propio (y el victimismo creativo, un somnífero).',
+    '<strong>No le exijas a tu arte que te mantenga.</strong> Poner la presión económica sobre la creatividad la estrangula: Gilbert trabajó de camarera años después de publicar. Mantén un empleo que financie tu libertad creativa hasta que (si acaso) el arte pueda solo.',
+    '<strong>El sándwich de mierda.</strong> Todo camino tiene su parte asquerosa (rechazos, crítica, horas ingratas): elige la vocación cuyo sándwich estés dispuesto a comerte (eco de Manson).',
+    '<strong>Perfeccionismo = miedo con tacones.</strong> «Hecho es mejor que bueno»: termina cosas; la obra terminada e imperfecta enseña más que la perfecta imaginaria.'
+  ],
+  actions: [
+    'Escribe la carta al miedo antes de tu próximo proyecto: reconoce su presencia, asígnale el asiento trasero.',
+    'Fírmate el permiso: una frase («me autorizo a escribir/pintar/montar X») y empieza sin pedir opinión.',
+    'Decide tu economía creativa: qué trabajo paga las facturas y qué horas semanales quedan blindadas para crear sin presión de ingresos.',
+    'Termina algo este mes en versión «hecha, no perfecta», y publícala o enséñala.'
+  ],
+  quote: { t: 'Querido miedo: la creatividad y yo vamos a hacer un viaje. Puedes venir, pero no conduces.', a: 'Elizabeth Gilbert' },
+  caveat: 'El marco de las «ideas como entidades que te visitan» es poesía, no psicología; tómalo como metáfora útil contra el ego creativo. Lo sólido: separar sustento y vocación reduce la presión que mata la motivación intrínseca (coherente con Drive y con la sobrejustificación).',
+  related: ['camino-artista', 'roba-artista', 'drive-motivacion']
+},
+
+{
+  id: 'cuerpo-lleva-cuenta', type: 'libro', emoji: '🫀', cat: 'salud',
+  title: 'El cuerpo lleva la cuenta', author: 'Bessel van der Kolk', year: 2014,
+  meta: ['560 páginas', 'Resumen: 7 min'],
+  one: 'El trauma no es el evento sino la huella que deja en cerebro y cuerpo —un sistema de alarma recalibrado—, y la recuperación exige trabajar de arriba abajo (palabra) y de abajo arriba (cuerpo).',
+  ideas: [
+    '<strong>El trauma vive en el presente.</strong> No es un mal recuerdo sino una alarma que sigue sonando: el cuerpo reacciona hoy (sobresalto, bloqueo, desconexión) como si el peligro siguiera aquí — aunque la cabeza «sepa» que pasó.',
+    '<strong>Tres rutas de entrada.</strong> Arriba-abajo: terapia, lenguaje, darle sentido a la historia. Abajo-arriba: respiración, movimiento, yoga, ritmo — recalibrar el cuerpo directamente. Y para algunos casos, terapias específicas (EMDR para TEPT, con buena evidencia).',
+    '<strong>La desregulación no es debilidad.</strong> Hipervigilancia, anestesia emocional o explosiones son adaptaciones de supervivencia que sobrevivieron a su utilidad: entenderlo cambia la culpa por trabajo concreto.',
+    '<strong>Agencia y seguridad primero.</strong> Sin sentirse a salvo (cuerpo, relación terapéutica, entorno) no hay procesamiento posible: la seguridad no es el premio de la terapia, es su prerrequisito.',
+    '<strong>Las relaciones curan (y hieren).</strong> El trauma suele ser relacional y la reparación también: comunidad, sintonía y ritmo compartido (coro, deporte, teatro) son medicina infravalorada.'
+  ],
+  actions: [
+    'Si esto te toca de cerca: busca ayuda profesional especializada en trauma — este libro orienta, no trata.',
+    'Aprende regulación básica de abajo-arriba: exhalaciones largas, movimiento rítmico (andar, nadar), yoga suave con permiso para parar.',
+    'Mapea tus disparadores sin juicio: qué situaciones disparan reacciones desproporcionadas y qué necesitas en ellas (salida, pausa, contacto).',
+    'Invierte en co-regulación: actividades rítmicas y grupales regulares con gente segura.'
+  ],
+  quote: { t: 'Mientras no te des cuenta de lo que tu cuerpo guarda, este seguirá llevando la cuenta por ti.', a: 'Bessel van der Kolk (tesis del libro)' },
+  caveat: 'Imprescindible y a la vez discutido: el EMDR y la terapia de exposición tienen buena evidencia, pero otras terapias que el libro promueve (neurofeedback, algunas somáticas) aún tienen apoyo preliminar, y la idea de «memoria corporal» funciona mejor como metáfora que como mecanismo literal. Con trauma serio: profesional siempre.',
+  related: ['cebras-ulcera', 'respira', 'agilidad-emocional']
+},
+
+{
+  id: 'outlive', type: 'libro', emoji: '🧬', cat: 'salud',
+  title: 'Outlive: la ciencia y el arte de la longevidad', author: 'Peter Attia', year: 2023,
+  meta: ['496 páginas', 'Resumen: 7 min'],
+  one: 'No se trata de vivir más años enfermos sino de comprimir la decadencia: prevenir desde décadas antes los «cuatro jinetes» y entrenar HOY para la vida física que quieres a los 80.',
+  ideas: [
+    '<strong>Medicina 2.0 vs 3.0.</strong> La medicina actual trata la enfermedad cuando aparece; la longevidad exige actuar 20-30 años antes sobre los cuatro jinetes: enfermedad cardiovascular, cáncer, neurodegeneración y disfunción metabólica.',
+    '<strong>Healthspan, no solo lifespan.</strong> El objetivo es la «década marginal»: que tus últimos 10 años sean funcionales. Eso se decide en los 30-40-50, no en los 75.',
+    '<strong>El ejercicio es el fármaco más potente conocido.</strong> VO2max alto y fuerza de agarre se asocian a reducciones de mortalidad mayores que casi cualquier medicamento: zona 2 (base aeróbica) + VO2max (intervalos) + fuerza + estabilidad.',
+    '<strong>El decatlón del centenario.</strong> Lista las 10 actividades físicas que quieres poder hacer a los 80 (cargar la compra, suelo, nietos, viajar) y entrena hacia atrás desde ahí: la vejez es un deporte de especialista.',
+    '<strong>Lo metabólico es el terreno común.</strong> Glucosa estable, músculo y sueño son la base sobre la que cabalgan (o no) los cuatro jinetes; y la salud emocional es el capítulo que Attia confiesa haber aprendido tarde.'
+  ],
+  actions: [
+    'Escribe tu decatlón del centenario: 10 capacidades físicas concretas para tus 80, y qué exige cada una hoy.',
+    'Estructura semanal mínima: 3 sesiones de zona 2 (45-60 min, puedes hablar con frases), 1 de intervalos, 2 de fuerza con énfasis en agarre, cargar y bisagra de cadera.',
+    'Conoce tus números (con tu médico): presión, ApoB/perfil lipídico, glucosa/HbA1c, y antecedentes familiares como mapa de riesgos.',
+    'Protege el sueño y entrena la estabilidad (equilibrio, movilidad) — las caídas son el jinete silencioso.'
+  ],
+  quote: { t: 'Ahora entreno para ser un atleta de los 100 años.', a: 'Peter Attia' },
+  science: 'Médico con sesgo intervencionista: la base (ejercicio, VO2max, fuerza, sueño, prevención temprana) refleja bien la evidencia; algunas posiciones (monitorización intensiva, fármacos off-label, dianas lipídicas agresivas) van por delante del consenso. Toma la arquitectura, consulta los detalles clínicos.',
+  related: ['hillman-2008', 'por-que-dormimos', 'spark']
+},
+
+{
+  id: 'valor-atencion', type: 'libro', emoji: '🔦', cat: 'salud',
+  title: 'El valor de la atención (Stolen Focus)', author: 'Johann Hari', year: 2022,
+  meta: ['368 páginas', 'Resumen: 6 min'],
+  one: 'Tu atención no colapsó por falta de voluntad: te la están robando doce fuerzas (diseño adictivo, multitarea, sueño roto, ansiedad) — y la salida es individual Y colectiva.',
+  ideas: [
+    '<strong>La atención como ecosistema contaminado.</strong> Culpar solo al individuo es «optimismo cruel»: el entorno está diseñado contra tu foco, y las soluciones puramente personales son curitas en una inundación.',
+    '<strong>El mito de la multitarea.</strong> No haces dos cosas: alternas con coste (efecto de cambio de tarea). La degradación de rendimiento por conmutación constante es de los hallazgos más sólidos del libro.',
+    '<strong>El modelo de negocio es la causa raíz.</strong> Las plataformas ganan por minutos de atención capturada: la indignación y la interrupción no son fallos del sistema, son el sistema.',
+    '<strong>Los cimientos también cuentan.</strong> Sueño insuficiente, dietas que disparan y hunden la glucosa, ansiedad crónica e infancias sin juego libre degradan la atención antes de tocar un móvil.',
+    '<strong>Flow como contraataque.</strong> La atención no solo se defiende (bloqueos): se cultiva con tareas absorbentes de meta clara y reto ajustado — el opuesto exacto del scroll.'
+  ],
+  actions: [
+    'Haz tu versión del experimento de Hari: 2 semanas con el móvil fuera del alcance en bloques crecientes (empieza por las mañanas).',
+    'Mata la multitarea estructural: una pestaña/una tarea, notificaciones solo de humanos, y agrupación de mensajería en ventanas.',
+    'Repara dos cimientos este mes: una hora más de sueño y una franja diaria de actividad absorbente (flow).',
+    'Acción colectiva mínima: pacta normas de foco con tu equipo o familia (horas sin interrupciones, reuniones sin móviles).'
+  ],
+  quote: { t: 'Tu atención no se perdió: te la robaron — y puedes empezar a recuperarla.', a: 'Johann Hari (tesis del libro)' },
+  caveat: 'Periodismo con tesis: mezcla evidencia fuerte (multitarea, sueño, diseño persuasivo) con afirmaciones más especulativas y entrevistas selectivas; algunos investigadores citados han matizado sus dichos. Léelo como panorámica movilizadora y baja a los detalles con Minimalismo digital e Indistraíble.',
+  related: ['minimalismo-digital', 'indistraible', 'generacion-dopamina']
+},
+
 /* ===================== ESTUDIOS CIENTÍFICOS ===================== */
 {
   id: 'gollwitzer-2006', type: 'paper', emoji: '📝', cat: 'habitos',
@@ -1937,6 +2812,382 @@ const LIBRARY = [
     design: 'Revisión de estudios transversales, longitudinales y de intervención en humanos (niños a mayores) y modelos animales, integrando resultados conductuales, de neuroimagen y moleculares.'
   },
   related: ['spark', 'por-que-dormimos']
+},
+
+{
+  id: 'dunlosky-2013', type: 'paper', emoji: '🎓', cat: 'aprendizaje',
+  title: '¿Qué técnicas de estudio funcionan de verdad?', author: 'Dunlosky, Rawson, Marsh, Nathan y Willingham', year: 2013,
+  meta: ['Mega-revisión · 10 técnicas evaluadas', 'Resumen: 5 min'],
+  one: 'La revisión de referencia evaluó las 10 técnicas de estudio más usadas: solo dos salen con nota alta (autoexamen y espaciado) — y las favoritas de los estudiantes suspenden.',
+  ideas: [
+    '<strong>Utilidad alta (2):</strong> práctica de recuperación (autoexámenes) y práctica distribuida (espaciado). Funcionan en todas las edades, materias y formatos evaluados.',
+    '<strong>Utilidad moderada (3):</strong> interrogación elaborativa (¿por qué es esto cierto?), autoexplicación e intercalado de tipos de problema.',
+    '<strong>Utilidad baja (5):</strong> subrayar, releer, resumir (tal y como se hace habitualmente), mnemotecnia de palabra clave e imaginería para textos. Las más populares del mundo real.',
+    '<strong>Por qué el desajuste.</strong> Las técnicas malas se sienten bien (fluidez inmediata) y las buenas se sienten mal (esfuerzo, errores): los estudiantes optimizan la sensación, no el aprendizaje.',
+    '<strong>Implicación de sistema.</strong> Ni profesores ni manuales suelen enseñar las dos ganadoras: la mejora educativa más barata del mundo sigue infrautilizada.'
+  ],
+  actions: [
+    'Reasigna tu tiempo de estudio: que el grueso sea autoexamen espaciado y no relectura.',
+    'Convierte el subrayado en preguntas: cada pasaje que ibas a marcar, vuélvelo una tarjeta pregunta-respuesta.',
+    'Al leer, interroga: «¿por qué tiene sentido esto?, ¿cómo conecta con lo que sé?» (interrogación elaborativa).',
+    'Si enseñas: dedica una clase a enseñar a estudiar con estas dos técnicas — es de lo más rentable que puedes hacer.'
+  ],
+  quote: { t: 'Las técnicas que más usan los estudiantes están entre las menos eficaces; las dos más eficaces apenas se enseñan.', a: 'Conclusión de la revisión' },
+  study: {
+    ref: 'Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J. y Willingham, D. T. (2013). Improving students learning with effective learning techniques. Psychological Science in the Public Interest, 14(1), 4-58.',
+    design: 'Revisión monográfica de 10 técnicas de aprendizaje contra cientos de estudios experimentales, evaluando generalización (edades, materiales, contextos) y calificando cada técnica en utilidad alta, moderada o baja.'
+  },
+  related: ['roediger-2006', 'cepeda-2006', 'aprendetelo']
+},
+
+{
+  id: 'ward-2017', type: 'paper', emoji: '📱', cat: 'productividad',
+  title: 'Fuga de cerebro: tu móvil resta aunque esté apagado', author: 'Ward, Duke, Gneezy y Bos', year: 2017,
+  meta: ['2 experimentos · ~800 participantes', 'Resumen: 4 min'],
+  one: 'La mera presencia del smartphone sobre la mesa —apagado y boca abajo— reduce la memoria de trabajo y la inteligencia fluida disponibles: inhibir su atracción consume recursos.',
+  ideas: [
+    '<strong>Tres condiciones, un gradiente.</strong> Móvil en la mesa vs en el bolsillo/bolso vs en otra habitación: el rendimiento cognitivo mejoraba a cada paso de distancia, con el mejor resultado en «otra habitación».',
+    '<strong>El coste es inconsciente.</strong> Los participantes juraban que el móvil no les había afectado: la «fuga» no se siente — ignorar activamente un atractor potente gasta atención de fondo.',
+    '<strong>A más dependencia, más fuga.</strong> El efecto era mayor en quienes declaraban mayor apego al dispositivo: justo quienes más lo necesitan cerca son quienes más pagan por tenerlo cerca.',
+    '<strong>Apagarlo no basta.</strong> El driver es la presencia visible/accesible, no las notificaciones: el cerebro sabe que «ahí está todo».'
+  ],
+  actions: [
+    'Trabajo profundo = móvil en otra habitación (no silenciado: ausente). Hazlo física y literalmente.',
+    'En reuniones y comidas importantes, fuera de la mesa y fuera de la vista.',
+    'Estudio y exámenes: mochila cerrada lejos del pupitre.',
+    'Si no puedes alejarlo, mételo en un cajón o bolsa cerrada: cada barrera física recupera capacidad.'
+  ],
+  quote: { t: 'La mera presencia del propio smartphone reduce la capacidad cognitiva disponible.', a: 'Título y hallazgo del estudio' },
+  study: {
+    ref: 'Ward, A. F., Duke, K., Gneezy, A. y Bos, M. W. (2017). Brain drain: The mere presence of ones own smartphone reduces available cognitive capacity. Journal of the Association for Consumer Research, 2(2), 140-154.',
+    design: 'Dos experimentos (~800 participantes) con asignación aleatoria de la ubicación del móvil (mesa, bolsillo/bolso, otra habitación) y medición de memoria de trabajo (OSpan) e inteligencia fluida (Raven).'
+  },
+  related: ['minimalismo-digital', 'deep-work', 'indistraible']
+},
+
+{
+  id: 'mark-2008', type: 'paper', emoji: '🔔', cat: 'productividad',
+  title: 'El precio real de cada interrupción', author: 'Mark, Gudith y Klocke', year: 2008,
+  meta: ['Experimento + estudios de campo', 'Resumen: 4 min'],
+  one: 'El trabajo interrumpido se termina… acelerando a costa de más estrés, presión y esfuerzo — y los estudios de campo del mismo equipo midieron ~23 minutos para volver de verdad a la tarea.',
+  ideas: [
+    '<strong>Compensamos acelerando.</strong> Tras una interrupción, la gente completa la tarea en menos tiempo del esperado: trabaja más rápido… y reporta significativamente más estrés, frustración, presión temporal y esfuerzo.',
+    '<strong>El coste de re-entrada.</strong> En sus observaciones de campo previas (Mark et al., 2005), recuperar el hilo de la tarea original tras una interrupción llevaba en torno a 23 minutos, a menudo pasando por tareas intermedias.',
+    '<strong>Interrupciones del mismo contexto dañan menos</strong> que las de contexto distinto: cambiar de «mundo mental» es lo caro (coherente con el residuo de atención de Leroy).',
+    '<strong>La fragmentación es el estado normal de oficina.</strong> Sus estudios de campo muestran cambios de actividad cada pocos minutos: el trabajo profundo no ocurre por defecto, hay que diseñarlo.'
+  ],
+  actions: [
+    'Agrupa las interrupciones: ventanas fijas para correo/chat en lugar de goteo continuo.',
+    'Protege bloques sin interrupciones para lo cognitivamente caro, y hazlos visibles al equipo (señal, calendario).',
+    'Si te interrumpen, deja una «miga de pan»: escribe la próxima frase/paso antes de atender la interrupción.',
+    'Mide tu fragmentación un día: cuenta los cambios de tarea; el número suele bastar como motivación.'
+  ],
+  quote: { t: 'El trabajo interrumpido se hace más rápido… pero a costa de más estrés y esfuerzo.', a: 'Conclusión del estudio' },
+  study: {
+    ref: 'Mark, G., Gudith, D. y Klocke, U. (2008). The cost of interrupted work: More speed and stress. Proceedings of CHI 2008, 107-110. (Campo: Mark, González y Harris, 2005.)',
+    design: 'Experimento de laboratorio con tareas de oficina interrumpidas en contexto igual o distinto, midiendo tiempo, calidad y carga subjetiva (NASA-TLX); complementado con etnografías de oficina del mismo grupo.'
+  },
+  related: ['deep-work', 'ward-2017', 'indistraible']
+},
+
+{
+  id: 'steel-2007', type: 'paper', emoji: '🐢', cat: 'productividad',
+  title: 'La naturaleza de la procrastinación', author: 'Piers Steel', year: 2007,
+  meta: ['Metaanálisis · 216 estudios', 'Resumen: 5 min'],
+  one: 'El metaanálisis definitivo: procrastinamos tareas aversivas y de recompensa lejana, sobre todo si somos impulsivos — y la ecuación de la motivación dice exactamente dónde atacar.',
+  ideas: [
+    '<strong>Los cuatro predictores.</strong> Aversión a la tarea (aburrida/desagradable), demora de la recompensa, baja expectativa de éxito (autoeficacia) e impulsividad/distraibilidad. La «pereza» no aparece: es mal diagnóstico.',
+    '<strong>La ecuación de la motivación temporal.</strong> Motivación = (Expectativa × Valor) / (Impulsividad × Demora). Cada término es una palanca: sube los de arriba, baja los de abajo.',
+    '<strong>Es un problema de regulación, no de tiempo.</strong> Procrastinar es elegir alivio emocional inmediato (evitar lo aversivo) pagando con tu yo futuro: por eso la culpa lo empeora y la autocompasión lo corta.',
+    '<strong>Es común y va a más.</strong> La gran mayoría de estudiantes procrastina y un 15-20% de adultos lo hace de forma crónica, con costes documentados en notas, salud y finanzas.'
+  ],
+  actions: [
+    'Sube Expectativa: trocea la tarea hasta que el primer paso sea trivial (2 minutos) y empieza ahí.',
+    'Sube Valor: empareja la tarea con algo placentero (café especial, música) y conéctala por escrito a una meta que te importe.',
+    'Baja Demora: crea hitos con fecha y testigo esta semana (no «para junio»).',
+    'Baja Impulsividad: elimina el atractor (móvil fuera, bloqueadores) durante el bloque de trabajo.'
+  ],
+  quote: { t: 'La procrastinación es un fallo de autorregulación quintaesencial: voluntario, dañino e irracional — y aun así predecible.', a: 'Síntesis del metaanálisis' },
+  study: {
+    ref: 'Steel, P. (2007). The nature of procrastination: A meta-analytic and theoretical review of quintessential self-regulatory failure. Psychological Bulletin, 133(1), 65-94.',
+    design: 'Síntesis cuantitativa de 216 estudios sobre correlatos y causas de la procrastinación, integrada en la Teoría de la Motivación Temporal (TMT).'
+  },
+  related: ['traguese-sapo', 'indistraible', 'sentirse-bien']
+},
+
+{
+  id: 'masicampo-2011', type: 'paper', emoji: '✍️', cat: 'productividad',
+  title: 'Considéralo hecho: el plan apaga la rumiación', author: 'Masicampo y Baumeister', year: 2011,
+  meta: ['Serie experimental · JPSP', 'Resumen: 4 min'],
+  one: 'Las tareas pendientes intrusan en la mente y degradan otras actividades (efecto Zeigarnik) — pero basta con escribir un plan concreto para silenciarlas, sin haberlas hecho aún.',
+  ideas: [
+    '<strong>Lo inacabado persigue.</strong> Las metas pendientes activadas producen intrusiones de pensamiento y peor rendimiento en tareas posteriores (peor comprensión lectora, más distracción).',
+    '<strong>El plan basta.</strong> Los participantes que escribían un plan específico (qué, cuándo, dónde) sobre sus pendientes dejaban de sufrir intrusiones — igual que si la tarea estuviera hecha. La mente no exige ejecución: exige un encargo fiable.',
+    '<strong>Especificidad obligatoria.</strong> Pensar vagamente «tengo que ocuparme de eso» no funciona: el efecto aparece con planes concretos de próxima acción.',
+    '<strong>Es la validación experimental de GTD.</strong> «Tu mente es para tener ideas, no para retenerlas» tiene aquí su mecanismo demostrado.'
+  ],
+  actions: [
+    'Cuando algo te ronde mientras trabajas u otras tareas: para 30 segundos y escribe el plan (próxima acción + cuándo + dónde). Vuelve.',
+    'Volcado nocturno: antes de dormir, lista de pendientes con su próxima acción — duerme la mente, no la lista (Scullin 2018 lo llevó al insomnio con éxito).',
+    'Ten captura siempre a mano (nota, papel): la rumiación es una tarea sin bandeja de entrada.',
+    'Haz la revisión semanal: los planes solo calman si el sistema es fiable.'
+  ],
+  quote: { t: 'Hacer un plan puede eliminar los efectos cognitivos de las metas incumplidas.', a: 'Título y hallazgo del estudio' },
+  study: {
+    ref: 'Masicampo, E. J. y Baumeister, R. F. (2011). Consider it done! Plan making can eliminate the cognitive effects of unfulfilled goals. Journal of Personality and Social Psychology, 101(4), 667-683.',
+    design: 'Serie de experimentos activando metas pendientes y midiendo intrusiones de pensamiento y rendimiento en tareas posteriores, con o sin elaboración previa de planes específicos.'
+  },
+  related: ['gtd-organizate', 'gollwitzer-2006', 'bullet-journal']
+},
+
+{
+  id: 'milkman-2014', type: 'paper', emoji: '🍿', cat: 'habitos',
+  title: 'Agrupamiento de tentaciones: Los juegos del hambre como gancho al gimnasio', author: 'Milkman, Minson y Volpp', year: 2014,
+  meta: ['Ensayo de campo · 226 participantes', 'Resumen: 4 min'],
+  one: 'Atar un placer culpable (audiolibros adictivos) a una conducta virtuosa (entrenar) —solo puedes uno CON la otra— aumentó la asistencia al gimnasio un 51% al inicio del programa.',
+  ideas: [
+    '<strong>El diseño.</strong> Tres grupos: audiolibro de novela adictiva bloqueado y disponible SOLO en el gimnasio; audiolibro propio con consejo de usarlo así; y control. El grupo «bloqueado» asistió un 51% más que control al arrancar; el intermedio, un 29%.',
+    '<strong>Por qué funciona.</strong> Resuelve a la vez dos fallos: el «quiero» inmediato de la tentación (que ahora empuja hacia el gimnasio) y la culpa del placer (que desaparece al volverse productivo).',
+    '<strong>La gente paga por atarse.</strong> Al final, el 61% eligió pagar por tener sus audiolibros restringidos al gimnasio: las personas valoran los dispositivos de compromiso cuando los entienden.',
+    '<strong>El efecto decae</strong> (vacaciones, novedad): los bundles necesitan renovarse — nueva serie, nuevo placer, mismo trato.'
+  ],
+  actions: [
+    'Crea tu primer bundle: elige un placer puro (serie, podcast ligero, novela) y átalo en exclusiva a tu conducta esquiva (solo en el gimnasio / planchando / caminando).',
+    'Hazlo de verdad exclusivo: el capítulo NO existe fuera de la conducta (esa es toda la magia).',
+    'Renueva el cebo cuando el efecto decaiga.',
+    'Versión social: queda con alguien que te cae genial SOLO para la actividad que evitas.'
+  ],
+  quote: { t: 'Restringir una tentación al gimnasio convirtió el deseo en asistencia.', a: 'Síntesis del estudio' },
+  study: {
+    ref: 'Milkman, K. L., Minson, J. A. y Volpp, K. G. M. (2014). Holding the Hunger Games hostage at the gym: An evaluation of temptation bundling. Management Science, 60(2), 283-299.',
+    design: 'Ensayo aleatorizado de campo (n=226) en un gimnasio universitario durante ~10 semanas, midiendo asistencia objetiva y disposición a pagar por la restricción.'
+  },
+  related: ['habitos-atomicos', 'indistraible', 'gollwitzer-2006']
+},
+
+{
+  id: 'stadler-2009', type: 'paper', emoji: '🪜', cat: 'habitos',
+  title: 'Contraste mental + planes: el método WOOP a prueba', author: 'Stadler, Oettingen y Gollwitzer', year: 2009,
+  meta: ['Ensayo de campo · 256 mujeres', 'Resumen: 4 min'],
+  one: 'Soñar el objetivo no basta y hasta resta: contrastar el deseo con tu obstáculo interno y atarlo a planes si-entonces (WOOP) duplicó el ejercicio realizado frente a solo recibir información.',
+  ideas: [
+    '<strong>Visualizar el éxito, a secas, desmotiva.</strong> La investigación de Oettingen muestra que fantasear con el resultado relaja al organismo como si ya estuviera logrado: el optimismo iluso predice menos acción.',
+    '<strong>El contraste mental.</strong> Wish-Outcome-Obstacle-Plan: nombra tu deseo, imagina vívidamente el mejor resultado… y entonces identifica el obstáculo INTERNO real (pereza a las 19h, vergüenza, móvil) y escribe el plan si-entonces para ese obstáculo.',
+    '<strong>Resultados de campo.</strong> Las participantes entrenadas en la técnica (intervención de una sesión + diarios) hicieron aproximadamente el doble de ejercicio semanal que el grupo de solo información durante los 4 meses de seguimiento.',
+    '<strong>Replicado en otros dominios:</strong> dieta, estudio (mejoró notas y asistencia de adolescentes en el ensayo de Duckworth et al., 2011), recuperación física.'
+  ],
+  actions: [
+    'Haz tu WOOP de 5 minutos: deseo (alcanzable este mes) → mejor resultado (imagínalo 1 minuto) → TU obstáculo interno (sé honesto) → plan «si [obstáculo], entonces [acción]».',
+    'Un WOOP por meta, renovado cada semana: el obstáculo cambia.',
+    'Detecta tus fantaseos dulces (repasar el éxito sin plan) y conviértelos en contraste: «¿qué hay EN MÍ que lo impide?».',
+    'Enseña la secuencia completa: el poder está en el orden (sueño → obstáculo → plan), no en las piezas sueltas.'
+  ],
+  quote: { t: 'Fantasear con el futuro deseado solo ayuda cuando se contrasta con la realidad que lo obstaculiza.', a: 'Gabriele Oettingen (síntesis de su programa de investigación)' },
+  study: {
+    ref: 'Stadler, G., Oettingen, G. y Gollwitzer, P. M. (2009). Physical activity in women: Effects of a self-regulation intervention. American Journal of Preventive Medicine, 36(1), 29-34.',
+    design: 'Ensayo aleatorizado (n=256 mujeres adultas): información de salud vs información + entrenamiento en contraste mental con intenciones de implementación (MCII); diarios de actividad durante 16 semanas.'
+  },
+  related: ['gollwitzer-2006', 'habitos-atomicos', 'lally-2010']
+},
+
+{
+  id: 'vandongen-2003', type: 'paper', emoji: '🥱', cat: 'salud',
+  title: 'Dormir 6 horas: el deterioro que no sientes', author: 'Van Dongen, Maislin, Mullington y Dinges', year: 2003,
+  meta: ['Experimento de laboratorio · 14 días', 'Resumen: 4 min'],
+  one: 'Dos semanas durmiendo 6 horas dejan el rendimiento cognitivo al nivel de 1-2 noches enteras en vela — mientras los sujetos insisten en que están «solo un poco cansados».',
+  ideas: [
+    '<strong>El diseño duro.</strong> Catorce días controlados en laboratorio con 4, 6 u 8 horas en cama, más un grupo de 3 noches de privación total, midiendo atención sostenida (PVT), memoria de trabajo y somnolencia subjetiva a diario.',
+    '<strong>La dosis-respuesta.</strong> Con 8 horas, rendimiento estable; con 6 y con 4, deterioro acumulativo día tras día SIN meseta: al día 14, el grupo de 6 horas rendía como tras ~2 noches sin dormir.',
+    '<strong>La ceguera al déficit.</strong> La somnolencia subjetiva se estanca a los pocos días mientras el rendimiento sigue cayendo: los sujetos se creían adaptados. «Me he acostumbrado a dormir poco» = me he acostumbrado a no notar el deterioro.',
+    '<strong>Implicación seria.</strong> La deuda de sueño crónica moderada es invisible para quien la sufre — conducción, decisiones y aprendizaje pagan la cuenta.'
+  ],
+  actions: [
+    'Deja de fiarte de tu sensación: si duermes <7 h habitualmente, asume déficit aunque «te encuentres bien».',
+    'Haz el experimento personal: 10 días con 7,5-8 h reales y compara foco, humor y errores (la mayoría descubre su línea base verdadera).',
+    'Trata el sueño como dosis, no como hueco: hora de acostarte fija que garantice tus horas.',
+    'Cuidado con decisiones y volante en semanas de deuda: tu autoevaluación está comprometida precisamente entonces.'
+  ],
+  quote: { t: 'La restricción crónica a 6 horas produce déficits equivalentes a noches enteras de privación — con mínima conciencia del deterioro.', a: 'Conclusión del estudio' },
+  study: {
+    ref: 'Van Dongen, H. P. A., Maislin, G., Mullington, J. M. y Dinges, D. F. (2003). The cumulative cost of additional wakefulness. Sleep, 26(2), 117-126.',
+    design: 'Experimento aleatorizado de 14 días en laboratorio (n=48) con tiempo en cama de 4, 6 u 8 horas frente a 88 horas de privación total, con baterías cognitivas y de somnolencia diarias.'
+  },
+  related: ['por-que-dormimos', 'cuando-pink', 'mente-numeros']
+},
+
+{
+  id: 'schuch-2018', type: 'paper', emoji: '🚴', cat: 'salud',
+  title: 'Ejercicio y depresión: la protección medida', author: 'Schuch, Vancampfort, Firth y colaboradores', year: 2018,
+  meta: ['Metaanálisis · 49 cohortes', 'Resumen: 4 min'],
+  one: 'Siguiendo a más de 260.000 personas durante años: quienes hacen más actividad física tienen un riesgo claramente menor de desarrollar depresión — en todas las edades y continentes.',
+  ideas: [
+    '<strong>Prospectivo, no foto fija.</strong> No es «la gente deprimida se mueve menos»: se midió actividad en personas sin depresión y se siguió quién la desarrollaba años después. Más actividad → menos casos nuevos (reducción de odds ~17-22%).',
+    '<strong>Universal.</strong> El efecto protector aparece en jóvenes, adultos y mayores, en Europa, América, Asia y Oceanía, y se mantiene al ajustar por factores de confusión.',
+    '<strong>Como tratamiento también.</strong> Los metaanálisis de ensayos del mismo equipo (2016) muestran efectos grandes del ejercicio como tratamiento de depresión ya instalada — infrautilizado clínicamente.',
+    '<strong>La dosis no necesita ser heroica.</strong> Los mayores saltos de protección ocurren al pasar de nada a algo: caminar rápido cuenta.'
+  ],
+  actions: [
+    'Trata el movimiento como higiene mental no negociable: 150 min/semana moderados o el equivalente que SÍ vayas a hacer.',
+    'Si atraviesas un bajón: la dosis mínima diaria (10-20 min de paseo, mejor con luz de día) es el primer escalón con evidencia.',
+    'Empareja el ejercicio con tu red social (quedar para andar): suma dos protectores de una vez.',
+    'En depresión clínica: el ejercicio complementa, no sustituye, la ayuda profesional.'
+  ],
+  quote: { t: 'La actividad física protege frente a la aparición de depresión, con independencia de edad y región geográfica.', a: 'Conclusión del metaanálisis' },
+  study: {
+    ref: 'Schuch, F. B., Vancampfort, D., Firth, J., et al. (2018). Physical activity and incident depression: A meta-analysis of prospective cohort studies. American Journal of Psychiatry, 175(7), 631-648.',
+    design: 'Metaanálisis de 49 cohortes prospectivas (n=266.939, seguimiento medio ~7,4 años) sobre actividad física basal y nueva aparición de depresión, con ajustes por confusores.'
+  },
+  related: ['spark', 'hillman-2008', 'outlive']
+},
+
+{
+  id: 'emmons-2003', type: 'paper', emoji: '🙏', cat: 'bienestar',
+  title: 'Contar bendiciones vs contar cargas: la gratitud a prueba', author: 'Emmons y McCullough', year: 2003,
+  meta: ['3 experimentos aleatorizados', 'Resumen: 4 min'],
+  one: 'El experimento fundacional de la gratitud: escribir semanalmente aquello por lo que estás agradecido mejoró bienestar, optimismo y hasta horas de ejercicio frente a escribir molestias o eventos neutros.',
+  ideas: [
+    '<strong>El diseño elegante.</strong> Tres grupos al azar: listar 5 motivos de gratitud, 5 molestias o 5 eventos neutros (semanal o diariamente, según estudio). Misma actividad de escritura, distinto foco.',
+    '<strong>Resultados.</strong> El grupo de gratitud reportó más satisfacción vital, más optimismo sobre la semana siguiente, menos quejas físicas y ~1,5 horas más de ejercicio semanal (estudio 1).',
+    '<strong>Funciona también con la vida difícil.</strong> En el estudio 3, con adultos con enfermedades neuromusculares, el diario de gratitud mejoró ánimo, conexión y calidad de sueño reportada.',
+    '<strong>Matiz de dosis.</strong> Investigación posterior (Lyubomirsky) sugiere que la versión semanal sostiene el efecto mejor que la diaria, que se mecaniza.'
+  ],
+  actions: [
+    'Instala el diario semanal: mismo día y hora, 5 cosas concretas y POR QUÉ ocurrieron (el porqué es lo que activa).',
+    'Especificidad sobre abstracción: «el mensaje de Ana el martes» vale más que «mi familia».',
+    'Incluye lo difícil superado: la gratitud no es negar problemas sino registrar también lo que sostiene.',
+    'Pruébalo 6 semanas antes de juzgar: es el plazo de los estudios.'
+  ],
+  quote: { t: 'Una intervención consciente de gratitud produce beneficios emocionales e interpersonales medibles.', a: 'Conclusión del estudio' },
+  study: {
+    ref: 'Emmons, R. A. y McCullough, M. E. (2003). Counting blessings versus burdens: An experimental investigation of gratitude and subjective well-being in daily life. Journal of Personality and Social Psychology, 84(2), 377-389.',
+    design: 'Tres experimentos aleatorizados (estudiantes y adultos con enfermedad crónica) comparando diarios de gratitud frente a molestias y eventos neutros, con medidas de bienestar, salud y conducta.'
+  },
+  related: ['ciencia-felicidad', 'hipotesis-felicidad', 'se-amable-contigo']
+},
+
+{
+  id: 'goyal-2014', type: 'paper', emoji: '🕊️', cat: 'bienestar',
+  title: 'Meditación: lo que dice la revisión más exigente', author: 'Goyal, Singh, Sibinga y colaboradores', year: 2014,
+  meta: ['Revisión sistemática · 47 ensayos', 'Resumen: 4 min'],
+  one: 'Filtrando solo ensayos con control activo: los programas de mindfulness producen mejoras moderadas y reales en ansiedad, depresión y dolor — ni milagro ni placebo.',
+  ideas: [
+    '<strong>El filtro duro.</strong> De 18.000 citas, solo 47 ensayos tenían control activo (algo creíble con igual tiempo y atención): el listón que separa el efecto de la técnica del efecto de «hacer algo».',
+    '<strong>Lo que sale.</strong> Mindfulness: efecto moderado en ansiedad y depresión (d≈0,3, comparable a antidepresivos en cuadros leves-moderados, sin sus efectos secundarios) y en dolor. Sin evidencia clara para atención, sueño, peso o ánimo positivo.',
+    '<strong>Lo que NO encontraron:</strong> que la meditación supere a otros tratamientos activos (ejercicio, terapia, relajación) — es una herramienta válida del menú, no la herramienta.',
+    '<strong>Dosis estudiada:</strong> programas estructurados tipo MBSR de 8 semanas, no apps de 3 minutos: la evidencia es del entrenamiento sostenido.'
+  ],
+  actions: [
+    'Ajusta expectativas: la meditación es un tratamiento moderado y legítimo para ansiedad/ánimo, no una panacea cognitiva.',
+    'Si la pruebas, hazlo en serio: 8 semanas, práctica diaria guiada (un programa MBSR o equivalente estructurado).',
+    'Elige por preferencia personal entre las opciones con evidencia (meditación, ejercicio, TCC): la que sostengas meses es la buena.',
+    'Desconfía por igual del hype («reconfigura tu cerebro en 7 días») y del descarte («es placebo»).'
+  ],
+  quote: { t: 'Los programas de meditación mejoran ansiedad, depresión y dolor con efectos pequeños a moderados frente a controles activos.', a: 'Conclusión de la revisión' },
+  study: {
+    ref: 'Goyal, M., Singh, S., Sibinga, E. M. S., et al. (2014). Meditation programs for psychological stress and well-being: A systematic review and meta-analysis. JAMA Internal Medicine, 174(3), 357-368.',
+    design: 'Revisión sistemática y metaanálisis de 47 ensayos aleatorizados con control activo (n≈3.515), encargada por la agencia AHRQ de EE. UU.'
+  },
+  related: ['mindfulness-cotidiana', 'killingsworth-2010', 'trampa-felicidad']
+},
+
+{
+  id: 'dunn-2008', type: 'paper', emoji: '🎁', cat: 'bienestar',
+  title: 'Gastar en otros hace más feliz que gastar en ti', author: 'Dunn, Aknin y Norton', year: 2008,
+  meta: ['Encuesta + longitudinal + experimento', 'Resumen: 4 min'],
+  one: 'Triangulación en Science: el gasto prosocial (regalos, donaciones, invitar) predice y CAUSA más felicidad que el gasto personal — y la cantidad importa menos que el destino.',
+  ideas: [
+    '<strong>Tres métodos, una conclusión.</strong> Encuesta nacional (el gasto prosocial predecía felicidad; el personal no), seguimiento de empleados con bonus (cómo lo gastaron predijo su felicidad meses después mejor que cuánto recibieron) y experimento causal.',
+    '<strong>El experimento.</strong> Sobres con 5 o 20 dólares a gastar ese día en uno mismo o en otros, al azar: por la noche, los del gasto prosocial estaban más felices — y 5 vs 20 no cambió nada.',
+    '<strong>El error de predicción.</strong> Preguntada antes, la mayoría predice lo contrario (que gastar en sí misma le hará más feliz): otro caso de mala prospección afectiva (Gilbert).',
+    '<strong>Amplificadores conocidos:</strong> el efecto crece cuando el gasto conecta socialmente (ver el impacto, compartir el momento) y es elegido, no obligado.'
+  ],
+  actions: [
+    'Presupuesta gasto prosocial mensual pequeño y deliberado: invitar un café, un detalle inesperado, una donación concreta.',
+    'Hazlo conectado: entrega en persona, mira el impacto, acompaña el regalo de tiempo.',
+    'Cuando te sobre dinero inesperado, separa un 20% «para otros» antes de decidir el resto.',
+    'Enséñalo a niños/equipos: decidir juntos a quién ayudar convierte el gasto en ritual de vínculo.'
+  ],
+  quote: { t: 'Cómo gastas el dinero importa para tu felicidad al menos tanto como cuánto ganas — y gastar en otros gana.', a: 'Síntesis del estudio' },
+  study: {
+    ref: 'Dunn, E. W., Aknin, L. B. y Norton, M. I. (2008). Spending money on others promotes happiness. Science, 319(5870), 1687-1688.',
+    design: 'Encuesta representativa, estudio longitudinal de bonus laborales y experimento de campo aleatorizado (dinero asignado a gasto personal vs prosocial el mismo día).'
+  },
+  related: ['ciencia-felicidad', 'tropezar-felicidad', 'psicologia-dinero']
+},
+
+{
+  id: 'holt-lunstad-2010', type: 'paper', emoji: '👥', cat: 'relaciones',
+  title: 'Las relaciones predicen quién sigue vivo', author: 'Holt-Lunstad, Smith y Layton', year: 2010,
+  meta: ['Metaanálisis · 148 estudios', 'Resumen: 4 min'],
+  one: 'Sobre 308.849 personas seguidas ~7,5 años: tener relaciones sociales fuertes se asoció a un 50% más de probabilidad de supervivencia — un efecto comparable a dejar de fumar y mayor que el de la obesidad.',
+  ideas: [
+    '<strong>La cifra que reordena prioridades.</strong> Integración social fuerte → +50% de supervivencia en el periodo estudiado, comparable a dejar de fumar 15 cigarrillos/día y superior a sedentarismo u obesidad como factor.',
+    '<strong>No es solo «tener pareja».</strong> Las medidas complejas de integración (red, apoyo percibido y dado, participación) predicen mejor que el estado civil: cuenta el tejido completo.',
+    '<strong>Mecanismos plausibles múltiples:</strong> regulación del estrés (la mano que sostienes literalmente baja tu respuesta de amenaza), conductas de salud, sentido y detección temprana de problemas.',
+    '<strong>Implicación de salud pública</strong> (y personal): la soledad es un factor de riesgo de primer orden, no un tema «blando» — y las relaciones se entrenan como se entrena el cuerpo.'
+  ],
+  actions: [
+    'Trata tu red como entrenas: frecuencia programada (la amistad adulta muere de logística, no de cariño) — un contacto significativo por semana, rotando personas.',
+    'Invierte en pertenencia estructural: un grupo estable con calendario propio (equipo, coro, voluntariado, moai).',
+    'Da apoyo, no solo lo recibas: ayudar predice salud al menos tanto como ser ayudado.',
+    'En mudanzas, rupturas o jubilación, presupuesta reconstrucción social deliberada: son los momentos de riesgo.'
+  ],
+  quote: { t: 'La influencia de las relaciones sociales sobre la mortalidad es comparable a la de fumar y mayor que la de la obesidad.', a: 'Conclusión del metaanálisis' },
+  study: {
+    ref: 'Holt-Lunstad, J., Smith, T. B. y Layton, J. B. (2010). Social relationships and mortality risk: A meta-analytic review. PLoS Medicine, 7(7), e1000316.',
+    design: 'Metaanálisis de 148 estudios prospectivos (n=308.849, seguimiento medio 7,5 años) sobre medidas de integración/apoyo social y mortalidad por todas las causas.'
+  },
+  related: ['como-ganar-amigos', 'hipotesis-felicidad', 'ikigai']
+},
+
+{
+  id: 'kross-2014', type: 'paper', emoji: '🗨️', cat: 'psicologia',
+  title: 'Háblate por tu nombre: el auto-diálogo distanciado', author: 'Kross, Bruehlman-Senecal, Park y colaboradores', year: 2014,
+  meta: ['7 experimentos · JPSP', 'Resumen: 4 min'],
+  one: 'Un cambio de pronombre con efecto real: hablarte en segunda/tercera persona o por tu nombre («Ana, tú puedes con esto») reduce la ansiedad, mejora el desempeño y corta la rumiación posterior.',
+  ideas: [
+    '<strong>El truco lingüístico.</strong> Preparándose para estrés social (discurso, primera impresión), quienes se hablaban con «tú» o su nombre —en vez de «yo»— mostraron menos ansiedad, mejor desempeño evaluado por jueces y menos rumiación después.',
+    '<strong>El mecanismo: distancia psicológica.</strong> El lenguaje no-primera-persona te coloca como observador/consejero de ti mismo: el mismo cerebro que aconseja bien a los amigos, por fin trabajando para ti.',
+    '<strong>Reencuadre de la amenaza.</strong> Con auto-distancia, el evento estresante se evalúa más como reto y menos como amenaza — el patrón fisiológico y atencional cambia.',
+    '<strong>Barato y rápido.</strong> No requiere entrenamiento: es una instrucción de un minuto, replicada también en niños («el efecto Batman»: rinden más perseverando como su personaje).'
+  ],
+  actions: [
+    'Antes de un momento tenso, prepárate en tercera persona: «[Tu nombre], esto es lo que va a pasar y así lo vas a manejar».',
+    'En plena emoción, narra con distancia: «estás notando enfado porque…» en lugar de «estoy fatal».',
+    'Para decisiones, usa la pregunta del amigo (Decídete): ¿qué le dirías a [tu nombre] si fuera otra persona?',
+    'Combínalo con la pausa de autocompasión: distancia + amabilidad es el dúo completo.'
+  ],
+  quote: { t: 'Pequeños cambios en el lenguaje con que nos hablamos pueden regular la emoción bajo estrés.', a: 'Conclusión del estudio' },
+  study: {
+    ref: 'Kross, E., Bruehlman-Senecal, E., Park, J., et al. (2014). Self-talk as a regulatory mechanism: How you do it matters. Journal of Personality and Social Psychology, 106(2), 304-324.',
+    design: 'Siete experimentos manipulando el pronombre del auto-diálogo ante estresores sociales (discursos, primeras impresiones), con medidas de ansiedad, desempeño evaluado por jueces y rumiación.'
+  },
+  related: ['se-amable-contigo', 'agilidad-emocional', 'sentirse-bien']
+},
+
+{
+  id: 'oppezzo-2014', type: 'paper', emoji: '🚶', cat: 'creatividad',
+  title: 'Caminar dispara las ideas (un 60%)', author: 'Oppezzo y Schwartz', year: 2014,
+  meta: ['4 experimentos · Stanford', 'Resumen: 4 min'],
+  one: 'Caminar —en cinta, ante una pared o al aire libre— aumentó la generación de ideas creativas en torno a un 60% frente a estar sentado, y el impulso persiste un rato al sentarse después.',
+  ideas: [
+    '<strong>El efecto es del caminar, no del paisaje.</strong> Funcionó incluso en cinta mirando una pared: el movimiento mismo (no la naturaleza) empuja la ideación divergente — complementario, no idéntico, al efecto restaurador de Berman.',
+    '<strong>Divergente sí, convergente no.</strong> Caminando se generan más usos nuevos y analogías de calidad; las tareas de respuesta única y foco (convergentes) no mejoran o empeoran ligeramente: camina para abrir, siéntate para cerrar.',
+    '<strong>El residuo creativo.</strong> Quienes caminaban antes de sentarse seguían rindiendo más sentados: el paseo previo a la reunión es inversión directa.',
+    '<strong>Dosis mínima ridícula:</strong> 5-16 minutos bastaron en los experimentos.'
+  ],
+  actions: [
+    'Convierte la fase de ideas en paseo: brainstorming andando (solo o «walking meeting») y cierre sentado.',
+    'Atascado = 10 minutos de caminata, con notas de voz para capturar.',
+    'Antes de sesiones creativas, llega andando o da una vuelta a la manzana.',
+    'Empareja: camina para generar opciones, vuelve al escritorio para evaluarlas (divergente/convergente en su sitio).'
+  ],
+  quote: { t: 'Caminar abre el flujo libre de ideas: una solución simple para aumentar la creatividad y la actividad física a la vez.', a: 'Conclusión del estudio' },
+  study: {
+    ref: 'Oppezzo, M. y Schwartz, D. L. (2014). Give your ideas some legs: The positive effect of walking on creative thinking. Journal of Experimental Psychology: Learning, Memory, and Cognition, 40(4), 1142-1152.',
+    design: 'Cuatro experimentos (interior en cinta, exterior, combinaciones sentado/andando) con tareas de creatividad divergente (usos alternativos) y convergente, n total=176.'
+  },
+  related: ['berman-2008', 'descansa-rest', 'roba-artista']
 }
 ];
 
@@ -1959,17 +3210,21 @@ function isFav(id) { return store.favs.indexOf(id) !== -1; }
 /* =====================================================================
    FILTROS Y RENDER DEL CATÁLOGO
    ===================================================================== */
-const filters = { q: '', cat: 'all', type: 'all', status: 'all' };
+const filters = { q: '', cat: 'all', type: 'all', status: 'all', sort: 'default' };
+function norm(s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+function yearNum(y) { const m = String(y).match(/\d+/); return m ? parseInt(m[0], 10) : 0; }
 const STATUS_LABEL = { pendiente: 'Por leer', leyendo: '📖 Leyendo', leido: '✅ Leído' };
 
 const grid = document.getElementById('grid');
 const chipsBox = document.getElementById('catChips');
 
 function buildChips() {
-  let html = '<button class="chip active" data-cat="all" style="--c:#e8eaf0">Todas</button>';
+  const counts = {};
+  LIBRARY.forEach(i => counts[i.cat] = (counts[i.cat] || 0) + 1);
+  let html = '<button class="chip active" data-cat="all">Todas · ' + LIBRARY.length + '</button>';
   for (const key in CATS) {
     const c = CATS[key];
-    html += '<button class="chip" data-cat="' + key + '">' + c.emoji + ' ' + c.name + '</button>';
+    html += '<button class="chip" data-cat="' + key + '">' + c.emoji + ' ' + c.name + ' · ' + (counts[key] || 0) + '</button>';
   }
   chipsBox.innerHTML = html;
   chipsBox.querySelectorAll('.chip').forEach(btn => {
@@ -1979,7 +3234,7 @@ function buildChips() {
         const on = b.dataset.cat === filters.cat;
         b.classList.toggle('active', on);
         b.style.background = on && b.dataset.cat !== 'all' ? CATS[b.dataset.cat].color
-                           : on ? '#e8eaf0' : '';
+                           : on ? 'var(--text)' : '';
       });
       renderGrid();
     });
@@ -1992,24 +3247,26 @@ function matchesFilters(item) {
   if (filters.status === 'fav') { if (!isFav(item.id)) return false; }
   else if (filters.status !== 'all' && statusOf(item.id) !== filters.status) return false;
   if (filters.q) {
-    const hay = (item.title + ' ' + item.author + ' ' + item.one + ' ' + item.ideas.join(' '))
-      .toLowerCase();
-    if (hay.indexOf(filters.q) === -1) return false;
+    if (!item._search) {
+      item._search = norm((item.title + ' ' + item.author + ' ' + item.one + ' ' + item.ideas.join(' ')).replace(/<[^>]+>/g, ' '));
+    }
+    if (item._search.indexOf(filters.q) === -1) return false;
   }
   return true;
 }
 
-function cardHTML(item) {
+function cardHTML(item, idx) {
   const c = CATS[item.cat];
   const st = statusOf(item.id);
   const done = (store.acciones[item.id] || []).filter(Boolean).length;
   const typeLabel = item.type === 'libro' ? '📖 LIBRO' : '🔬 ESTUDIO';
   return '' +
-  '<article class="card" data-id="' + item.id + '" tabindex="0" role="button" aria-label="' + item.title + '">' +
+  '<article class="card" data-id="' + item.id + '" tabindex="0" role="button" aria-label="' + item.title + '" style="animation-delay:' + Math.min((idx || 0) * 28, 320) + 'ms">' +
     '<div class="cover" style="background: linear-gradient(135deg, ' + c.color + '33, ' + c.color + '14); border-bottom: 1px solid ' + c.color + '55;">' +
       '<span class="type-badge">' + typeLabel + '</span>' +
       '<button class="fav-btn' + (isFav(item.id) ? ' on' : '') + '" data-fav="' + item.id + '" aria-label="Favorito" title="Favorito">★</button>' +
       '<span>' + item.emoji + '</span>' +
+      '<span class="deco">' + item.emoji + '</span>' +
     '</div>' +
     '<div class="card-body">' +
       '<h3>' + item.title + '</h3>' +
@@ -2024,10 +3281,15 @@ function cardHTML(item) {
 }
 
 function renderGrid() {
-  const items = LIBRARY.filter(matchesFilters);
+  let items = LIBRARY.filter(matchesFilters);
+  if (filters.sort === 'titulo') items = items.slice().sort((a, b) => a.title.localeCompare(b.title, 'es'));
+  else if (filters.sort === 'autor') items = items.slice().sort((a, b) => a.author.localeCompare(b.author, 'es'));
+  else if (filters.sort === 'anio') items = items.slice().sort((a, b) => yearNum(b.year) - yearNum(a.year));
+  else if (filters.sort === 'anio-asc') items = items.slice().sort((a, b) => yearNum(a.year) - yearNum(b.year));
   grid.innerHTML = items.length
     ? items.map(cardHTML).join('')
     : '<div class="empty">😕 Ningún recurso coincide con tu búsqueda.<br>Prueba con otros términos o limpia los filtros.</div>';
+  document.getElementById('resultsCount').textContent = 'Mostrando ' + items.length + ' de ' + LIBRARY.length + ' recursos';
   refreshStats();
 }
 
@@ -2073,6 +3335,9 @@ function refreshStats() {
   document.getElementById('statRead').textContent = read;
   document.getElementById('statReading').textContent = reading;
   document.getElementById('statFav').textContent = store.favs.length;
+  let doneActions = 0;
+  for (const k in store.acciones) doneActions += store.acciones[k].filter(Boolean).length;
+  document.getElementById('statActions').textContent = doneActions;
   const pct = Math.round(read / total * 100);
   document.getElementById('progressFill').style.width = pct + '%';
   document.getElementById('progressLabel').textContent = pct + '% de la biblioteca leída (' + read + '/' + total + ')';
@@ -2114,6 +3379,7 @@ function detailHTML(item) {
       ).join('') +
     '</div>' +
     '<button class="fav-toggle' + (isFav(item.id) ? ' on' : '') + '" id="favToggle">' + (isFav(item.id) ? '⭐ En favoritos' : '☆ Añadir a favoritos') + '</button>' +
+    '<button class="ghost-btn" id="copyLink">🔗 Copiar enlace</button>' +
     (item.link ? '<a class="ext-link" href="' + item.link.href + '">' + item.link.label + '</a>' : '') +
   '</div>';
 
@@ -2161,22 +3427,29 @@ function detailHTML(item) {
   return h;
 }
 
-function openDetail(id) {
+function openDetail(id, keepScroll) {
   const item = LIBRARY.find(x => x.id === id);
   if (!item) return;
+  const prevScroll = keepScroll ? overlay.scrollTop : 0;
   currentId = id;
   detailBox.innerHTML = detailHTML(item);
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-  overlay.scrollTop = 0;
+  overlay.scrollTop = prevScroll;
 
   document.getElementById('backBtn').addEventListener('click', () => { location.hash = ''; });
   document.getElementById('favToggle').addEventListener('click', () => {
-    toggleFav(id); openDetail(id); renderGrid();
+    toggleFav(id); openDetail(id, true); renderGrid();
+  });
+  document.getElementById('copyLink').addEventListener('click', e => {
+    const btn = e.currentTarget;
+    const done = () => { btn.textContent = '✔ Enlace copiado'; setTimeout(() => { btn.textContent = '🔗 Copiar enlace'; }, 1600); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+    else done();
   });
   detailBox.querySelectorAll('[data-setstatus]').forEach(b => {
     b.addEventListener('click', () => {
-      store.estado[id] = b.dataset.setstatus; save(); openDetail(id); renderGrid();
+      store.estado[id] = b.dataset.setstatus; save(); openDetail(id, true); renderGrid();
     });
   });
   detailBox.querySelectorAll('[data-action]').forEach(cb => {
@@ -2217,7 +3490,7 @@ window.addEventListener('keydown', e => {
 });
 
 document.getElementById('searchInput').addEventListener('input', e => {
-  filters.q = e.target.value.trim().toLowerCase();
+  filters.q = norm(e.target.value.trim());
   renderGrid();
 });
 document.getElementById('typeFilter').addEventListener('change', e => {
@@ -2225,6 +3498,69 @@ document.getElementById('typeFilter').addEventListener('change', e => {
 });
 document.getElementById('statusFilter').addEventListener('change', e => {
   filters.status = e.target.value; renderGrid();
+});
+document.getElementById('sortSelect').addEventListener('change', e => {
+  filters.sort = e.target.value; renderGrid();
+});
+document.getElementById('randomBtn').addEventListener('click', () => {
+  const pool = LIBRARY.filter(matchesFilters);
+  const list = pool.length ? pool : LIBRARY;
+  const pick = list[Math.floor(Math.random() * list.length)];
+  location.hash = '#/r/' + pick.id;
+});
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const toLight = document.documentElement.dataset.theme !== 'light';
+  if (toLight) document.documentElement.dataset.theme = 'light';
+  else delete document.documentElement.dataset.theme;
+  try { localStorage.setItem('bp_theme', toLight ? 'light' : 'dark'); } catch (e) {}
+});
+const toTopBtn = document.getElementById('toTop');
+window.addEventListener('scroll', () => {
+  toTopBtn.classList.toggle('show', window.scrollY > 600 && !currentId);
+});
+toTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+window.addEventListener('keydown', e => {
+  if (e.key === '/' && !currentId && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) {
+    e.preventDefault(); document.getElementById('searchInput').focus();
+  }
+});
+
+/* ---------- Exportar / importar datos ---------- */
+document.getElementById('exportBtn').addEventListener('click', e => {
+  e.preventDefault();
+  const blob = new Blob([JSON.stringify({ app: 'biblioteca-practica', exportado: new Date().toISOString(), datos: store }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'biblioteca-practica-datos.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById('importBtn').addEventListener('click', e => {
+  e.preventDefault(); document.getElementById('importFile').click();
+});
+document.getElementById('importFile').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const json = JSON.parse(reader.result);
+      const d = json.datos || json;
+      if (!d || typeof d !== 'object' || (!d.estado && !d.favs && !d.acciones && !d.notas)) throw new Error('formato');
+      store = {
+        estado: d.estado || {},
+        favs: Array.isArray(d.favs) ? d.favs : [],
+        acciones: d.acciones || {},
+        notas: d.notas || {}
+      };
+      save(); renderGrid();
+      alert('✔ Datos importados correctamente.');
+    } catch (err) {
+      alert('✘ El archivo no tiene el formato esperado de la Biblioteca Práctica.');
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
 });
 
 /* ---------- Init ---------- */
