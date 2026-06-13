@@ -21,9 +21,11 @@ python3 -m http.server 8000
 | Archivo | Contenido |
 |---------|-----------|
 | `index.html` | **La biblioteca**: catálogo completo con resúmenes prácticos |
-| `habitos-atomicos.html` | Guía interactiva completa de *Hábitos Atómicos* (James Clear) |
-| `por-que-dormimos.html` | Guía interactiva completa de *Por qué dormimos* (Matthew Walker) |
-| `meditaciones.html` | Guía interactiva completa de *Meditaciones* (Marco Aurelio y estoicismo práctico) |
+| `guia.html` | **Generador de guías prácticas**: dada `?id=<recurso>`, construye una guía interactiva para cualquiera de los 200 recursos a partir de los datos |
+| `assets/data.js` | **Fuente única de datos**: catálogo (`CATS` + `LIBRARY`, 200 recursos), usado por la biblioteca y por el generador de guías |
+| `habitos-atomicos.html` | Guía interactiva ampliada de *Hábitos Atómicos* (James Clear) |
+| `por-que-dormimos.html` | Guía interactiva ampliada de *Por qué dormimos* (Matthew Walker) |
+| `meditaciones.html` | Guía interactiva ampliada de *Meditaciones* (Marco Aurelio y estoicismo práctico) |
 
 ## 📖 Contenido de la biblioteca
 
@@ -61,9 +63,13 @@ Desde los clásicos (la curva del olvido de Ebbinghaus 1885, intenciones de impl
 - **Diseño responsive**: en móvil, chips de categoría deslizables, controles a pantalla completa, objetivos táctiles amplios y campos a 16px (sin zoom forzado en iOS); en escritorio, hero con degradados, rejilla de hasta 4 columnas y tarjetas con franja de color por categoría
 - Todo persiste en `localStorage` (sin cuentas ni servidores)
 
-## 🎓 Guías interactivas completas (3)
+## 🎓 Guías prácticas
 
-Además de los resúmenes, tres libros tienen **guía didáctica profunda** como página propia (`habitos-atomicos.html`, `por-que-dormimos.html`, `meditaciones.html`): módulos navegables con progreso persistente, ejercicios interactivos y quiz final de 10 preguntas con retroalimentación. Cada guía incluye un enlace «← Volver a la Biblioteca Práctica».
+**Cada uno de los 200 recursos tiene su guía práctica interactiva.** Desde la ficha de la biblioteca, el botón **«📘 Abrir guía práctica»** abre `guia.html?id=<recurso>`, que genera —a partir de los datos del catálogo y con el estilo de las guías— una página navegable temática por el color de su categoría, con módulos: Introducción, Ideas clave, Plan de acción (checklist persistente), Cita, La evidencia, Ficha del estudio (en los estudios científicos), Relacionados, Autoevaluación y Mis notas. El progreso, la checklist y las notas se guardan por recurso en `localStorage`.
+
+### Tres guías ampliadas (artesanales)
+
+Tres libros tienen además una **guía profunda hecha a mano** como página propia, con ejercicios interactivos a medida y quiz final de 10 preguntas:
 
 - ⚛️ **Hábitos Atómicos** — calculadora del 1%, constructor de identidad, apilador de hábitos, rastreador semanal, diagnóstico de malos hábitos
 - 😴 **Por qué dormimos** — calculadoras de cafeína y ciclos de sueño, checklist de higiene (12 reglas), autoevaluación orientativa y plan de 7 días
