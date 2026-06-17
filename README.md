@@ -54,18 +54,25 @@ Desde los clásicos (la curva del olvido de Ebbinghaus 1885, intenciones de impl
 ## 🗼 El diseño Pharus (faro + conexiones neuronales)
 
 - **Estética de faro**: paleta de océano nocturno (azules profundos) con el haz ámbar del faro como acento. La portada (hero) tiene una **red neuronal animada** y dos **haces de luz** que barren suavemente desde el faro.
-- **Logo Pharus** como título principal (`assets/pharus.svg`): un faro que emite su luz entre nodos neuronales, con el wordmark *PHARUS · BIBLIOTECA*.
-- **Logo BYMCYL** (`assets/bymcyl.svg`): insignia compacta fijada en una esquina.
+- **Logo Pharus** como título principal (`assets/pharus-dark.png` en tema oscuro: estrella/brújula dorada con el wordmark *Pharus*; `assets/pharus.png` en tema claro).
+- **Logo BYMCYL** (`assets/bymcyl-dark.png` / `assets/bymcyl.png`): insignia compacta fijada en una esquina, que también cambia según el tema.
 - **Conmutador de vistas** bajo la portada: **📚 Biblioteca · 🧭 Secuencias · 🕸️ Mapa de conexiones · ✨ Constelación**.
+
+### 📚 Descubrimiento dinámico (vista por defecto)
+La biblioteca abre con un **feed de descubrimiento** en lugar de una rejilla estática:
+- **🔦 El faro ilumina**: un recurso destacado rotativo (uno por día, con botón «Otro» para barajar) con resumen, guía y acceso directo.
+- **Chips de intención**: «Crear un hábito», «Concentrarme», «Dormir mejor», «Calmar la ansiedad»… que lanzan una búsqueda temática.
+- **Carruseles horizontales**: «Continúa donde lo dejaste», «Tus favoritos», «Para empezar», «Descubre algo nuevo» (barajado), «Ciencia que puedes aplicar hoy» y una fila por cada área, con «Ver todos →».
+- En cuanto buscas, filtras u ordenas, el feed da paso a la **rejilla clásica** con el contador de resultados.
 
 ### 🧭 Secuencias curadas
 Rutas de lectura **en orden**, no listados sueltos: por ejemplo *«Quiero mejores hábitos»* propone 5 lecturas encadenadas. Cada secuencia (hábitos, foco, aprendizaje, calma y propósito, relaciones, decisiones, cuerpo y cerebro, creatividad) muestra sus pasos numerados con una línea de progreso que se va encendiendo conforme marcas cada lectura como leída.
 
 ### 🕸️ Mapa de conexiones
-Un **grafo dirigido por fuerzas** donde cada punto es un recurso y cada línea une ideas relacionadas (a partir del campo `related` de cada ficha). Se puede **arrastrar** para reorganizar, pasar el cursor para ver el título y **hacer clic para abrir la ficha**. Las lecturas leídas brillan y sus conexiones se iluminan.
+Un mapa **agrupado por áreas**: los 200 recursos se organizan en 8 clústeres etiquetados (uno por categoría) dispuestos en círculo, mucho más claro que un grafo suelto. Pasa el cursor o toca un recurso para **iluminar solo sus conexiones** (las demás se atenúan) y ver un **panel lateral** con sus relacionados; vuelve a tocarlo —o usa «Abrir ficha»— para ver su resumen. La **leyenda es interactiva**: pulsa un área para aislarla, y «↺ Ver todo» restablece. Las conexiones entre lecturas ya completadas brillan en dorado.
 
-### ✨ Constelación de progreso
-Un cielo donde **cada estrella es una lectura**, agrupada por categoría. Las estrellas se **encienden y titilan** al marcarlas como leídas, y cuando dos lecturas relacionadas brillan, la línea que las une se ilumina: tu constelación se completa a medida que avanzas.
+### ✨ Constelación = cerebro de conocimiento
+Las 200 lecturas se distribuyen formando la **silueta de un cerebro** (dos hemisferios con su fisura central) y se enlazan entre sí como una **red neuronal** (cada neurona unida a sus vecinas más cercanas). Cada neurona se **enciende y titila** al marcar su lectura como leída, y las conexiones entre neuronas encendidas se iluminan en dorado: el cerebro «cobra vida» a medida que avanzas. Pulsa cualquier neurona para abrir su ficha.
 
 ## 🧪 Funciones interactivas
 
@@ -98,7 +105,7 @@ Tres libros tienen además una **guía profunda hecha a mano** como página prop
 
 HTML + CSS + JavaScript vanilla, un archivo por página. Diseño oscuro, responsivo (escritorio y móvil), sin frameworks ni CDN.
 
-**Identidad visual** (en `assets/`, todo SVG vectorial en la paleta de la app): `pharus.svg` (logo principal: faro + red neuronal + wordmark, usado como título del hero), `bymcyl.svg` (insignia compacta de la esquina), `logo.svg` (logotipo clásico con icono de libro + chispa de idea), `favicon.svg` (favicon de pestaña, presente en la biblioteca y en las guías) y `og-image.svg` (tarjeta para compartir, referenciada en las metaetiquetas Open Graph/Twitter de `index.html`). Nota: algunas redes no renderizan `og:image` en SVG; para esos casos conviene exportar una versión PNG (1200×630).
+**Identidad visual** (en `assets/`): `pharus-dark.png` y `pharus.png` (logo principal *Pharus* — estrella/brújula con wordmark — en versión para tema oscuro y claro, usado como título del hero), `bymcyl-dark.png` y `bymcyl.png` (insignia *BYMCYL* de la esquina, en sus dos temas), `logo.svg` (logotipo clásico con icono de libro + chispa de idea), `favicon.svg` (favicon de pestaña, presente en la biblioteca y en las guías) y `og-image.svg` (tarjeta para compartir, referenciada en las metaetiquetas Open Graph/Twitter de `index.html`). Nota: algunas redes no renderizan `og:image` en SVG; para esos casos conviene exportar una versión PNG (1200×630).
 
 ## ⚠️ Nota
 

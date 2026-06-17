@@ -443,12 +443,17 @@
      =================================================================== */
 
   /* Logo Pharus en el hero */
-  header.hero { padding-top: 2.6rem; }
+  header.hero { padding-top: 2.4rem; }
   .pharus-logo {
-    width: min(440px, 84%); height: auto; display: block; margin: 0 auto .2rem;
-    filter: drop-shadow(0 8px 26px rgba(255,212,121,.18));
+    width: min(300px, 68%); height: auto; display: block; margin: -.6rem auto -.4rem;
+    filter: drop-shadow(0 10px 30px rgba(255,212,121,.22));
   }
   header.hero h1 { display: none; } /* sustituido por el logo Pharus */
+  /* Variantes de logo según tema (oscuro por defecto) */
+  .logo-light { display: none; }
+  html[data-theme="light"] .logo-dark { display: none; }
+  html[data-theme="light"] .logo-light { display: block; }
+  html[data-theme="light"] .pharus-logo { filter: drop-shadow(0 8px 22px rgba(30,40,70,.14)); }
 
   /* Red neuronal del hero (canvas) + haz de luz del faro */
   .hero-neural {
@@ -594,8 +599,115 @@
   html[data-mode="mobile"] .bymcyl-badge { left: max(.7rem, calc(50% - 218px)); }
   @media (max-width: 560px) {
     html:not([data-mode]) .seq-list { grid-template-columns: 1fr; }
-    html:not([data-mode]) .pharus-logo { width: 90%; }
+    html:not([data-mode]) .pharus-logo { width: 80%; }
   }
+
+  /* ===================================================================
+     FEED DE DESCUBRIMIENTO DINÁMICO (vista biblioteca por defecto)
+     =================================================================== */
+  #discoverFeed { display: none; }
+  html[data-libmode="discover"] #discoverFeed { display: block; }
+  html[data-libmode="discover"] #grid { display: none; }
+
+  .feed-row { margin: 0 0 2rem; }
+  .row-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 0 .15rem .8rem; }
+  .row-head h2 { font-size: 1.18rem; letter-spacing: -.2px; display: flex; align-items: center; gap: .5rem; }
+  .row-head .row-sub { color: var(--muted); font-size: .8rem; font-weight: 400; }
+  .row-more { background: none; border: none; color: var(--accent-3); font-size: .82rem; cursor: pointer; white-space: nowrap; font-weight: 600; }
+  .row-more:hover { color: var(--accent); }
+  .row-track {
+    display: flex; gap: .9rem; overflow-x: auto; padding: .2rem .15rem 1rem; scroll-snap-type: x proximity;
+    scrollbar-width: thin; -webkit-overflow-scrolling: touch;
+  }
+  .row-track::-webkit-scrollbar { height: 8px; }
+  .row-track::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+  .mini {
+    scroll-snap-align: start; flex: 0 0 186px; width: 186px;
+    background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--mini-c, var(--accent));
+    border-radius: var(--radius); overflow: hidden; cursor: pointer; text-align: left;
+    display: flex; flex-direction: column; padding: 0; color: inherit; font: inherit;
+    transition: transform .15s, border-color .15s, box-shadow .2s;
+  }
+  .mini:hover { transform: translateY(-4px); box-shadow: 0 14px 30px var(--shadow); border-color: var(--muted); }
+  .mini .mini-cover {
+    height: 78px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; position: relative;
+  }
+  .mini .mini-type { position: absolute; top: .4rem; left: .45rem; font-size: .6rem; font-weight: 700; letter-spacing: .5px;
+    background: var(--pill-bg); border-radius: 99px; padding: .1rem .5rem; color: var(--text); }
+  .mini .mini-state { position: absolute; top: .45rem; right: .5rem; width: 9px; height: 9px; border-radius: 99px; background: transparent; }
+  .mini .mini-state.leyendo { background: var(--accent-3); box-shadow: 0 0 7px var(--accent-3); }
+  .mini .mini-state.leido { background: var(--beam); box-shadow: 0 0 7px var(--beam); }
+  .mini .mini-body { padding: .6rem .7rem .8rem; display: flex; flex-direction: column; gap: .25rem; flex: 1; }
+  .mini .mini-title { font-size: .85rem; font-weight: 700; line-height: 1.25;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .mini .mini-author { font-size: .7rem; color: var(--muted); }
+  .mini .mini-one { font-size: .72rem; color: var(--text-2); margin-top: .1rem;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+  /* Spotlight (faro) */
+  .spotlight {
+    position: relative; overflow: hidden; border-radius: 18px; border: 1px solid var(--border);
+    background: linear-gradient(120deg, var(--surface) 0%, var(--surface-2) 100%);
+    display: grid; grid-template-columns: 230px 1fr; gap: 0; margin-bottom: 2.2rem;
+  }
+  .spotlight::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(420px 220px at 12% 0%, color-mix(in srgb, var(--spot-c, #f5b942) 16%, transparent), transparent 70%); opacity: .6; }
+  .spot-cover { position: relative; display: flex; align-items: center; justify-content: center; font-size: 5rem;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--spot-c, #f5b942) 22%, transparent), color-mix(in srgb, var(--spot-c, #f5b942) 7%, transparent));
+    border-right: 1px solid var(--border); }
+  .spot-cover .spot-deco { position: absolute; right: -10px; bottom: -18px; font-size: 9rem; opacity: .1; transform: rotate(-12deg); }
+  .spot-body { padding: 1.5rem 1.6rem; position: relative; z-index: 1; }
+  .spot-kicker { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--accent);
+    display: flex; align-items: center; gap: .5rem; }
+  .spot-body h2 { font-size: 1.6rem; line-height: 1.2; margin: .5rem 0 .1rem; }
+  .spot-author { color: var(--muted); font-size: .85rem; }
+  .spot-one { color: var(--text-2); font-size: .95rem; margin: .7rem 0 1.1rem; max-width: 60ch; }
+  .spot-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .spot-btn { border: none; border-radius: 10px; padding: .58rem 1.1rem; font-size: .85rem; font-weight: 700; cursor: pointer;
+    background: linear-gradient(92deg, var(--beam), #e8862f); color: #0b1220; text-decoration: none; display: inline-flex; align-items: center; gap: .4rem; }
+  .spot-btn.ghost { background: var(--surface); border: 1px solid var(--border); color: var(--text); font-weight: 600; }
+  .spot-btn:hover { filter: brightness(1.05); }
+
+  /* Chips de estado de ánimo / atajos de descubrimiento */
+  .mood-row { display: flex; flex-wrap: wrap; gap: .5rem; margin: -0.4rem 0 2rem; justify-content: center; }
+  .mood-chip { background: var(--surface); border: 1px solid var(--border); color: var(--text-2);
+    border-radius: 99px; padding: .5rem 1rem; font-size: .85rem; cursor: pointer; transition: all .15s; }
+  .mood-chip:hover { border-color: var(--accent); color: var(--text); transform: translateY(-2px); }
+
+  html[data-mode="mobile"] .spotlight { grid-template-columns: 1fr; }
+  html[data-mode="mobile"] .spot-cover { height: 120px; border-right: none; border-bottom: 1px solid var(--border); }
+  @media (max-width: 620px) {
+    html:not([data-mode]) .spotlight { grid-template-columns: 1fr; }
+    html:not([data-mode]) .spot-cover { height: 120px; border-right: none; border-bottom: 1px solid var(--border); font-size: 3.4rem; }
+    html:not([data-mode]) .spot-body h2 { font-size: 1.35rem; }
+  }
+
+  /* ===================================================================
+     CONTROLES DE MAPA Y CONSTELACIÓN (rediseño)
+     =================================================================== */
+  .graph-controls { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; align-items: center; margin-bottom: 1rem; }
+  .legend-item { cursor: pointer; transition: all .15s; user-select: none; }
+  .legend-item:hover { border-color: var(--muted); color: var(--text); }
+  .legend-item.active { color: var(--text); border-width: 2px; }
+  .legend-item.dimmed { opacity: .4; }
+  .graph-reset { background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    border-radius: 99px; padding: .3rem .85rem; font-size: .78rem; cursor: pointer; }
+  .graph-reset:hover { border-color: var(--accent); color: var(--text); }
+  .graph-focus-panel {
+    position: absolute; top: .8rem; right: .8rem; width: 240px; max-width: 60%; z-index: 6;
+    background: var(--pill-bg); border: 1px solid var(--border); border-radius: 12px; padding: .9rem 1rem;
+    backdrop-filter: blur(8px); box-shadow: 0 10px 30px var(--shadow); font-size: .82rem; display: none;
+  }
+  .graph-focus-panel.show { display: block; }
+  .graph-focus-panel .gf-title { font-weight: 700; font-size: .92rem; display: flex; gap: .4rem; align-items: flex-start; }
+  .graph-focus-panel .gf-cat { font-size: .72rem; margin: .15rem 0 .5rem; }
+  .graph-focus-panel .gf-list { display: flex; flex-direction: column; gap: .35rem; max-height: 220px; overflow-y: auto; }
+  .graph-focus-panel .gf-link { background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: .35rem .55rem; cursor: pointer; color: var(--text-2); font-size: .78rem; text-align: left; }
+  .graph-focus-panel .gf-link:hover { border-color: var(--accent); color: var(--text); }
+  .graph-focus-panel .gf-open { margin-top: .6rem; width: 100%; border: none; border-radius: 8px; padding: .45rem;
+    background: linear-gradient(92deg, var(--beam), #e8862f); color: #0b1220; font-weight: 700; cursor: pointer; font-size: .8rem; }
+  .graph-focus-panel .gf-empty { color: var(--muted); font-size: .76rem; }
 </style>
 <script>
   /* Aplica modo y tema antes del primer pintado (evita parpadeo) */
@@ -639,7 +751,8 @@
   <div class="beam b2" aria-hidden="true"></div>
   <div class="wrap">
     <h1>📚 Biblioteca <span>Práctica</span></h1>
-    <img class="pharus-logo" src="assets/pharus.svg" alt="Pharus — Biblioteca">
+    <img class="pharus-logo logo-dark" src="assets/pharus-dark.png" alt="Pharus — Biblioteca">
+    <img class="pharus-logo logo-light" src="assets/pharus.png" alt="Pharus — Biblioteca" aria-hidden="true">
     <p class="tagline">Un faro entre 200 libros y estudios: resúmenes accionables sobre hábitos, foco, aprendizaje, decisiones, relaciones, propósito y cerebro. Sigue secuencias guiadas, recorre el mapa de ideas conectadas y enciende tu constelación a medida que lees.</p>
     <div class="view-switcher" id="viewSwitcher">
       <button class="view-tab active" data-view="biblioteca">📚 Biblioteca</button>
@@ -699,6 +812,7 @@
 <main>
   <div class="wrap">
     <div id="view-biblioteca">
+      <div id="discoverFeed"></div>
       <div class="grid" id="grid"></div>
     </div>
 
@@ -713,27 +827,31 @@
     <section id="view-mapa" class="view" hidden>
       <div class="view-head">
         <h2>🕸️ Mapa de conexiones</h2>
-        <p>Cada punto es un recurso y cada línea une ideas que dialogan entre sí. Arrastra para reorganizar, pasa el cursor para ver el título y haz clic para abrir su ficha.</p>
+        <p>Los recursos se agrupan por área. Pasa el cursor (o toca) sobre cualquiera para iluminar solo sus conexiones; haz clic para abrir su ficha. Usa la leyenda para aislar un área.</p>
       </div>
-      <div class="map-legend" id="mapLegend"></div>
+      <div class="graph-controls">
+        <div class="map-legend" id="mapLegend"></div>
+        <button class="graph-reset" id="mapReset">↺ Ver todo</button>
+      </div>
       <div class="canvas-wrap">
         <canvas id="mapCanvas"></canvas>
         <div class="graph-tip" id="mapTip" hidden></div>
+        <div class="graph-focus-panel" id="mapPanel"></div>
       </div>
-      <div class="map-hint">Las líneas más brillantes conectan lecturas que ya completaste.</div>
+      <div class="map-hint">Cada línea une ideas que dialogan entre sí. Las conexiones entre lecturas que ya completaste brillan en dorado.</div>
     </section>
 
     <section id="view-constelacion" class="view" hidden>
       <div class="view-head">
-        <h2>✨ Tu constelación de progreso</h2>
-        <p>Cada estrella es una lectura. Se enciende cuando la marcas como leída y, cuando dos lecturas relacionadas brillan, la línea que las une se ilumina: tu cielo se completa conforme avanzas.</p>
+        <h2>✨ Tu cerebro de conocimiento</h2>
+        <p>Las 200 lecturas dibujan la silueta de un cerebro y se enlazan como una red neuronal. Cada estrella se enciende cuando marcas una lectura como leída, y las conexiones entre lecturas encendidas se iluminan: tu cerebro cobra vida conforme avanzas.</p>
       </div>
       <div class="constel-stats" id="constelStats"></div>
       <div class="canvas-wrap">
         <canvas id="constelCanvas"></canvas>
         <div class="graph-tip" id="constelTip" hidden></div>
       </div>
-      <div class="map-hint">Pulsa una estrella para abrir su ficha. Marca lecturas como «leídas» para encenderlas.</div>
+      <div class="map-hint">Pulsa una neurona para abrir su ficha. Marca lecturas como «leídas» para encender el cerebro.</div>
     </section>
   </div>
 </main>
@@ -751,7 +869,7 @@
 
 <button class="to-top" id="toTop" title="Volver arriba" aria-label="Volver arriba">↑</button>
 
-<a class="bymcyl-badge" href="#" id="bymcylBadge" title="BYMCYL" aria-label="BYMCYL"><img src="assets/bymcyl.svg" alt="BYMCYL"></a>
+<a class="bymcyl-badge" href="#" id="bymcylBadge" title="BYMCYL" aria-label="BYMCYL"><img class="logo-dark" src="assets/bymcyl-dark.png" alt="BYMCYL"><img class="logo-light" src="assets/bymcyl.png" alt="BYMCYL" aria-hidden="true"></a>
 
 </div><!-- /.device-frame -->
 
@@ -5608,7 +5726,7 @@ function buildChips() {
         b.style.background = on && b.dataset.cat !== 'all' ? CATS[b.dataset.cat].color
                            : on ? 'var(--text)' : '';
       });
-      renderGrid();
+      renderLibrary();
     });
   });
 }
@@ -5668,9 +5786,9 @@ function renderGrid() {
 
 grid.addEventListener('click', e => {
   const fav = e.target.closest('[data-fav]');
-  if (fav) { e.stopPropagation(); toggleFav(fav.dataset.fav); renderGrid(); return; }
+  if (fav) { e.stopPropagation(); toggleFav(fav.dataset.fav); renderLibrary(); return; }
   const pill = e.target.closest('[data-status]');
-  if (pill) { e.stopPropagation(); cycleStatus(pill.dataset.status); renderGrid(); return; }
+  if (pill) { e.stopPropagation(); cycleStatus(pill.dataset.status); renderLibrary(); return; }
   const card = e.target.closest('.card');
   if (card) location.hash = '#/r/' + card.dataset.id;
 });
@@ -5816,7 +5934,7 @@ function openDetail(id, keepScroll) {
 
   document.getElementById('backBtn').addEventListener('click', () => { location.hash = ''; });
   document.getElementById('favToggle').addEventListener('click', () => {
-    toggleFav(id); openDetail(id, true); renderGrid();
+    toggleFav(id); openDetail(id, true); renderLibrary();
   });
   document.getElementById('copyLink').addEventListener('click', e => {
     const btn = e.currentTarget;
@@ -5826,7 +5944,7 @@ function openDetail(id, keepScroll) {
   });
   detailBox.querySelectorAll('[data-setstatus]').forEach(b => {
     b.addEventListener('click', () => {
-      store.estado[id] = b.dataset.setstatus; save(); openDetail(id, true); renderGrid();
+      store.estado[id] = b.dataset.setstatus; save(); openDetail(id, true); renderLibrary();
     });
   });
   detailBox.querySelectorAll('[data-action]').forEach(cb => {
@@ -5851,7 +5969,7 @@ function closeDetail() {
   currentId = null;
   overlay.classList.remove('open');
   document.body.style.overflow = '';
-  renderGrid();
+  if (typeof renderLibrary === 'function') renderLibrary(); else renderGrid();
   if (typeof resumeActiveView === 'function') resumeActiveView();
 }
 
@@ -5869,16 +5987,16 @@ window.addEventListener('keydown', e => {
 
 document.getElementById('searchInput').addEventListener('input', e => {
   filters.q = norm(e.target.value.trim());
-  renderGrid();
+  renderLibrary();
 });
 document.getElementById('typeFilter').addEventListener('change', e => {
-  filters.type = e.target.value; renderGrid();
+  filters.type = e.target.value; renderLibrary();
 });
 document.getElementById('statusFilter').addEventListener('change', e => {
-  filters.status = e.target.value; renderGrid();
+  filters.status = e.target.value; renderLibrary();
 });
 document.getElementById('sortSelect').addEventListener('change', e => {
-  filters.sort = e.target.value; renderGrid();
+  filters.sort = e.target.value; renderLibrary();
 });
 document.getElementById('randomBtn').addEventListener('click', () => {
   const pool = LIBRARY.filter(matchesFilters);
@@ -5891,6 +6009,7 @@ document.getElementById('themeBtn').addEventListener('click', () => {
   if (toLight) document.documentElement.dataset.theme = 'light';
   else delete document.documentElement.dataset.theme;
   try { localStorage.setItem('bp_theme', toLight ? 'light' : 'dark'); } catch (e) {}
+  if (typeof drawMap === 'function' && currentView === 'mapa' && mapCtx) drawMap();
 });
 
 /* ---------- Selector de modo (móvil / escritorio) ---------- */
@@ -5958,7 +6077,7 @@ document.getElementById('importFile').addEventListener('change', e => {
         acciones: d.acciones || {},
         notas: d.notas || {}
       };
-      save(); renderGrid();
+      save(); renderLibrary();
       alert('✔ Datos importados correctamente.');
     } catch (err) {
       alert('✘ El archivo no tiene el formato esperado de la Biblioteca Práctica.');
@@ -6143,235 +6262,469 @@ document.getElementById('seqList').addEventListener('click', e => {
   if (step) location.hash = '#/r/' + step.dataset.id;
 });
 
+/* ---------- Helpers compartidos para los grafos ---------- */
+function ensureAdj() {
+  const g = buildGraph();
+  if (g.adj) return g;
+  const adj = g.nodes.map(() => new Set());
+  g.edges.forEach(e => { adj[e.a].add(e.b); adj[e.b].add(e.a); });
+  g.adj = adj; return g;
+}
+function nodeRadius(n) { return 3.4 + Math.min(n.deg, 9) * 0.8; }
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function angDiff(a, b) { let d = Math.abs(a - b) % (Math.PI * 2); return d > Math.PI ? Math.PI * 2 - d : d; }
+const CAT_RGB = {};
+for (const k in CATS) {
+  const h = CATS[k].color.replace('#', '');
+  CAT_RGB[k] = parseInt(h.substr(0, 2), 16) + ',' + parseInt(h.substr(2, 2), 16) + ',' + parseInt(h.substr(4, 2), 16);
+}
+function isLight() { return document.documentElement.dataset.theme === 'light'; }
+
 /* =====================================================================
-   MAPA DE CONEXIONES (grafo dirigido por fuerzas)
+   FEED DE DESCUBRIMIENTO DINÁMICO
    ===================================================================== */
-let mapRAF = null, mapInited = false, mapCtx = null, mapW = 0, mapH = 0, mapAlpha = 0;
-let mapHover = null, mapDrag = null;
-
-function buildLegend() {
-  const box = document.getElementById('mapLegend');
-  let h = '';
-  for (const k in CATS) h += '<span class="legend-item"><span class="dot" style="background:' +
-    CATS[k].color + '"></span>' + CATS[k].name + '</span>';
-  h += '<span class="legend-item"><span class="dot" style="background:var(--beam);box-shadow:0 0 7px var(--beam)"></span>Leído</span>';
-  box.innerHTML = h;
+function isDefaultLib() {
+  return !filters.q && filters.cat === 'all' && filters.type === 'all' &&
+         filters.status === 'all' && filters.sort === 'default';
 }
-function nodeRadius(n) { return 3.2 + Math.min(n.deg, 9) * 0.85; }
-
-function forceStep(nodes, edges, w, h, alpha, drag) {
-  const rep = 2400;
-  for (let i = 0; i < nodes.length; i++) {
-    const a = nodes[i];
-    for (let j = i + 1; j < nodes.length; j++) {
-      const b = nodes[j];
-      let dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy;
-      if (d2 < 1) { dx = Math.random() - .5; dy = Math.random() - .5; d2 = 1; }
-      const d = Math.sqrt(d2), f = rep / d2 * alpha, fx = dx / d * f, fy = dy / d * f;
-      a.vx += fx; a.vy += fy; b.vx -= fx; b.vy -= fy;
-    }
-  }
-  const ideal = 72;
-  for (const e of edges) {
-    const a = nodes[e.a], b = nodes[e.b];
-    let dx = b.x - a.x, dy = b.y - a.y, d = Math.sqrt(dx * dx + dy * dy) || 1;
-    const f = (d - ideal) * 0.016 * alpha, fx = dx / d * f, fy = dy / d * f;
-    a.vx += fx; a.vy += fy; b.vx -= fx; b.vy -= fy;
-  }
-  const cx = w / 2, cy = h / 2, m = 16;
-  for (const n of nodes) {
-    n.vx += (cx - n.x) * 0.001 * alpha;
-    n.vy += (cy - n.y) * 0.001 * alpha;
-    if (n === drag) { n.vx = 0; n.vy = 0; continue; }
-    n.vx *= 0.86; n.vy *= 0.86;
-    n.x += n.vx; n.y += n.vy;
-    n.x = Math.max(m, Math.min(w - m, n.x));
-    n.y = Math.max(m, Math.min(h - m, n.y));
+function renderLibrary() {
+  if (currentView !== 'biblioteca') return;
+  if (isDefaultLib()) {
+    document.documentElement.dataset.libmode = 'discover';
+    renderDiscover();
+    refreshStats();
+    const rc = document.getElementById('resultsCount'); if (rc) rc.textContent = '';
+  } else {
+    document.documentElement.dataset.libmode = 'grid';
+    renderGrid();
   }
 }
-function drawGraph(ctx, g, w, h) {
+function syncChips(cat) {
+  chipsBox.querySelectorAll('.chip').forEach(b => {
+    const on = b.dataset.cat === cat;
+    b.classList.toggle('active', on);
+    b.style.background = on && cat !== 'all' ? CATS[cat].color : on ? 'var(--text)' : '';
+  });
+}
+function stripTags(s) { return String(s).replace(/<[^>]+>/g, ''); }
+function shuffleSample(arr, n) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; }
+  return a.slice(0, n);
+}
+function miniHTML(it) {
+  const c = CATS[it.cat], st = statusOf(it.id);
+  const typeLabel = it.type === 'libro' ? 'LIBRO' : 'ESTUDIO';
+  return '<button class="mini" data-id="' + it.id + '" style="--mini-c:' + c.color + '">' +
+    '<div class="mini-cover" style="background:linear-gradient(135deg,' + c.color + '33,' + c.color + '12)">' +
+      '<span class="mini-type">' + typeLabel + '</span>' +
+      '<span class="mini-state ' + st + '"></span>' +
+      '<span>' + it.emoji + '</span></div>' +
+    '<div class="mini-body"><div class="mini-title">' + it.title + '</div>' +
+      '<div class="mini-author">' + it.author + ' · ' + it.year + '</div>' +
+      '<div class="mini-one">' + stripTags(it.one) + '</div></div></button>';
+}
+function rowHTML(icon, title, sub, items, moreVal) {
+  if (!items.length) return '';
+  const more = moreVal ? '<button class="row-more" data-more="' + moreVal + '">Ver todos →</button>' : '';
+  return '<div class="feed-row"><div class="row-head"><h2>' + icon + ' ' + title +
+    (sub ? ' <span class="row-sub">' + sub + '</span>' : '') + '</h2>' + more + '</div>' +
+    '<div class="row-track">' + items.map(miniHTML).join('') + '</div></div>';
+}
+let spotShuffle = 0;
+function currentSpot() {
+  const pool = FEATURED.map(id => LIBRARY.find(x => x.id === id)).filter(Boolean);
+  const day = Math.floor(Date.now() / 8.64e7);
+  return pool[(day + spotShuffle) % pool.length];
+}
+function spotlightHTML(it) {
+  const c = CATS[it.cat];
+  return '<div class="spotlight" style="--spot-c:' + c.color + '">' +
+    '<div class="spot-cover"><span>' + it.emoji + '</span><span class="spot-deco">' + c.emoji + '</span></div>' +
+    '<div class="spot-body">' +
+      '<span class="spot-kicker">🔦 El faro ilumina · ' + c.emoji + ' ' + c.name + '</span>' +
+      '<h2>' + it.title + '</h2>' +
+      '<div class="spot-author">' + it.author + ' · ' + it.year + '</div>' +
+      '<p class="spot-one">' + stripTags(it.one) + '</p>' +
+      '<div class="spot-actions">' +
+        '<button class="spot-btn" data-open="' + it.id + '">Abrir resumen →</button>' +
+        '<a class="spot-btn ghost" href="' + guideHref(it.id) + '">📘 Guía práctica</a>' +
+        '<button class="spot-btn ghost" data-spot-shuffle="1">🎲 Otro</button>' +
+      '</div></div></div>';
+}
+const MOODS = [
+  { q: 'hábito', label: '🔁 Crear un hábito' },
+  { q: 'foco', label: '🎯 Concentrarme' },
+  { q: 'sueño', label: '🛌 Dormir mejor' },
+  { q: 'ansiedad', label: '🧘 Calmar la ansiedad' },
+  { q: 'dinero', label: '💰 Manejar el dinero' },
+  { q: 'memoria', label: '🧠 Recordar más' },
+  { q: 'procrastin', label: '⏳ Dejar de procrastinar' }
+];
+function moodRowHTML() {
+  return '<div class="mood-row">' + MOODS.map(m =>
+    '<button class="mood-chip" data-q="' + m.q + '">' + m.label + '</button>').join('') + '</div>';
+}
+function renderDiscover() {
+  const feed = document.getElementById('discoverFeed');
+  const byId = id => LIBRARY.find(x => x.id === id);
+  let html = spotlightHTML(currentSpot());
+  html += moodRowHTML();
+  const reading = LIBRARY.filter(it => statusOf(it.id) === 'leyendo');
+  html += rowHTML('▶️', 'Continúa donde lo dejaste', '', reading.slice(0, 14));
+  const favs = store.favs.map(byId).filter(Boolean);
+  html += rowHTML('⭐', 'Tus favoritos', '', favs.slice(0, 14));
+  html += rowHTML('🌟', 'Para empezar', 'los más conocidos', FEATURED.map(byId).filter(Boolean));
+  html += rowHTML('🎲', 'Descubre algo nuevo', 'recién barajado', shuffleSample(LIBRARY, 14));
+  const papers = LIBRARY.filter(it => it.type === 'paper');
+  html += rowHTML('🔬', 'Ciencia que puedes aplicar hoy', '', shuffleSample(papers, 14), 'type:paper');
+  for (const k in CATS) {
+    const items = LIBRARY.filter(it => it.cat === k);
+    html += rowHTML(CATS[k].emoji, CATS[k].name, items.length + ' recursos', items.slice(0, 16), 'cat:' + k);
+  }
+  feed.innerHTML = html;
+}
+document.getElementById('discoverFeed').addEventListener('click', e => {
+  const sh = e.target.closest('[data-spot-shuffle]');
+  if (sh) { spotShuffle++; renderDiscover(); return; }
+  const open = e.target.closest('[data-open]');
+  if (open) { location.hash = '#/r/' + open.dataset.open; return; }
+  const more = e.target.closest('[data-more]');
+  if (more) {
+    const v = more.dataset.more;
+    if (v === 'type:paper') { filters.type = 'paper'; document.getElementById('typeFilter').value = 'paper'; }
+    else if (v.startsWith('cat:')) { filters.cat = v.slice(4); syncChips(filters.cat); }
+    renderLibrary(); window.scrollTo({ top: 0, behavior: 'smooth' }); return;
+  }
+  const mood = e.target.closest('[data-q]');
+  if (mood) {
+    const q = mood.dataset.q;
+    document.getElementById('searchInput').value = q; filters.q = norm(q);
+    renderLibrary(); window.scrollTo({ top: 0, behavior: 'smooth' }); return;
+  }
+  const mini = e.target.closest('[data-id]');
+  if (mini) location.hash = '#/r/' + mini.dataset.id;
+});
+
+/* =====================================================================
+   MAPA DE CONEXIONES (clústeres por área + foco interactivo)
+   ===================================================================== */
+let mapCtx = null, mapW = 0, mapH = 0, mapHover = null, mapFocus = null, mapCatFilter = null, mapInited = false;
+const CAT_KEYS = Object.keys(CATS);
+
+function clusterLayout(w, h) {
+  const g = ensureAdj();
+  const cx = w / 2, cy = h / 2, S = Math.min(w, h);
+  const Rring = S * 0.355;
+  const byCat = {}; CAT_KEYS.forEach(c => byCat[c] = []);
+  g.nodes.forEach(n => byCat[n.cat].push(n));
+  const centers = {};
+  CAT_KEYS.forEach((cat, ci) => {
+    const ang = ci / CAT_KEYS.length * Math.PI * 2 - Math.PI / 2;
+    const ccx = cx + Math.cos(ang) * Rring * (w > h ? 1.18 : 1);
+    const ccy = cy + Math.sin(ang) * Rring * (h >= w ? 1.05 : 0.86);
+    const arr = byCat[cat];
+    const spread = S * 0.066 * Math.sqrt(arr.length / 12 + 0.5);
+    const m = 24, cl = (v, hi) => Math.max(m, Math.min(hi - m, v));
+    arr.forEach((n, i) => {
+      const a = i * 2.399963, rr = Math.sqrt((i + 0.5) / arr.length) * spread;
+      n.mx = cl(ccx + Math.cos(a) * rr, w); n.my = cl(ccy + Math.sin(a) * rr, h);
+    });
+    centers[cat] = { x: ccx, y: ccy, lx: cl(ccx + Math.cos(ang) * (spread + S * 0.05), w), ly: cl(ccy + Math.sin(ang) * (spread + S * 0.05), h) };
+  });
+  GRAPH.centers = centers;
+}
+function drawMap() {
+  const g = GRAPH, ctx = mapCtx, w = mapW, h = mapH, adj = g.adj;
   ctx.clearRect(0, 0, w, h);
-  const hi = mapHover != null ? mapHover : -1;
+  const focus = mapFocus != null ? mapFocus : (mapHover != null ? mapHover : -1);
   for (const e of g.edges) {
     const a = g.nodes[e.a], b = g.nodes[e.b];
     const both = statusOf(a.id) === 'leido' && statusOf(b.id) === 'leido';
-    let alpha = both ? 0.5 : 0.1, col = both ? '255,212,121' : '147,161,189';
-    if (hi >= 0) {
-      if (e.a === hi || e.b === hi) { alpha = 0.75; col = '255,212,121'; }
-      else alpha *= 0.25;
+    let alpha, col, lw = 1;
+    if (focus >= 0) {
+      if (e.a === focus || e.b === focus) { alpha = .85; col = '255,212,121'; lw = 1.6; }
+      else { alpha = .025; col = '147,161,189'; }
+    } else if (mapCatFilter) {
+      const inA = g.nodes[e.a].cat === mapCatFilter, inB = g.nodes[e.b].cat === mapCatFilter;
+      if (inA || inB) { alpha = both ? .6 : .28; col = both ? '255,212,121' : CAT_RGB[mapCatFilter]; lw = both ? 1.4 : 1; }
+      else { alpha = .02; col = '147,161,189'; }
+    } else {
+      alpha = both ? .5 : .07; col = both ? '255,212,121' : '147,161,189'; lw = both ? 1.3 : 1;
     }
-    ctx.strokeStyle = 'rgba(' + col + ',' + alpha + ')';
-    ctx.lineWidth = both ? 1.3 : 1;
-    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    ctx.strokeStyle = 'rgba(' + col + ',' + alpha + ')'; ctx.lineWidth = lw;
+    ctx.beginPath(); ctx.moveTo(a.mx, a.my); ctx.lineTo(b.mx, b.my); ctx.stroke();
   }
+  // etiquetas de área (medidas y ajustadas para que siempre quepan)
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = '700 ' + (w < 520 ? 11 : 13) + 'px "Segoe UI", system-ui, sans-serif';
+  const halo = isLight() ? 'rgba(255,255,255,.92)' : 'rgba(7,13,24,.92)';
+  for (const cat of CAT_KEYS) {
+    const c = GRAPH.centers[cat]; if (!c) continue;
+    const dim = (mapCatFilter && mapCatFilter !== cat) || focus >= 0;
+    ctx.globalAlpha = dim ? 0.28 : 1;
+    const label = CATS[cat].emoji + ' ' + CATS[cat].name;
+    const tw = ctx.measureText(label).width;
+    const lx = Math.max(tw / 2 + 6, Math.min(w - tw / 2 - 6, c.lx));
+    const ly = Math.max(12, Math.min(h - 12, c.ly));
+    ctx.lineWidth = 3.5; ctx.strokeStyle = halo; ctx.strokeText(label, lx, ly);
+    ctx.fillStyle = CATS[cat].color; ctx.fillText(label, lx, ly);
+    ctx.globalAlpha = 1;
+  }
+  // nodos
   for (let i = 0; i < g.nodes.length; i++) {
     const n = g.nodes[i], c = CATS[n.cat].color, st = statusOf(n.id), r = nodeRadius(n);
-    const dim = hi >= 0 && hi !== i && !(g.edges.some(e => (e.a === hi && e.b === i) || (e.b === hi && e.a === i)));
-    ctx.globalAlpha = dim ? 0.3 : 1;
+    let dim = false;
+    if (focus >= 0) dim = !(i === focus || adj[focus].has(i));
+    else if (mapCatFilter) dim = n.cat !== mapCatFilter;
+    ctx.globalAlpha = dim ? 0.16 : 1;
     if (st === 'leido') {
-      const grd = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r + 9);
-      grd.addColorStop(0, 'rgba(255,212,121,.55)');
-      grd.addColorStop(1, 'rgba(255,212,121,0)');
-      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(n.x, n.y, r + 9, 0, 7); ctx.fill();
+      const grd = ctx.createRadialGradient(n.mx, n.my, 0, n.mx, n.my, r + 9);
+      grd.addColorStop(0, 'rgba(255,212,121,.5)'); grd.addColorStop(1, 'rgba(255,212,121,0)');
+      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(n.mx, n.my, r + 9, 0, 7); ctx.fill();
     }
-    ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, 7); ctx.fillStyle = c; ctx.fill();
+    ctx.beginPath(); ctx.arc(n.mx, n.my, r, 0, 7); ctx.fillStyle = c; ctx.fill();
     if (st === 'leido') { ctx.lineWidth = 1.6; ctx.strokeStyle = '#ffd479'; ctx.stroke(); }
     else if (st === 'leyendo') { ctx.lineWidth = 1.6; ctx.strokeStyle = '#5b8def'; ctx.stroke(); }
-    if (i === hi) { ctx.lineWidth = 2; ctx.strokeStyle = '#fff'; ctx.stroke(); }
+    if (i === focus) { ctx.lineWidth = 2.6; ctx.strokeStyle = '#fff'; ctx.beginPath(); ctx.arc(n.mx, n.my, r + 2.5, 0, 7); ctx.stroke(); }
     ctx.globalAlpha = 1;
   }
 }
-function mapLoop() {
-  const g = GRAPH;
-  if (mapAlpha > 0.02 || mapDrag) {
-    forceStep(g.nodes, g.edges, mapW, mapH, Math.max(mapAlpha, mapDrag ? 0.12 : 0), mapDrag);
-    if (!mapDrag) mapAlpha *= 0.984;
-  }
-  drawGraph(mapCtx, g, mapW, mapH);
-  mapRAF = requestAnimationFrame(mapLoop);
+function buildLegend() {
+  const box = document.getElementById('mapLegend');
+  let h = '';
+  for (const k in CATS) h += '<span class="legend-item" data-cat="' + k + '"><span class="dot" style="background:' +
+    CATS[k].color + '"></span>' + CATS[k].emoji + ' ' + CATS[k].name + '</span>';
+  h += '<span class="legend-item legend-info"><span class="dot" style="background:var(--beam);box-shadow:0 0 7px var(--beam)"></span>Leído</span>';
+  box.innerHTML = h;
 }
+function updateLegendActive() {
+  document.querySelectorAll('#mapLegend .legend-item[data-cat]').forEach(el => {
+    el.classList.toggle('active', el.dataset.cat === mapCatFilter);
+    el.classList.toggle('dimmed', mapCatFilter && el.dataset.cat !== mapCatFilter);
+  });
+}
+function showMapPanel(i) {
+  const n = GRAPH.nodes[i], it = n.item, c = CATS[n.cat];
+  const rel = (it.related || []).map(rid => LIBRARY.find(x => x.id === rid)).filter(Boolean);
+  let h = '<div class="gf-title">' + it.emoji + '&nbsp;' + it.title + '</div>' +
+    '<div class="gf-cat" style="color:' + c.color + '">' + c.emoji + ' ' + c.name + ' · ' +
+    (STATUS_LABEL[statusOf(it.id)] || 'Por leer') + '</div>';
+  if (rel.length) h += '<div class="gf-list">' + rel.map(r =>
+    '<button class="gf-link" data-go="' + r.id + '">' + r.emoji + ' ' + r.title + '</button>').join('') + '</div>';
+  else h += '<div class="gf-empty">Sin conexiones directas registradas.</div>';
+  h += '<button class="gf-open" data-open="' + it.id + '">Abrir ficha →</button>';
+  const panel = document.getElementById('mapPanel');
+  panel.innerHTML = h; panel.classList.add('show');
+}
+function hideMapPanel() { document.getElementById('mapPanel').classList.remove('show'); }
 function initMap() {
-  buildLegend();
-  const g = buildGraph();
+  ensureAdj(); buildLegend();
   const canvas = document.getElementById('mapCanvas');
   const dim = fitCanvas(canvas); mapCtx = dim.ctx; mapW = dim.w; mapH = dim.h;
-  g.nodes.forEach((n, i) => {
-    if (n._init) return;
-    const ang = i * 2.399963, rad = Math.sqrt(i / g.nodes.length) * Math.min(mapW, mapH) * 0.44;
-    n.x = mapW / 2 + Math.cos(ang) * rad; n.y = mapH / 2 + Math.sin(ang) * rad; n._init = true;
-  });
-  mapAlpha = 1;
-  if (!mapInited) { attachMapEvents(canvas); mapInited = true; }
-  cancelAnimationFrame(mapRAF); mapLoop();
+  clusterLayout(mapW, mapH);
+  if (!mapInited) { attachMapEvents(canvas); attachMapUI(); mapInited = true; }
+  drawMap();
 }
-function stopMap() { cancelAnimationFrame(mapRAF); mapRAF = null; }
+function stopMap() {}
 function attachMapEvents(canvas) {
   const tip = document.getElementById('mapTip');
-  let downXY = null, downNode = null, moved = false;
-  canvas.addEventListener('pointerdown', e => {
-    canvas.setPointerCapture(e.pointerId);
-    const p = evPos(e, canvas), n = pickAt(GRAPH.nodes, p.x, p.y, 'x', 'y', 15);
-    downXY = p; moved = false; downNode = n || null;
-    if (n) { mapDrag = n; mapAlpha = Math.max(mapAlpha, 0.4); }
-  });
   canvas.addEventListener('pointermove', e => {
-    const p = evPos(e, canvas);
-    if (mapDrag) {
-      mapDrag.x = p.x; mapDrag.y = p.y; mapDrag.vx = 0; mapDrag.vy = 0;
-      if (downXY && Math.hypot(p.x - downXY.x, p.y - downXY.y) > 5) moved = true;
-      return;
-    }
-    const n = pickAt(GRAPH.nodes, p.x, p.y, 'x', 'y', 15);
-    mapHover = n ? GRAPH.idx[n.id] : null;
+    const p = evPos(e, canvas), n = pickAt(GRAPH.nodes, p.x, p.y, 'mx', 'my', 13);
+    const hi = n ? GRAPH.idx[n.id] : null;
+    if (hi !== mapHover) { mapHover = hi; if (mapFocus == null) drawMap(); }
     if (n) { canvas.style.cursor = 'pointer'; showTip(tip, n, p, canvas); }
-    else { canvas.style.cursor = 'grab'; tip.hidden = true; }
+    else { canvas.style.cursor = 'default'; tip.hidden = true; }
   });
-  const up = () => {
-    if (mapDrag && !moved && downNode) location.hash = '#/r/' + downNode.id;
-    mapDrag = null; downNode = null;
-  };
-  canvas.addEventListener('pointerup', up);
-  canvas.addEventListener('pointerleave', () => { mapHover = null; tip.hidden = true; });
+  canvas.addEventListener('pointerleave', () => { mapHover = null; tip.hidden = true; if (mapFocus == null) drawMap(); });
+  canvas.addEventListener('click', e => {
+    const p = evPos(e, canvas), n = pickAt(GRAPH.nodes, p.x, p.y, 'mx', 'my', 13);
+    if (!n) { mapFocus = null; hideMapPanel(); drawMap(); return; }
+    const i = GRAPH.idx[n.id];
+    if (mapFocus === i) { location.hash = '#/r/' + n.id; return; }
+    mapFocus = i; mapCatFilter = null; updateLegendActive(); showMapPanel(i); drawMap();
+  });
+}
+function attachMapUI() {
+  document.getElementById('mapLegend').addEventListener('click', e => {
+    const item = e.target.closest('.legend-item[data-cat]'); if (!item) return;
+    const cat = item.dataset.cat;
+    mapCatFilter = mapCatFilter === cat ? null : cat;
+    mapFocus = null; hideMapPanel(); updateLegendActive(); drawMap();
+  });
+  document.getElementById('mapReset').addEventListener('click', () => {
+    mapFocus = null; mapCatFilter = null; mapHover = null;
+    hideMapPanel(); updateLegendActive(); drawMap();
+  });
+  document.getElementById('mapPanel').addEventListener('click', e => {
+    const open = e.target.closest('[data-open]'); if (open) { location.hash = '#/r/' + open.dataset.open; return; }
+    const go = e.target.closest('[data-go]');
+    if (go) { const i = GRAPH.idx[go.dataset.go]; if (i != null) { mapFocus = i; showMapPanel(i); drawMap(); } }
+  });
 }
 
 /* =====================================================================
-   CONSTELACIÓN DE PROGRESO
+   CONSTELACIÓN: CEREBRO DE CONOCIMIENTO (silueta + red neuronal)
    ===================================================================== */
-let constelRAF = null, constelInited = false, constelCtx = null, constelW = 0, constelH = 0, constelStart = 0;
-let constelHover = null;
+let constelRAF = null, constelInited = false, constelCtx = null, constelW = 0, constelH = 0, constelHover = null;
 
-function layoutConstel(w, h) {
-  const g = buildGraph();
-  const cats = Object.keys(CATS), cx = w / 2, cy = h / 2;
-  const R = Math.min(w, h) * 0.34, spread = Math.min(w, h) * 0.15;
-  const byCat = {}; cats.forEach(c => byCat[c] = []);
-  g.nodes.forEach(n => byCat[n.cat].push(n));
-  cats.forEach((cat, ci) => {
-    const base = ci / cats.length * Math.PI * 2 - Math.PI / 2;
-    const ccx = cx + Math.cos(base) * R, ccy = cy + Math.sin(base) * R;
-    const arr = byCat[cat];
-    arr.forEach((n, i) => {
-      const a = i * 2.399963, rr = Math.sqrt((i + 0.6) / arr.length) * spread;
-      n.cx2 = ccx + Math.cos(a) * rr;
-      n.cy2 = ccy + Math.sin(a) * rr;
-      if (!n.tw) n.tw = Math.random() * Math.PI * 2;
-    });
-  });
-}
-function drawConstel(t) {
-  const g = GRAPH, ctx = constelCtx, w = constelW, h = constelH;
-  ctx.clearRect(0, 0, w, h);
-  for (const e of g.edges) {
-    const a = g.nodes[e.a], b = g.nodes[e.b];
-    const both = statusOf(a.id) === 'leido' && statusOf(b.id) === 'leido';
-    ctx.strokeStyle = both ? 'rgba(255,212,121,.5)' : 'rgba(147,161,189,.06)';
-    ctx.lineWidth = both ? 1.2 : 0.8;
-    ctx.beginPath(); ctx.moveTo(a.cx2, a.cy2); ctx.lineTo(b.cx2, b.cy2); ctx.stroke();
+function pointInPoly(poly, x, y) {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+    if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside;
   }
+  return inside;
+}
+function brainShape(w, h) {
+  const cx = w / 2, cy = h * 0.52, S = Math.min(w, h);
+  const rx = S * 0.43, ry = S * 0.34;
+  const outline = [], STEPS = 200;
+  for (let k = 0; k < STEPS; k++) {
+    const t = k / STEPS * Math.PI * 2;
+    let f = 1 + 0.05 * Math.sin(9 * t) + 0.035 * Math.sin(15 * t + 1.3) + 0.028 * Math.sin(5 * t + 0.6);
+    f -= Math.exp(-Math.pow(angDiff(t, 3 * Math.PI / 2) / 0.30, 2)) * 0.17; // entrante frontal (dos lóbulos)
+    f -= Math.exp(-Math.pow(angDiff(t, Math.PI / 2) / 0.20, 2)) * 0.06;     // pequeña muesca posterior
+    outline.push([cx + Math.cos(t) * rx * f, cy + Math.sin(t) * ry * f]);
+  }
+  const fissure = [];
+  for (let s = 0; s <= 30; s++) {
+    const u = s / 30;
+    const y = cy - ry * 0.84 + u * ry * 1.54;
+    const x = cx + Math.sin(u * Math.PI) * S * 0.012 + Math.sin(u * Math.PI * 4) * S * 0.006;
+    fissure.push([x, y]);
+  }
+  return { outline, fissure, cx, cy, rx, ry, S };
+}
+function buildBrain(w, h) {
+  const g = ensureAdj();
+  const shape = brainShape(w, h);
+  const { outline, cx, cy, rx, ry, S } = shape;
+  const rng = mulberry32(20240617);
+  const N = g.nodes.length, minD = S * 0.026, gap = S * 0.014;
+  const pts = []; let tries = 0;
+  while (pts.length < N && tries < N * 500) {
+    tries++;
+    const x = cx + (rng() * 2 - 1) * rx * 1.04;
+    const y = cy + (rng() * 2 - 1) * ry * 1.12;
+    if (Math.abs(x - cx) < gap) continue;           // fisura central (separa hemisferios)
+    if (!pointInPoly(outline, x, y)) continue;
+    let ok = true;
+    for (const p of pts) { if ((p[0] - x) ** 2 + (p[1] - y) ** 2 < minD * minD) { ok = false; break; } }
+    if (ok) pts.push([x, y]);
+  }
+  // si faltan puntos por densidad, rellena sin la restricción de distancia
+  while (pts.length < N && tries < N * 1200) {
+    tries++;
+    const x = cx + (rng() * 2 - 1) * rx * 1.04, y = cy + (rng() * 2 - 1) * ry * 1.12;
+    if (Math.abs(x - cx) < gap || !pointInPoly(outline, x, y)) continue;
+    pts.push([x, y]);
+  }
+  // ordena por posición para que vecinos en el array estén cerca (estético)
+  pts.sort((a, b) => (a[1] - b[1]) || (a[0] - b[0]));
+  g.nodes.forEach((n, i) => {
+    const p = pts[i] || [cx, cy];
+    n.bx = p[0]; n.by = p[1]; if (!n.tw) n.tw = rng() * 6.28;
+  });
+  // aristas: k vecinos más cercanos (red neuronal que une TODOS los puntos)
+  const K = 3, seen = {}, bedges = [];
   for (let i = 0; i < g.nodes.length; i++) {
-    const n = g.nodes[i], st = statusOf(n.id), c = CATS[n.cat].color;
-    const hovered = constelHover === i;
+    const a = g.nodes[i];
+    const d = [];
+    for (let j = 0; j < g.nodes.length; j++) {
+      if (i === j) continue;
+      const b = g.nodes[j];
+      d.push([(a.bx - b.bx) ** 2 + (a.by - b.by) ** 2, j]);
+    }
+    d.sort((p, q) => p[0] - q[0]);
+    for (let k = 0; k < K && k < d.length; k++) {
+      const j = d[k][1], key = i < j ? i + '-' + j : j + '-' + i;
+      if (seen[key]) continue; seen[key] = 1; bedges.push({ a: i, b: j });
+    }
+  }
+  GRAPH.brain = shape; GRAPH.brainEdges = bedges;
+}
+function drawBrain(t) {
+  const g = GRAPH, ctx = constelCtx, w = constelW, h = constelH, sh = g.brain;
+  ctx.clearRect(0, 0, w, h);
+  // silueta y relleno sutil
+  ctx.beginPath();
+  sh.outline.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
+  ctx.closePath();
+  const fill = ctx.createRadialGradient(sh.cx, sh.cy, 0, sh.cx, sh.cy, sh.rx);
+  fill.addColorStop(0, 'rgba(79,214,192,.05)'); fill.addColorStop(1, 'rgba(79,214,192,.01)');
+  ctx.fillStyle = fill; ctx.fill();
+  ctx.strokeStyle = 'rgba(127,240,224,.18)'; ctx.lineWidth = 1.4; ctx.stroke();
+  // fisura central
+  ctx.beginPath();
+  sh.fissure.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
+  ctx.strokeStyle = 'rgba(127,240,224,.12)'; ctx.lineWidth = 1.2; ctx.stroke();
+  // aristas neuronales
+  for (const e of g.brainEdges) {
+    const a = g.nodes[e.a], b = g.nodes[e.b];
+    const ra = statusOf(a.id) === 'leido', rb = statusOf(b.id) === 'leido';
+    if (ra && rb) { ctx.strokeStyle = 'rgba(255,212,121,.55)'; ctx.lineWidth = 1.2; }
+    else if (ra || rb) { ctx.strokeStyle = 'rgba(255,212,121,.14)'; ctx.lineWidth = .9; }
+    else { ctx.strokeStyle = 'rgba(79,214,192,.08)'; ctx.lineWidth = .8; }
+    ctx.beginPath(); ctx.moveTo(a.bx, a.by); ctx.lineTo(b.bx, b.by); ctx.stroke();
+  }
+  // neuronas (nodos)
+  for (let i = 0; i < g.nodes.length; i++) {
+    const n = g.nodes[i], st = statusOf(n.id), c = CATS[n.cat].color, hovered = constelHover === i;
     if (st === 'leido') {
-      const tw = 0.65 + 0.35 * Math.sin(t / 600 + n.tw);
-      const R = 8 + tw * 3;
-      const grd = ctx.createRadialGradient(n.cx2, n.cy2, 0, n.cx2, n.cy2, R);
+      const tw = 0.65 + 0.35 * Math.sin(t / 600 + n.tw), R = 7 + tw * 3;
+      const grd = ctx.createRadialGradient(n.bx, n.by, 0, n.bx, n.by, R);
       grd.addColorStop(0, 'rgba(255,236,180,' + (0.85 * tw) + ')');
       grd.addColorStop(.5, 'rgba(255,212,121,' + (0.4 * tw) + ')');
       grd.addColorStop(1, 'rgba(255,212,121,0)');
-      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(n.cx2, n.cy2, R, 0, 7); ctx.fill();
-      ctx.fillStyle = '#fff6df'; ctx.beginPath(); ctx.arc(n.cx2, n.cy2, 2.4, 0, 7); ctx.fill();
-      ctx.strokeStyle = 'rgba(255,236,180,' + (0.6 * tw) + ')'; ctx.lineWidth = 1;
-      const sp = 5 + tw * 3;
-      ctx.beginPath();
-      ctx.moveTo(n.cx2 - sp, n.cy2); ctx.lineTo(n.cx2 + sp, n.cy2);
-      ctx.moveTo(n.cx2, n.cy2 - sp); ctx.lineTo(n.cx2, n.cy2 + sp);
-      ctx.stroke();
+      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(n.bx, n.by, R, 0, 7); ctx.fill();
+      ctx.fillStyle = '#fff6df'; ctx.beginPath(); ctx.arc(n.bx, n.by, 2.4, 0, 7); ctx.fill();
     } else if (st === 'leyendo') {
-      ctx.fillStyle = c; ctx.globalAlpha = .85;
-      ctx.beginPath(); ctx.arc(n.cx2, n.cy2, 3, 0, 7); ctx.fill();
+      ctx.fillStyle = c; ctx.globalAlpha = .9;
+      ctx.beginPath(); ctx.arc(n.bx, n.by, 3, 0, 7); ctx.fill();
       ctx.globalAlpha = 1; ctx.strokeStyle = '#5b8def'; ctx.lineWidth = 1.4; ctx.stroke();
     } else {
-      ctx.fillStyle = 'rgba(147,161,189,.32)';
-      ctx.beginPath(); ctx.arc(n.cx2, n.cy2, 1.7, 0, 7); ctx.fill();
+      ctx.fillStyle = 'rgba(127,240,224,.42)';
+      ctx.beginPath(); ctx.arc(n.bx, n.by, 1.8, 0, 7); ctx.fill();
     }
-    if (hovered) {
-      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.6;
-      ctx.beginPath(); ctx.arc(n.cx2, n.cy2, 7, 0, 7); ctx.stroke();
-    }
+    if (hovered) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(n.bx, n.by, 7, 0, 7); ctx.stroke(); }
   }
 }
-function constelLoop(t) {
-  drawConstel(t || 0);
-  constelRAF = requestAnimationFrame(constelLoop);
-}
+function constelLoop(t) { drawBrain(t || 0); constelRAF = requestAnimationFrame(constelLoop); }
 function renderConstelStats() {
   const read = LIBRARY.filter(it => statusOf(it.id) === 'leido').length;
   const pct = Math.round(read / LIBRARY.length * 100);
   document.getElementById('constelStats').innerHTML =
-    '<span class="constel-stat">✨ <b>' + read + '</b> de ' + LIBRARY.length + ' estrellas encendidas</span>' +
-    '<span class="constel-stat">🌌 <b>' + pct + '%</b> del cielo iluminado</span>';
+    '<span class="constel-stat">🧠 <b>' + read + '</b> de ' + LIBRARY.length + ' neuronas encendidas</span>' +
+    '<span class="constel-stat">⚡ <b>' + pct + '%</b> del cerebro activo</span>';
 }
 function initConstel() {
-  buildGraph();
-  renderConstelStats();
+  ensureAdj(); renderConstelStats();
   const canvas = document.getElementById('constelCanvas');
   const dim = fitCanvas(canvas); constelCtx = dim.ctx; constelW = dim.w; constelH = dim.h;
-  layoutConstel(constelW, constelH);
+  buildBrain(constelW, constelH);
   if (!constelInited) { attachConstelEvents(canvas); constelInited = true; }
-  cancelAnimationFrame(constelRAF); constelStart = performance.now(); constelLoop(0);
+  cancelAnimationFrame(constelRAF); constelLoop(0);
 }
 function stopConstel() { cancelAnimationFrame(constelRAF); constelRAF = null; }
 function attachConstelEvents(canvas) {
   const tip = document.getElementById('constelTip');
   canvas.addEventListener('pointermove', e => {
-    const p = evPos(e, canvas), n = pickAt(GRAPH.nodes, p.x, p.y, 'cx2', 'cy2', 12);
+    const p = evPos(e, canvas), n = pickAt(GRAPH.nodes, p.x, p.y, 'bx', 'by', 11);
     constelHover = n ? GRAPH.idx[n.id] : null;
     if (n) { canvas.style.cursor = 'pointer'; showTip(tip, n, p, canvas); }
     else { canvas.style.cursor = 'default'; tip.hidden = true; }
   });
   canvas.addEventListener('pointerleave', () => { constelHover = null; tip.hidden = true; });
   canvas.addEventListener('click', e => {
-    const p = evPos(e, canvas), n = pickAt(GRAPH.nodes, p.x, p.y, 'cx2', 'cy2', 12);
+    const p = evPos(e, canvas), n = pickAt(GRAPH.nodes, p.x, p.y, 'bx', 'by', 11);
     if (n) location.hash = '#/r/' + n.id;
   });
 }
@@ -6389,7 +6742,8 @@ function setView(name) {
     document.getElementById('view-' + v).hidden = name !== v;
   });
   stopMap(); stopConstel();
-  if (name === 'secuencias') renderSequences();
+  if (name === 'biblioteca') renderLibrary();
+  else if (name === 'secuencias') renderSequences();
   else if (name === 'mapa') requestAnimationFrame(initMap);
   else if (name === 'constelacion') requestAnimationFrame(initConstel);
   if (!currentId) window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -6404,7 +6758,8 @@ document.getElementById('bymcylBadge').addEventListener('click', e => {
 
 /* Reanuda la vista dinámica activa al cerrar una ficha */
 function resumeActiveView() {
-  if (currentView === 'secuencias') renderSequences();
+  if (currentView === 'biblioteca') renderLibrary();
+  else if (currentView === 'secuencias') renderSequences();
   else if (currentView === 'mapa') requestAnimationFrame(initMap);
   else if (currentView === 'constelacion') requestAnimationFrame(initConstel);
 }
@@ -6422,7 +6777,7 @@ window.addEventListener('resize', () => {
 
 /* ---------- Init ---------- */
 buildChips();
-renderGrid();
+renderLibrary();
 route();
 </script>
 </body>
