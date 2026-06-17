@@ -1,6 +1,8 @@
-# 📚 Biblioteca Práctica
+# 🗼 Pharus · Biblioteca
 
 Biblioteca interactiva en español con **resúmenes accionables de 151 libros y 49 estudios científicos** (200 recursos) sobre hábitos, productividad, aprendizaje, creatividad, psicología de las decisiones, relaciones, propósito y salud cerebral. Construida como páginas HTML autocontenidas, sin dependencias externas.
+
+**Pharus** (faro, en latín) es la identidad visual de la biblioteca: un diseño basado en un **faro y conexiones neuronales**. El faro guía la lectura, y las ideas de los libros se entrelazan como una red de neuronas. La portada muestra el logo **Pharus** como título principal sobre una red neuronal animada con el haz de luz del faro, y la insignia **BYMCYL** queda anclada en una esquina.
 
 ## 🚀 Cómo usarla
 
@@ -49,6 +51,22 @@ Cada recurso incluye: **idea central en una frase**, **ideas clave**, **plan de 
 
 Desde los clásicos (la curva del olvido de Ebbinghaus 1885, intenciones de implementación de Gollwitzer, la práctica deliberada de Ericsson, el test de la golosina de Mischel, elogiar la inteligencia de Mueller–Dweck, la disonancia cognitiva de Festinger) hasta hallazgos aplicables hoy mismo: la mera presencia del móvil reduce tu capacidad cognitiva (Ward 2017), qué técnicas de estudio funcionan (Dunlosky 2013), recuperar vence a los mapas conceptuales (Karpicke 2011), escribir la lista de tareas ayuda a dormir (Scullin 2018), hablar con desconocidos (Epley 2014), relaciones y mortalidad (Holt-Lunstad 2010), ¿puede el ejercicio compensar 8 h sentado? (Ekelund 2016), metas específicas y difíciles (Locke–Latham), tres cosas buenas (Seligman 2005) o ¿el dinero da la felicidad? (Killingsworth–Kahneman 2023). Cada ficha incluye referencia completa, diseño del estudio, cómo aplicarlo y, cuando procede, sus controversias y réplicas.
 
+## 🗼 El diseño Pharus (faro + conexiones neuronales)
+
+- **Estética de faro**: paleta de océano nocturno (azules profundos) con el haz ámbar del faro como acento. La portada (hero) tiene una **red neuronal animada** y dos **haces de luz** que barren suavemente desde el faro.
+- **Logo Pharus** como título principal (`assets/pharus.svg`): un faro que emite su luz entre nodos neuronales, con el wordmark *PHARUS · BIBLIOTECA*.
+- **Logo BYMCYL** (`assets/bymcyl.svg`): insignia compacta fijada en una esquina.
+- **Conmutador de vistas** bajo la portada: **📚 Biblioteca · 🧭 Secuencias · 🕸️ Mapa de conexiones · ✨ Constelación**.
+
+### 🧭 Secuencias curadas
+Rutas de lectura **en orden**, no listados sueltos: por ejemplo *«Quiero mejores hábitos»* propone 5 lecturas encadenadas. Cada secuencia (hábitos, foco, aprendizaje, calma y propósito, relaciones, decisiones, cuerpo y cerebro, creatividad) muestra sus pasos numerados con una línea de progreso que se va encendiendo conforme marcas cada lectura como leída.
+
+### 🕸️ Mapa de conexiones
+Un **grafo dirigido por fuerzas** donde cada punto es un recurso y cada línea une ideas relacionadas (a partir del campo `related` de cada ficha). Se puede **arrastrar** para reorganizar, pasar el cursor para ver el título y **hacer clic para abrir la ficha**. Las lecturas leídas brillan y sus conexiones se iluminan.
+
+### ✨ Constelación de progreso
+Un cielo donde **cada estrella es una lectura**, agrupada por categoría. Las estrellas se **encienden y titilan** al marcarlas como leídas, y cuando dos lecturas relacionadas brillan, la línea que las une se ilumina: tu constelación se completa a medida que avanzas.
+
 ## 🧪 Funciones interactivas
 
 - **Pantalla de bienvenida** que deja elegir entre **Modo Móvil** (una columna en tarjetas de lista, controles grandes, chips deslizables) y **Modo Escritorio** (rejilla amplia de varias columnas, ficha más ancha), con opción de autodetección; la elección se recuerda y se cambia con el botón 🖥️/📱 de la barra
@@ -80,7 +98,7 @@ Tres libros tienen además una **guía profunda hecha a mano** como página prop
 
 HTML + CSS + JavaScript vanilla, un archivo por página. Diseño oscuro, responsivo (escritorio y móvil), sin frameworks ni CDN.
 
-**Identidad visual** (en `assets/`, todo SVG vectorial en la paleta de la app): `logo.svg` (logotipo con icono de libro + chispa de idea), `favicon.svg` (favicon de pestaña, presente en la biblioteca y en las guías) y `og-image.svg` (tarjeta para compartir, referenciada en las metaetiquetas Open Graph/Twitter de `index.html`). Nota: algunas redes no renderizan `og:image` en SVG; para esos casos conviene exportar una versión PNG (1200×630).
+**Identidad visual** (en `assets/`, todo SVG vectorial en la paleta de la app): `pharus.svg` (logo principal: faro + red neuronal + wordmark, usado como título del hero), `bymcyl.svg` (insignia compacta de la esquina), `logo.svg` (logotipo clásico con icono de libro + chispa de idea), `favicon.svg` (favicon de pestaña, presente en la biblioteca y en las guías) y `og-image.svg` (tarjeta para compartir, referenciada en las metaetiquetas Open Graph/Twitter de `index.html`). Nota: algunas redes no renderizan `og:image` en SVG; para esos casos conviene exportar una versión PNG (1200×630).
 
 ## ⚠️ Nota
 

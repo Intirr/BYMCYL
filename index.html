@@ -3,24 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Biblioteca Práctica — Resúmenes de libros y ciencia aplicada</title>
+<title>Pharus — Biblioteca: resúmenes, secuencias y mapa de ideas</title>
 <style>
   :root {
-    --bg: #0f1115;
-    --surface: #181b22;
-    --surface-2: #1f232d;
-    --border: #2c3140;
-    --text: #e8eaf0;
-    --muted: #9aa3b5;
+    --bg: #070d18;
+    --surface: #0f1828;
+    --surface-2: #16233a;
+    --border: #243349;
+    --text: #e9edf6;
+    --muted: #93a1bd;
     --accent: #f5b942;
-    --accent-2: #4fc08d;
+    --accent-2: #4fd6c0;
     --accent-3: #5b8def;
     --accent-4: #a78bfa;
     --danger: #e0606a;
-    --text-2: var(--text-2);
-    --toolbar-bg: rgba(15,17,21,.92);
-    --pill-bg: var(--pill-bg);
-    --shadow: rgba(0,0,0,.38);
+    --beam: #ffd479;
+    --neural: #4fd6c0;
+    --text-2: #c3ccde;
+    --toolbar-bg: rgba(7,13,24,.9);
+    --pill-bg: rgba(15,24,40,.85);
+    --shadow: rgba(0,0,0,.5);
     --radius: 14px;
     font-size: 16px;
   }
@@ -35,6 +37,8 @@
     --toolbar-bg: rgba(243,245,249,.92);
     --pill-bg: rgba(255,255,255,.88);
     --shadow: rgba(30,40,70,.16);
+    --beam: #e8862f;
+    --neural: #1f9e92;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -433,6 +437,165 @@
   .mp-auto { margin-top: 1.5rem; background: none; border: none; color: var(--accent-3); cursor: pointer; font-size: .85rem; text-decoration: underline; }
   .mp-hint { margin-top: .5rem; font-size: .74rem; color: var(--muted); }
   @media (max-width: 560px) { .mp-options { flex-direction: column; align-items: center; } .mp-card { max-width: 100%; flex-basis: auto; width: 100%; } }
+
+  /* ===================================================================
+     REDISEÑO FARO + CONEXIONES NEURONALES
+     =================================================================== */
+
+  /* Logo Pharus en el hero */
+  header.hero { padding-top: 2.6rem; }
+  .pharus-logo {
+    width: min(440px, 84%); height: auto; display: block; margin: 0 auto .2rem;
+    filter: drop-shadow(0 8px 26px rgba(255,212,121,.18));
+  }
+  header.hero h1 { display: none; } /* sustituido por el logo Pharus */
+
+  /* Red neuronal del hero (canvas) + haz de luz del faro */
+  .hero-neural {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    z-index: 0; pointer-events: none; opacity: .9;
+  }
+  header.hero .beam {
+    position: absolute; left: 50%; top: -6%; z-index: 0; pointer-events: none;
+    width: 150px; height: 150%;
+    background: linear-gradient(to bottom, rgba(255,212,121,.30), rgba(255,212,121,0) 72%);
+    clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%);
+    transform-origin: 50% 0%;
+    animation: beamSweep 9s ease-in-out infinite alternate;
+    mix-blend-mode: screen;
+  }
+  header.hero .beam.b2 { animation-delay: -4.5s; opacity: .7; }
+  @keyframes beamSweep {
+    0%   { transform: translateX(-50%) rotate(-32deg); }
+    100% { transform: translateX(-50%) rotate(32deg); }
+  }
+  html[data-theme="light"] header.hero .beam { mix-blend-mode: multiply; opacity: .5; }
+  header.hero .wrap { z-index: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    header.hero .beam { animation: none; transform: translateX(-50%) rotate(-8deg); }
+  }
+
+  /* Insignia BYMCYL en la esquina */
+  .bymcyl-badge {
+    position: fixed; left: 1rem; bottom: 1rem; z-index: 70;
+    background: var(--pill-bg); border: 1px solid var(--border);
+    border-radius: 99px; padding: .3rem .7rem .3rem .5rem;
+    display: flex; align-items: center; backdrop-filter: blur(6px);
+    box-shadow: 0 6px 18px var(--shadow); transition: transform .15s, border-color .15s;
+    text-decoration: none;
+  }
+  .bymcyl-badge:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .bymcyl-badge img { height: 26px; width: auto; display: block; }
+
+  /* Conmutador de vistas */
+  .view-switcher {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem;
+    margin: 1.4rem auto 0; position: relative; z-index: 1;
+  }
+  .view-tab {
+    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    border-radius: 99px; padding: .5rem 1.05rem; font-size: .86rem; font-weight: 600;
+    cursor: pointer; transition: all .15s; display: inline-flex; align-items: center; gap: .4rem;
+  }
+  .view-tab:hover { color: var(--text); border-color: var(--muted); }
+  .view-tab.active {
+    color: #0b1220; border-color: transparent; font-weight: 700;
+    background: linear-gradient(92deg, var(--beam), #e8862f);
+    box-shadow: 0 8px 22px -10px rgba(255,212,121,.6);
+  }
+
+  /* Las vistas que no son la biblioteca ocultan la barra de filtros */
+  html[data-view="secuencias"] .toolbar,
+  html[data-view="mapa"] .toolbar,
+  html[data-view="constelacion"] .toolbar { display: none; }
+
+  .view { animation: cardIn .35s ease backwards; }
+  .view-head { text-align: center; max-width: 720px; margin: .4rem auto 1.8rem; }
+  .view-head h2 {
+    font-size: 1.7rem; letter-spacing: -.3px;
+    background: linear-gradient(92deg, var(--beam), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .view-head p { color: var(--muted); margin-top: .5rem; font-size: .95rem; }
+
+  /* ---------- Secuencias curadas ---------- */
+  .seq-list { display: grid; gap: 1.3rem; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
+  .seq-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.2rem 1.3rem 1.4rem;
+    position: relative; overflow: hidden; border-left: 4px solid var(--seq-color, var(--accent));
+  }
+  .seq-card::before {
+    content: ''; position: absolute; right: -40px; top: -40px; width: 150px; height: 150px;
+    background: radial-gradient(circle, var(--seq-color, var(--accent)) 0%, transparent 70%);
+    opacity: .1; pointer-events: none;
+  }
+  .seq-head { display: flex; align-items: center; gap: .7rem; }
+  .seq-emoji { font-size: 1.9rem; line-height: 1; }
+  .seq-card h3 { font-size: 1.15rem; line-height: 1.25; }
+  .seq-card .seq-desc { color: var(--muted); font-size: .86rem; margin: .55rem 0 .4rem; }
+  .seq-prog { display: flex; align-items: center; gap: .6rem; margin: .5rem 0 1rem; }
+  .seq-prog-bar { flex: 1; height: 7px; border-radius: 99px; background: var(--surface-2); border: 1px solid var(--border); overflow: hidden; }
+  .seq-prog-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--seq-color, var(--accent)), var(--accent-2)); transition: width .4s ease; }
+  .seq-prog-txt { font-size: .72rem; color: var(--muted); white-space: nowrap; }
+  .seq-steps { display: flex; flex-direction: column; gap: 0; position: relative; }
+  .seq-step {
+    display: flex; gap: .8rem; align-items: stretch; cursor: pointer; padding: .15rem 0;
+    text-align: left; background: none; border: none; color: inherit; width: 100%; font: inherit;
+  }
+  .seq-rail { display: flex; flex-direction: column; align-items: center; width: 30px; flex-shrink: 0; }
+  .seq-dot {
+    width: 26px; height: 26px; border-radius: 99px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .8rem; font-weight: 700; border: 2px solid var(--border);
+    background: var(--surface-2); color: var(--muted); transition: all .2s;
+  }
+  .seq-line { flex: 1; width: 2px; background: var(--border); min-height: 10px; }
+  .seq-step:last-child .seq-line { display: none; }
+  .seq-step.done .seq-dot { background: var(--seq-color, var(--accent)); border-color: var(--seq-color, var(--accent)); color: #0b1220; }
+  .seq-step.reading .seq-dot { border-color: var(--accent-3); color: var(--accent-3); }
+  .seq-step-body { padding: .15rem 0 .8rem; }
+  .seq-step-title { font-size: .92rem; font-weight: 600; }
+  .seq-step:hover .seq-step-title { color: var(--accent); }
+  .seq-step-meta { font-size: .74rem; color: var(--muted); }
+
+  /* ---------- Lienzo de mapa / constelación ---------- */
+  .canvas-wrap {
+    position: relative; width: 100%; height: 70vh; min-height: 460px;
+    background:
+      radial-gradient(900px 420px at 50% -10%, rgba(255,212,121,.06), transparent 60%),
+      radial-gradient(700px 500px at 80% 120%, rgba(91,141,239,.08), transparent 60%),
+      var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+  }
+  .canvas-wrap canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .graph-tip {
+    position: absolute; pointer-events: none; z-index: 5;
+    background: var(--pill-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: .4rem .65rem; font-size: .78rem; color: var(--text); max-width: 230px;
+    box-shadow: 0 8px 24px var(--shadow); backdrop-filter: blur(6px);
+    transform: translate(-50%, -120%); transition: opacity .12s;
+  }
+  .graph-tip b { display: block; }
+  .graph-tip small { color: var(--muted); }
+  .map-legend, .constel-stats { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin-bottom: 1rem; }
+  .legend-item, .constel-stat {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    border-radius: 99px; padding: .3rem .8rem; font-size: .78rem;
+  }
+  .legend-item .dot { width: 10px; height: 10px; border-radius: 99px; }
+  .constel-stat b { color: var(--text); }
+  .map-hint { text-align: center; color: var(--muted); font-size: .76rem; margin-top: .7rem; }
+
+  html[data-mode="mobile"] .seq-list { grid-template-columns: 1fr; }
+  html[data-mode="mobile"] .canvas-wrap { height: 64vh; min-height: 380px; }
+  html[data-mode="mobile"] .view-tab { padding: .45rem .8rem; font-size: .8rem; }
+  html[data-mode="mobile"] .bymcyl-badge { left: max(.7rem, calc(50% - 218px)); }
+  @media (max-width: 560px) {
+    html:not([data-mode]) .seq-list { grid-template-columns: 1fr; }
+    html:not([data-mode]) .pharus-logo { width: 90%; }
+  }
 </style>
 <script>
   /* Aplica modo y tema antes del primer pintado (evita parpadeo) */
@@ -448,8 +611,8 @@
 <!-- ===== Pantalla selectora de modo ===== -->
 <div class="mode-picker" id="modePicker" role="dialog" aria-modal="true" aria-label="Elige el modo de visualización">
   <div class="mp-box">
-    <div class="mp-logo">📚</div>
-    <h2>Biblioteca <span>Práctica</span></h2>
+    <div class="mp-logo">🗼</div>
+    <h2>Pharus · <span>Biblioteca</span></h2>
     <p class="mp-sub">¿Cómo quieres ver la biblioteca?</p>
     <div class="mp-options">
       <button class="mp-card" data-mode="mobile">
@@ -471,9 +634,19 @@
 <div class="device-frame">
 
 <header class="hero">
+  <canvas class="hero-neural" id="heroNeural" aria-hidden="true"></canvas>
+  <div class="beam" aria-hidden="true"></div>
+  <div class="beam b2" aria-hidden="true"></div>
   <div class="wrap">
     <h1>📚 Biblioteca <span>Práctica</span></h1>
-    <p class="tagline">Resúmenes accionables de libros y estudios científicos sobre hábitos, foco, aprendizaje, decisiones, relaciones, propósito y cerebro. Cada recurso incluye ideas clave, un plan de acción y la evidencia que lo respalda.</p>
+    <img class="pharus-logo" src="assets/pharus.svg" alt="Pharus — Biblioteca">
+    <p class="tagline">Un faro entre 200 libros y estudios: resúmenes accionables sobre hábitos, foco, aprendizaje, decisiones, relaciones, propósito y cerebro. Sigue secuencias guiadas, recorre el mapa de ideas conectadas y enciende tu constelación a medida que lees.</p>
+    <div class="view-switcher" id="viewSwitcher">
+      <button class="view-tab active" data-view="biblioteca">📚 Biblioteca</button>
+      <button class="view-tab" data-view="secuencias">🧭 Secuencias</button>
+      <button class="view-tab" data-view="mapa">🕸️ Mapa de conexiones</button>
+      <button class="view-tab" data-view="constelacion">✨ Constelación</button>
+    </div>
     <div class="stats">
       <div class="stat">📦 <b id="statTotal">0</b> recursos</div>
       <div class="stat">✅ <b id="statRead">0</b> leídos</div>
@@ -525,7 +698,43 @@
 
 <main>
   <div class="wrap">
-    <div class="grid" id="grid"></div>
+    <div id="view-biblioteca">
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <section id="view-secuencias" class="view" hidden>
+      <div class="view-head">
+        <h2>🧭 Secuencias curadas</h2>
+        <p>No es un listado suelto: son rutas de lectura en orden. Empieza por la primera y avanza; cada secuencia se enciende a medida que marcas sus lecturas como leídas.</p>
+      </div>
+      <div class="seq-list" id="seqList"></div>
+    </section>
+
+    <section id="view-mapa" class="view" hidden>
+      <div class="view-head">
+        <h2>🕸️ Mapa de conexiones</h2>
+        <p>Cada punto es un recurso y cada línea une ideas que dialogan entre sí. Arrastra para reorganizar, pasa el cursor para ver el título y haz clic para abrir su ficha.</p>
+      </div>
+      <div class="map-legend" id="mapLegend"></div>
+      <div class="canvas-wrap">
+        <canvas id="mapCanvas"></canvas>
+        <div class="graph-tip" id="mapTip" hidden></div>
+      </div>
+      <div class="map-hint">Las líneas más brillantes conectan lecturas que ya completaste.</div>
+    </section>
+
+    <section id="view-constelacion" class="view" hidden>
+      <div class="view-head">
+        <h2>✨ Tu constelación de progreso</h2>
+        <p>Cada estrella es una lectura. Se enciende cuando la marcas como leída y, cuando dos lecturas relacionadas brillan, la línea que las une se ilumina: tu cielo se completa conforme avanzas.</p>
+      </div>
+      <div class="constel-stats" id="constelStats"></div>
+      <div class="canvas-wrap">
+        <canvas id="constelCanvas"></canvas>
+        <div class="graph-tip" id="constelTip" hidden></div>
+      </div>
+      <div class="map-hint">Pulsa una estrella para abrir su ficha. Marca lecturas como «leídas» para encenderlas.</div>
+    </section>
   </div>
 </main>
 
@@ -541,6 +750,8 @@
 </footer>
 
 <button class="to-top" id="toTop" title="Volver arriba" aria-label="Volver arriba">↑</button>
+
+<a class="bymcyl-badge" href="#" id="bymcylBadge" title="BYMCYL" aria-label="BYMCYL"><img src="assets/bymcyl.svg" alt="BYMCYL"></a>
 
 </div><!-- /.device-frame -->
 
@@ -5595,6 +5806,7 @@ function detailHTML(item) {
 function openDetail(id, keepScroll) {
   const item = LIBRARY.find(x => x.id === id);
   if (!item) return;
+  if (typeof stopMap === 'function') { stopMap(); stopConstel(); }
   const prevScroll = keepScroll ? overlay.scrollTop : 0;
   currentId = id;
   detailBox.innerHTML = detailHTML(item);
@@ -5640,6 +5852,7 @@ function closeDetail() {
   overlay.classList.remove('open');
   document.body.style.overflow = '';
   renderGrid();
+  if (typeof resumeActiveView === 'function') resumeActiveView();
 }
 
 /* =====================================================================
@@ -5753,6 +5966,458 @@ document.getElementById('importFile').addEventListener('change', e => {
     e.target.value = '';
   };
   reader.readAsText(file);
+});
+
+/* =====================================================================
+   FARO + CONEXIONES — secuencias, mapa y constelación
+   ===================================================================== */
+
+/* ---------- Red neuronal animada del hero ---------- */
+(function heroNeuralInit() {
+  const canvas = document.getElementById('heroNeural');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w = 0, h = 0, dpr = 1, parts = [];
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function init() {
+    const n = Math.max(14, Math.round(Math.min(48, w / 26)));
+    parts = [];
+    for (let i = 0; i < n; i++) parts.push({
+      x: Math.random() * w, y: Math.random() * h,
+      vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25
+    });
+  }
+  function resize() {
+    const r = canvas.parentElement.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = r.width; h = r.height;
+    canvas.width = Math.max(1, w * dpr); canvas.height = Math.max(1, h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    init();
+  }
+  function frame() {
+    ctx.clearRect(0, 0, w, h);
+    if (!reduce) for (const p of parts) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+    }
+    for (let i = 0; i < parts.length; i++) for (let j = i + 1; j < parts.length; j++) {
+      const a = parts[i], b = parts[j], dx = a.x - b.x, dy = a.y - b.y;
+      const d = Math.hypot(dx, dy);
+      if (d < 124) {
+        ctx.strokeStyle = 'rgba(79,214,192,' + (.18 * (1 - d / 124)) + ')';
+        ctx.lineWidth = 1; ctx.beginPath();
+        ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+    }
+    for (const p of parts) {
+      ctx.beginPath(); ctx.arc(p.x, p.y, 1.7, 0, 7);
+      ctx.fillStyle = 'rgba(127,240,224,.72)'; ctx.fill();
+    }
+    if (!reduce) requestAnimationFrame(frame);
+  }
+  window.addEventListener('resize', resize);
+  resize(); requestAnimationFrame(frame);
+})();
+
+/* ---------- Grafo compartido (nodos + aristas a partir de "related") ---------- */
+let GRAPH = null;
+function buildGraph() {
+  if (GRAPH) return GRAPH;
+  const nodes = LIBRARY.map(it => ({ id: it.id, item: it, cat: it.cat, deg: 0,
+    x: 0, y: 0, vx: 0, vy: 0, cx2: 0, cy2: 0, tw: 0, _init: false }));
+  const idx = {}; nodes.forEach((n, i) => idx[n.id] = i);
+  const seen = {}; const edges = [];
+  LIBRARY.forEach(it => {
+    (it.related || []).forEach(rid => {
+      if (!(rid in idx)) return;
+      const a = idx[it.id], b = idx[rid];
+      if (a === b) return;
+      const key = a < b ? a + '-' + b : b + '-' + a;
+      if (seen[key]) return; seen[key] = 1;
+      edges.push({ a, b }); nodes[a].deg++; nodes[b].deg++;
+    });
+  });
+  GRAPH = { nodes, edges, idx };
+  return GRAPH;
+}
+
+/* ---------- Utilidades de lienzo ---------- */
+function fitCanvas(canvas) {
+  const r = canvas.parentElement.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.max(1, Math.round(r.width * dpr));
+  canvas.height = Math.max(1, Math.round(r.height * dpr));
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, w: r.width, h: r.height };
+}
+function evPos(e, canvas) {
+  const r = canvas.getBoundingClientRect();
+  return { x: e.clientX - r.left, y: e.clientY - r.top };
+}
+function pickAt(nodes, x, y, xk, yk, rad) {
+  let best = null, bd = rad * rad;
+  for (const n of nodes) {
+    const dx = n[xk] - x, dy = n[yk] - y, d = dx * dx + dy * dy;
+    if (d < bd) { bd = d; best = n; }
+  }
+  return best;
+}
+function showTip(tip, n, p, canvas) {
+  const it = n.item, c = CATS[n.cat];
+  tip.innerHTML = '<b>' + it.emoji + ' ' + it.title + '</b><small>' + c.emoji + ' ' +
+    c.name + ' · ' + (STATUS_LABEL[statusOf(n.id)] || 'Por leer') + '</small>';
+  tip.style.left = p.x + 'px'; tip.style.top = p.y + 'px'; tip.hidden = false;
+}
+
+/* =====================================================================
+   SECUENCIAS CURADAS
+   ===================================================================== */
+const SEQUENCES = [
+  { id: 'mejores-habitos', emoji: '🔁', cat: 'habitos',
+    title: 'Quiero mejores hábitos',
+    desc: 'De entender por qué fallamos a construir un sistema que se sostiene casi solo.',
+    steps: ['poder-habitos', 'habitos-atomicos', 'tiny-habits', 'lally-2010', 'efecto-compuesto'] },
+  { id: 'foco-profundo', emoji: '🎯', cat: 'productividad',
+    title: 'Quiero recuperar mi concentración',
+    desc: 'Decide qué importa, protege el foco y reconcíliate con tu tiempo finito.',
+    steps: ['esencialismo', 'deep-work', 'lo-unico', 'hyperfocus', 'cuatro-mil-semanas'] },
+  { id: 'aprender-mejor', emoji: '🧠', cat: 'aprendizaje',
+    title: 'Quiero aprender de forma más eficaz',
+    desc: 'De la mentalidad correcta a las técnicas que de verdad fijan lo aprendido.',
+    steps: ['mindset', 'aprendetelo', 'peak-ericsson', 'como-aprendemos', 'amplitud-range'] },
+  { id: 'calma-proposito', emoji: '🧘', cat: 'bienestar',
+    title: 'Quiero más calma y sentido',
+    desc: 'Del control estoico a aceptar lo que duele y vivir según tus valores.',
+    steps: ['meditaciones', 'hombre-busca-sentido', 'poder-del-ahora', 'trampa-felicidad', 'sutil-arte'] },
+  { id: 'mejores-relaciones', emoji: '🤝', cat: 'relaciones',
+    title: 'Quiero relacionarme mejor',
+    desc: 'Conectar, comunicar sin violencia y sostener conversaciones difíciles.',
+    steps: ['como-ganar-amigos', 'cnv', 'conversaciones-dificiles', 'cinco-lenguajes', 'abrazame-fuerte'] },
+  { id: 'decidir-mejor', emoji: '🧭', cat: 'psicologia',
+    title: 'Quiero decidir con más cabeza',
+    desc: 'Conoce tus sesgos, diseña mejores elecciones y piensa en probabilidades.',
+    steps: ['pensar-rapido', 'predeciblemente-irracional', 'nudge', 'pensar-apuestas', 'ruido-kahneman'] },
+  { id: 'cuerpo-cerebro', emoji: '💪', cat: 'salud',
+    title: 'Quiero cuidar cuerpo y cerebro',
+    desc: 'Dormir, moverte y comer para que tu cerebro y tu salud duren más.',
+    steps: ['por-que-dormimos', 'spark', 'comer-moverse-dormir', 'glucosa', 'outlive'] },
+  { id: 'desbloquear-creatividad', emoji: '🎨', cat: 'creatividad',
+    title: 'Quiero desbloquear mi creatividad',
+    desc: 'Vence la resistencia, crea por hábito, roba con criterio y atrévete a ser original.',
+    steps: ['guerra-arte', 'camino-artista', 'roba-artista', 'libera-tu-magia', 'originales'] }
+];
+
+function renderSequences() {
+  const box = document.getElementById('seqList');
+  if (!box) return;
+  box.innerHTML = SEQUENCES.map(s => {
+    const color = CATS[s.cat] ? CATS[s.cat].color : 'var(--accent)';
+    const steps = s.steps.map(id => LIBRARY.find(x => x.id === id)).filter(Boolean);
+    const read = steps.filter(it => statusOf(it.id) === 'leido').length;
+    const pct = steps.length ? Math.round(read / steps.length * 100) : 0;
+    const stepsHTML = steps.map((it, i) => {
+      const st = statusOf(it.id);
+      const cls = st === 'leido' ? ' done' : (st === 'leyendo' ? ' reading' : '');
+      const lbl = STATUS_LABEL[st] || 'Por leer';
+      return '<button class="seq-step' + cls + '" data-id="' + it.id + '">' +
+        '<div class="seq-rail"><span class="seq-dot">' + (st === 'leido' ? '✓' : (i + 1)) +
+        '</span><span class="seq-line"></span></div>' +
+        '<div class="seq-step-body"><div class="seq-step-title">' + it.emoji + ' ' + it.title + '</div>' +
+        '<div class="seq-step-meta">' + it.author + ' · ' + lbl + '</div></div>' +
+      '</button>';
+    }).join('');
+    return '<div class="seq-card" style="--seq-color:' + color + '">' +
+      '<div class="seq-head"><span class="seq-emoji">' + s.emoji + '</span><h3>' + s.title + '</h3></div>' +
+      '<div class="seq-desc">' + s.desc + '</div>' +
+      '<div class="seq-prog"><div class="seq-prog-bar"><div class="seq-prog-fill" style="width:' + pct + '%"></div></div>' +
+        '<span class="seq-prog-txt">' + read + '/' + steps.length + ' leídos</span></div>' +
+      '<div class="seq-steps">' + stepsHTML + '</div>' +
+    '</div>';
+  }).join('');
+}
+document.getElementById('seqList').addEventListener('click', e => {
+  const step = e.target.closest('.seq-step');
+  if (step) location.hash = '#/r/' + step.dataset.id;
+});
+
+/* =====================================================================
+   MAPA DE CONEXIONES (grafo dirigido por fuerzas)
+   ===================================================================== */
+let mapRAF = null, mapInited = false, mapCtx = null, mapW = 0, mapH = 0, mapAlpha = 0;
+let mapHover = null, mapDrag = null;
+
+function buildLegend() {
+  const box = document.getElementById('mapLegend');
+  let h = '';
+  for (const k in CATS) h += '<span class="legend-item"><span class="dot" style="background:' +
+    CATS[k].color + '"></span>' + CATS[k].name + '</span>';
+  h += '<span class="legend-item"><span class="dot" style="background:var(--beam);box-shadow:0 0 7px var(--beam)"></span>Leído</span>';
+  box.innerHTML = h;
+}
+function nodeRadius(n) { return 3.2 + Math.min(n.deg, 9) * 0.85; }
+
+function forceStep(nodes, edges, w, h, alpha, drag) {
+  const rep = 2400;
+  for (let i = 0; i < nodes.length; i++) {
+    const a = nodes[i];
+    for (let j = i + 1; j < nodes.length; j++) {
+      const b = nodes[j];
+      let dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy;
+      if (d2 < 1) { dx = Math.random() - .5; dy = Math.random() - .5; d2 = 1; }
+      const d = Math.sqrt(d2), f = rep / d2 * alpha, fx = dx / d * f, fy = dy / d * f;
+      a.vx += fx; a.vy += fy; b.vx -= fx; b.vy -= fy;
+    }
+  }
+  const ideal = 72;
+  for (const e of edges) {
+    const a = nodes[e.a], b = nodes[e.b];
+    let dx = b.x - a.x, dy = b.y - a.y, d = Math.sqrt(dx * dx + dy * dy) || 1;
+    const f = (d - ideal) * 0.016 * alpha, fx = dx / d * f, fy = dy / d * f;
+    a.vx += fx; a.vy += fy; b.vx -= fx; b.vy -= fy;
+  }
+  const cx = w / 2, cy = h / 2, m = 16;
+  for (const n of nodes) {
+    n.vx += (cx - n.x) * 0.001 * alpha;
+    n.vy += (cy - n.y) * 0.001 * alpha;
+    if (n === drag) { n.vx = 0; n.vy = 0; continue; }
+    n.vx *= 0.86; n.vy *= 0.86;
+    n.x += n.vx; n.y += n.vy;
+    n.x = Math.max(m, Math.min(w - m, n.x));
+    n.y = Math.max(m, Math.min(h - m, n.y));
+  }
+}
+function drawGraph(ctx, g, w, h) {
+  ctx.clearRect(0, 0, w, h);
+  const hi = mapHover != null ? mapHover : -1;
+  for (const e of g.edges) {
+    const a = g.nodes[e.a], b = g.nodes[e.b];
+    const both = statusOf(a.id) === 'leido' && statusOf(b.id) === 'leido';
+    let alpha = both ? 0.5 : 0.1, col = both ? '255,212,121' : '147,161,189';
+    if (hi >= 0) {
+      if (e.a === hi || e.b === hi) { alpha = 0.75; col = '255,212,121'; }
+      else alpha *= 0.25;
+    }
+    ctx.strokeStyle = 'rgba(' + col + ',' + alpha + ')';
+    ctx.lineWidth = both ? 1.3 : 1;
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+  }
+  for (let i = 0; i < g.nodes.length; i++) {
+    const n = g.nodes[i], c = CATS[n.cat].color, st = statusOf(n.id), r = nodeRadius(n);
+    const dim = hi >= 0 && hi !== i && !(g.edges.some(e => (e.a === hi && e.b === i) || (e.b === hi && e.a === i)));
+    ctx.globalAlpha = dim ? 0.3 : 1;
+    if (st === 'leido') {
+      const grd = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r + 9);
+      grd.addColorStop(0, 'rgba(255,212,121,.55)');
+      grd.addColorStop(1, 'rgba(255,212,121,0)');
+      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(n.x, n.y, r + 9, 0, 7); ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, 7); ctx.fillStyle = c; ctx.fill();
+    if (st === 'leido') { ctx.lineWidth = 1.6; ctx.strokeStyle = '#ffd479'; ctx.stroke(); }
+    else if (st === 'leyendo') { ctx.lineWidth = 1.6; ctx.strokeStyle = '#5b8def'; ctx.stroke(); }
+    if (i === hi) { ctx.lineWidth = 2; ctx.strokeStyle = '#fff'; ctx.stroke(); }
+    ctx.globalAlpha = 1;
+  }
+}
+function mapLoop() {
+  const g = GRAPH;
+  if (mapAlpha > 0.02 || mapDrag) {
+    forceStep(g.nodes, g.edges, mapW, mapH, Math.max(mapAlpha, mapDrag ? 0.12 : 0), mapDrag);
+    if (!mapDrag) mapAlpha *= 0.984;
+  }
+  drawGraph(mapCtx, g, mapW, mapH);
+  mapRAF = requestAnimationFrame(mapLoop);
+}
+function initMap() {
+  buildLegend();
+  const g = buildGraph();
+  const canvas = document.getElementById('mapCanvas');
+  const dim = fitCanvas(canvas); mapCtx = dim.ctx; mapW = dim.w; mapH = dim.h;
+  g.nodes.forEach((n, i) => {
+    if (n._init) return;
+    const ang = i * 2.399963, rad = Math.sqrt(i / g.nodes.length) * Math.min(mapW, mapH) * 0.44;
+    n.x = mapW / 2 + Math.cos(ang) * rad; n.y = mapH / 2 + Math.sin(ang) * rad; n._init = true;
+  });
+  mapAlpha = 1;
+  if (!mapInited) { attachMapEvents(canvas); mapInited = true; }
+  cancelAnimationFrame(mapRAF); mapLoop();
+}
+function stopMap() { cancelAnimationFrame(mapRAF); mapRAF = null; }
+function attachMapEvents(canvas) {
+  const tip = document.getElementById('mapTip');
+  let downXY = null, downNode = null, moved = false;
+  canvas.addEventListener('pointerdown', e => {
+    canvas.setPointerCapture(e.pointerId);
+    const p = evPos(e, canvas), n = pickAt(GRAPH.nodes, p.x, p.y, 'x', 'y', 15);
+    downXY = p; moved = false; downNode = n || null;
+    if (n) { mapDrag = n; mapAlpha = Math.max(mapAlpha, 0.4); }
+  });
+  canvas.addEventListener('pointermove', e => {
+    const p = evPos(e, canvas);
+    if (mapDrag) {
+      mapDrag.x = p.x; mapDrag.y = p.y; mapDrag.vx = 0; mapDrag.vy = 0;
+      if (downXY && Math.hypot(p.x - downXY.x, p.y - downXY.y) > 5) moved = true;
+      return;
+    }
+    const n = pickAt(GRAPH.nodes, p.x, p.y, 'x', 'y', 15);
+    mapHover = n ? GRAPH.idx[n.id] : null;
+    if (n) { canvas.style.cursor = 'pointer'; showTip(tip, n, p, canvas); }
+    else { canvas.style.cursor = 'grab'; tip.hidden = true; }
+  });
+  const up = () => {
+    if (mapDrag && !moved && downNode) location.hash = '#/r/' + downNode.id;
+    mapDrag = null; downNode = null;
+  };
+  canvas.addEventListener('pointerup', up);
+  canvas.addEventListener('pointerleave', () => { mapHover = null; tip.hidden = true; });
+}
+
+/* =====================================================================
+   CONSTELACIÓN DE PROGRESO
+   ===================================================================== */
+let constelRAF = null, constelInited = false, constelCtx = null, constelW = 0, constelH = 0, constelStart = 0;
+let constelHover = null;
+
+function layoutConstel(w, h) {
+  const g = buildGraph();
+  const cats = Object.keys(CATS), cx = w / 2, cy = h / 2;
+  const R = Math.min(w, h) * 0.34, spread = Math.min(w, h) * 0.15;
+  const byCat = {}; cats.forEach(c => byCat[c] = []);
+  g.nodes.forEach(n => byCat[n.cat].push(n));
+  cats.forEach((cat, ci) => {
+    const base = ci / cats.length * Math.PI * 2 - Math.PI / 2;
+    const ccx = cx + Math.cos(base) * R, ccy = cy + Math.sin(base) * R;
+    const arr = byCat[cat];
+    arr.forEach((n, i) => {
+      const a = i * 2.399963, rr = Math.sqrt((i + 0.6) / arr.length) * spread;
+      n.cx2 = ccx + Math.cos(a) * rr;
+      n.cy2 = ccy + Math.sin(a) * rr;
+      if (!n.tw) n.tw = Math.random() * Math.PI * 2;
+    });
+  });
+}
+function drawConstel(t) {
+  const g = GRAPH, ctx = constelCtx, w = constelW, h = constelH;
+  ctx.clearRect(0, 0, w, h);
+  for (const e of g.edges) {
+    const a = g.nodes[e.a], b = g.nodes[e.b];
+    const both = statusOf(a.id) === 'leido' && statusOf(b.id) === 'leido';
+    ctx.strokeStyle = both ? 'rgba(255,212,121,.5)' : 'rgba(147,161,189,.06)';
+    ctx.lineWidth = both ? 1.2 : 0.8;
+    ctx.beginPath(); ctx.moveTo(a.cx2, a.cy2); ctx.lineTo(b.cx2, b.cy2); ctx.stroke();
+  }
+  for (let i = 0; i < g.nodes.length; i++) {
+    const n = g.nodes[i], st = statusOf(n.id), c = CATS[n.cat].color;
+    const hovered = constelHover === i;
+    if (st === 'leido') {
+      const tw = 0.65 + 0.35 * Math.sin(t / 600 + n.tw);
+      const R = 8 + tw * 3;
+      const grd = ctx.createRadialGradient(n.cx2, n.cy2, 0, n.cx2, n.cy2, R);
+      grd.addColorStop(0, 'rgba(255,236,180,' + (0.85 * tw) + ')');
+      grd.addColorStop(.5, 'rgba(255,212,121,' + (0.4 * tw) + ')');
+      grd.addColorStop(1, 'rgba(255,212,121,0)');
+      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(n.cx2, n.cy2, R, 0, 7); ctx.fill();
+      ctx.fillStyle = '#fff6df'; ctx.beginPath(); ctx.arc(n.cx2, n.cy2, 2.4, 0, 7); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,236,180,' + (0.6 * tw) + ')'; ctx.lineWidth = 1;
+      const sp = 5 + tw * 3;
+      ctx.beginPath();
+      ctx.moveTo(n.cx2 - sp, n.cy2); ctx.lineTo(n.cx2 + sp, n.cy2);
+      ctx.moveTo(n.cx2, n.cy2 - sp); ctx.lineTo(n.cx2, n.cy2 + sp);
+      ctx.stroke();
+    } else if (st === 'leyendo') {
+      ctx.fillStyle = c; ctx.globalAlpha = .85;
+      ctx.beginPath(); ctx.arc(n.cx2, n.cy2, 3, 0, 7); ctx.fill();
+      ctx.globalAlpha = 1; ctx.strokeStyle = '#5b8def'; ctx.lineWidth = 1.4; ctx.stroke();
+    } else {
+      ctx.fillStyle = 'rgba(147,161,189,.32)';
+      ctx.beginPath(); ctx.arc(n.cx2, n.cy2, 1.7, 0, 7); ctx.fill();
+    }
+    if (hovered) {
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.6;
+      ctx.beginPath(); ctx.arc(n.cx2, n.cy2, 7, 0, 7); ctx.stroke();
+    }
+  }
+}
+function constelLoop(t) {
+  drawConstel(t || 0);
+  constelRAF = requestAnimationFrame(constelLoop);
+}
+function renderConstelStats() {
+  const read = LIBRARY.filter(it => statusOf(it.id) === 'leido').length;
+  const pct = Math.round(read / LIBRARY.length * 100);
+  document.getElementById('constelStats').innerHTML =
+    '<span class="constel-stat">✨ <b>' + read + '</b> de ' + LIBRARY.length + ' estrellas encendidas</span>' +
+    '<span class="constel-stat">🌌 <b>' + pct + '%</b> del cielo iluminado</span>';
+}
+function initConstel() {
+  buildGraph();
+  renderConstelStats();
+  const canvas = document.getElementById('constelCanvas');
+  const dim = fitCanvas(canvas); constelCtx = dim.ctx; constelW = dim.w; constelH = dim.h;
+  layoutConstel(constelW, constelH);
+  if (!constelInited) { attachConstelEvents(canvas); constelInited = true; }
+  cancelAnimationFrame(constelRAF); constelStart = performance.now(); constelLoop(0);
+}
+function stopConstel() { cancelAnimationFrame(constelRAF); constelRAF = null; }
+function attachConstelEvents(canvas) {
+  const tip = document.getElementById('constelTip');
+  canvas.addEventListener('pointermove', e => {
+    const p = evPos(e, canvas), n = pickAt(GRAPH.nodes, p.x, p.y, 'cx2', 'cy2', 12);
+    constelHover = n ? GRAPH.idx[n.id] : null;
+    if (n) { canvas.style.cursor = 'pointer'; showTip(tip, n, p, canvas); }
+    else { canvas.style.cursor = 'default'; tip.hidden = true; }
+  });
+  canvas.addEventListener('pointerleave', () => { constelHover = null; tip.hidden = true; });
+  canvas.addEventListener('click', e => {
+    const p = evPos(e, canvas), n = pickAt(GRAPH.nodes, p.x, p.y, 'cx2', 'cy2', 12);
+    if (n) location.hash = '#/r/' + n.id;
+  });
+}
+
+/* =====================================================================
+   ROUTER DE VISTAS (biblioteca / secuencias / mapa / constelación)
+   ===================================================================== */
+let currentView = 'biblioteca';
+function setView(name) {
+  currentView = name;
+  document.documentElement.dataset.view = name;
+  document.querySelectorAll('.view-tab').forEach(t => t.classList.toggle('active', t.dataset.view === name));
+  document.getElementById('view-biblioteca').hidden = name !== 'biblioteca';
+  ['secuencias', 'mapa', 'constelacion'].forEach(v => {
+    document.getElementById('view-' + v).hidden = name !== v;
+  });
+  stopMap(); stopConstel();
+  if (name === 'secuencias') renderSequences();
+  else if (name === 'mapa') requestAnimationFrame(initMap);
+  else if (name === 'constelacion') requestAnimationFrame(initConstel);
+  if (!currentId) window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.getElementById('viewSwitcher').addEventListener('click', e => {
+  const t = e.target.closest('.view-tab');
+  if (t) setView(t.dataset.view);
+});
+document.getElementById('bymcylBadge').addEventListener('click', e => {
+  e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* Reanuda la vista dinámica activa al cerrar una ficha */
+function resumeActiveView() {
+  if (currentView === 'secuencias') renderSequences();
+  else if (currentView === 'mapa') requestAnimationFrame(initMap);
+  else if (currentView === 'constelacion') requestAnimationFrame(initConstel);
+}
+
+/* Reajusta el lienzo activo al cambiar el tamaño de la ventana */
+let _resizeT = null;
+window.addEventListener('resize', () => {
+  clearTimeout(_resizeT);
+  _resizeT = setTimeout(() => {
+    if (currentId) return;
+    if (currentView === 'mapa') initMap();
+    else if (currentView === 'constelacion') initConstel();
+  }, 200);
 });
 
 /* ---------- Init ---------- */
