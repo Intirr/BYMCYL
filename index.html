@@ -480,18 +480,6 @@
     header.hero .beam { animation: none; transform: translateX(-50%) rotate(-8deg); }
   }
 
-  /* Insignia BYMCYL en la esquina */
-  .bymcyl-badge {
-    position: fixed; left: 1rem; bottom: 1rem; z-index: 70;
-    background: var(--pill-bg); border: 1px solid var(--border);
-    border-radius: 99px; padding: .3rem .7rem .3rem .5rem;
-    display: flex; align-items: center; backdrop-filter: blur(6px);
-    box-shadow: 0 6px 18px var(--shadow); transition: transform .15s, border-color .15s;
-    text-decoration: none;
-  }
-  .bymcyl-badge:hover { transform: translateY(-2px); border-color: var(--accent); }
-  .bymcyl-badge img { height: 26px; width: auto; display: block; }
-
   /* Conmutador de vistas */
   .view-switcher {
     display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem;
@@ -596,7 +584,6 @@
   html[data-mode="mobile"] .seq-list { grid-template-columns: 1fr; }
   html[data-mode="mobile"] .canvas-wrap { height: 64vh; min-height: 380px; }
   html[data-mode="mobile"] .view-tab { padding: .45rem .8rem; font-size: .8rem; }
-  html[data-mode="mobile"] .bymcyl-badge { left: max(.7rem, calc(50% - 218px)); }
   @media (max-width: 560px) {
     html:not([data-mode]) .seq-list { grid-template-columns: 1fr; }
     html:not([data-mode]) .pharus-logo { width: 80%; }
@@ -685,29 +672,60 @@
   /* ===================================================================
      CONTROLES DE MAPA Y CONSTELACIÓN (rediseño)
      =================================================================== */
-  .graph-controls { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; align-items: center; margin-bottom: 1rem; }
-  .legend-item { cursor: pointer; transition: all .15s; user-select: none; }
-  .legend-item:hover { border-color: var(--muted); color: var(--text); }
-  .legend-item.active { color: var(--text); border-width: 2px; }
-  .legend-item.dimmed { opacity: .4; }
-  .graph-reset { background: var(--surface); border: 1px solid var(--border); color: var(--muted);
-    border-radius: 99px; padding: .3rem .85rem; font-size: .78rem; cursor: pointer; }
-  .graph-reset:hover { border-color: var(--accent); color: var(--text); }
+  /* Barra de navegación del mapa (migas) */
+  .map-bar { display: flex; align-items: center; gap: .7rem; margin-bottom: .8rem; min-height: 2rem; }
+  .map-back {
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    border-radius: 99px; padding: .4rem 1rem; font-size: .82rem; font-weight: 600; cursor: pointer;
+    transition: border-color .15s, transform .15s;
+  }
+  .map-back:hover { border-color: var(--accent); transform: translateX(-2px); }
+  .map-crumb { font-size: .9rem; font-weight: 700; color: var(--text); display: inline-flex; align-items: center; gap: .4rem; }
+
+  /* Selector de formas de la constelación */
+  .shape-picker { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin-bottom: 1rem; }
+  .shape-btn {
+    background: var(--surface); border: 1px solid var(--border); color: var(--text-2);
+    border-radius: 99px; padding: .45rem 1rem; font-size: .85rem; cursor: pointer; transition: all .15s;
+    display: inline-flex; align-items: center; gap: .4rem;
+  }
+  .shape-btn:hover { border-color: var(--muted); color: var(--text); transform: translateY(-2px); }
+  .shape-btn.active {
+    color: #0b1220; border-color: transparent; font-weight: 700;
+    background: linear-gradient(92deg, var(--beam), #e8862f);
+  }
+
+  /* Panel de foco (lateral en escritorio, hoja inferior en móvil) */
   .graph-focus-panel {
-    position: absolute; top: .8rem; right: .8rem; width: 240px; max-width: 60%; z-index: 6;
+    position: absolute; top: .8rem; right: .8rem; width: 250px; max-width: 62%; z-index: 6;
     background: var(--pill-bg); border: 1px solid var(--border); border-radius: 12px; padding: .9rem 1rem;
     backdrop-filter: blur(8px); box-shadow: 0 10px 30px var(--shadow); font-size: .82rem; display: none;
   }
   .graph-focus-panel.show { display: block; }
-  .graph-focus-panel .gf-title { font-weight: 700; font-size: .92rem; display: flex; gap: .4rem; align-items: flex-start; }
+  .graph-focus-panel .gf-close { position: absolute; top: .5rem; right: .6rem; background: none; border: none;
+    color: var(--muted); font-size: 1.1rem; cursor: pointer; line-height: 1; padding: .1rem .3rem; }
+  .graph-focus-panel .gf-close:hover { color: var(--text); }
+  .graph-focus-panel .gf-title { font-weight: 700; font-size: .92rem; padding-right: 1.2rem; }
   .graph-focus-panel .gf-cat { font-size: .72rem; margin: .15rem 0 .5rem; }
-  .graph-focus-panel .gf-list { display: flex; flex-direction: column; gap: .35rem; max-height: 220px; overflow-y: auto; }
+  .graph-focus-panel .gf-sub { font-size: .68rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin: .2rem 0 .3rem; }
+  .graph-focus-panel .gf-list { display: flex; flex-direction: column; gap: .35rem; max-height: 200px; overflow-y: auto; }
   .graph-focus-panel .gf-link { background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
-    padding: .35rem .55rem; cursor: pointer; color: var(--text-2); font-size: .78rem; text-align: left; }
+    padding: .4rem .55rem; cursor: pointer; color: var(--text-2); font-size: .78rem; text-align: left;
+    display: flex; align-items: center; gap: .35rem; }
   .graph-focus-panel .gf-link:hover { border-color: var(--accent); color: var(--text); }
-  .graph-focus-panel .gf-open { margin-top: .6rem; width: 100%; border: none; border-radius: 8px; padding: .45rem;
+  .graph-focus-panel .gf-link .gf-otherc { width: 8px; height: 8px; border-radius: 99px; flex-shrink: 0; }
+  .graph-focus-panel .gf-open { margin-top: .6rem; width: 100%; border: none; border-radius: 8px; padding: .5rem;
     background: linear-gradient(92deg, var(--beam), #e8862f); color: #0b1220; font-weight: 700; cursor: pointer; font-size: .8rem; }
   .graph-focus-panel .gf-empty { color: var(--muted); font-size: .76rem; }
+
+  /* Panel como hoja inferior en móvil */
+  html[data-mode="mobile"] .graph-focus-panel,
+  html[data-mode="mobile"] .graph-focus-panel.show { left: 0; right: 0; bottom: 0; top: auto; width: 100%;
+    max-width: 100%; border-radius: 16px 16px 0 0; border-bottom: none; }
+  @media (max-width: 620px) {
+    html:not([data-mode]) .graph-focus-panel { left: 0; right: 0; bottom: 0; top: auto; width: 100%;
+      max-width: 100%; border-radius: 16px 16px 0 0; border-bottom: none; }
+  }
 </style>
 <script>
   /* Aplica modo y tema antes del primer pintado (evita parpadeo) */
@@ -827,31 +845,32 @@
     <section id="view-mapa" class="view" hidden>
       <div class="view-head">
         <h2>🕸️ Mapa de conexiones</h2>
-        <p>Los recursos se agrupan por área. Pasa el cursor (o toca) sobre cualquiera para iluminar solo sus conexiones; haz clic para abrir su ficha. Usa la leyenda para aislar un área.</p>
+        <p id="mapIntro">Toca un <b>área</b> para explorar sus recursos sin agobios. Dentro de cada área verás cómo se relacionan las ideas y podrás saltar a las áreas vecinas.</p>
       </div>
-      <div class="graph-controls">
-        <div class="map-legend" id="mapLegend"></div>
-        <button class="graph-reset" id="mapReset">↺ Ver todo</button>
+      <div class="map-bar">
+        <button class="map-back" id="mapBack" hidden>← Áreas</button>
+        <span class="map-crumb" id="mapCrumb">Todas las áreas</span>
       </div>
       <div class="canvas-wrap">
         <canvas id="mapCanvas"></canvas>
         <div class="graph-tip" id="mapTip" hidden></div>
         <div class="graph-focus-panel" id="mapPanel"></div>
       </div>
-      <div class="map-hint">Cada línea une ideas que dialogan entre sí. Las conexiones entre lecturas que ya completaste brillan en dorado.</div>
+      <div class="map-hint" id="mapHint">Las áreas más conectadas se unen con líneas; el aro dorado muestra cuánto has leído de cada una.</div>
     </section>
 
     <section id="view-constelacion" class="view" hidden>
       <div class="view-head">
-        <h2>✨ Tu cerebro de conocimiento</h2>
-        <p>Las 200 lecturas dibujan la silueta de un cerebro y se enlazan como una red neuronal. Cada estrella se enciende cuando marcas una lectura como leída, y las conexiones entre lecturas encendidas se iluminan: tu cerebro cobra vida conforme avanzas.</p>
+        <h2 id="constelTitle">✨ Tu cerebro de conocimiento</h2>
+        <p id="constelIntro">Las 200 lecturas dibujan una figura y se enlazan como una red neuronal. Cada punto se enciende cuando marcas su lectura como leída, y las conexiones entre lecturas encendidas se iluminan: la figura cobra vida conforme avanzas.</p>
       </div>
+      <div class="shape-picker" id="shapePicker"></div>
       <div class="constel-stats" id="constelStats"></div>
       <div class="canvas-wrap">
         <canvas id="constelCanvas"></canvas>
         <div class="graph-tip" id="constelTip" hidden></div>
       </div>
-      <div class="map-hint">Pulsa una neurona para abrir su ficha. Marca lecturas como «leídas» para encender el cerebro.</div>
+      <div class="map-hint">Pulsa un punto para abrir su ficha. Marca lecturas como «leídas» para encender la figura, y elige la forma que prefieras arriba.</div>
     </section>
   </div>
 </main>
@@ -868,8 +887,6 @@
 </footer>
 
 <button class="to-top" id="toTop" title="Volver arriba" aria-label="Volver arriba">↑</button>
-
-<a class="bymcyl-badge" href="#" id="bymcylBadge" title="BYMCYL" aria-label="BYMCYL"><img class="logo-dark" src="assets/bymcyl-dark.png" alt="BYMCYL"><img class="logo-light" src="assets/bymcyl.png" alt="BYMCYL" aria-hidden="true"></a>
 
 </div><!-- /.device-frame -->
 
@@ -6414,159 +6431,265 @@ document.getElementById('discoverFeed').addEventListener('click', e => {
 });
 
 /* =====================================================================
-   MAPA DE CONEXIONES (clústeres por área + foco interactivo)
+   MAPA DE CONEXIONES (navegación por niveles: áreas → área)
    ===================================================================== */
-let mapCtx = null, mapW = 0, mapH = 0, mapHover = null, mapFocus = null, mapCatFilter = null, mapInited = false;
+let mapCtx = null, mapW = 0, mapH = 0, mapHover = null, mapFocus = null, mapInited = false;
+let mapLevel = 'areas', mapArea = null, areaBubbles = [];
 const CAT_KEYS = Object.keys(CATS);
 
-function clusterLayout(w, h) {
-  const g = ensureAdj();
-  const cx = w / 2, cy = h / 2, S = Math.min(w, h);
-  const Rring = S * 0.355;
-  const byCat = {}; CAT_KEYS.forEach(c => byCat[c] = []);
-  g.nodes.forEach(n => byCat[n.cat].push(n));
-  const centers = {};
-  CAT_KEYS.forEach((cat, ci) => {
-    const ang = ci / CAT_KEYS.length * Math.PI * 2 - Math.PI / 2;
-    const ccx = cx + Math.cos(ang) * Rring * (w > h ? 1.18 : 1);
-    const ccy = cy + Math.sin(ang) * Rring * (h >= w ? 1.05 : 0.86);
-    const arr = byCat[cat];
-    const spread = S * 0.066 * Math.sqrt(arr.length / 12 + 0.5);
-    const m = 24, cl = (v, hi) => Math.max(m, Math.min(hi - m, v));
-    arr.forEach((n, i) => {
-      const a = i * 2.399963, rr = Math.sqrt((i + 0.5) / arr.length) * spread;
-      n.mx = cl(ccx + Math.cos(a) * rr, w); n.my = cl(ccy + Math.sin(a) * rr, h);
-    });
-    centers[cat] = { x: ccx, y: ccy, lx: cl(ccx + Math.cos(ang) * (spread + S * 0.05), w), ly: cl(ccy + Math.sin(ang) * (spread + S * 0.05), h) };
+function wrapLabel(ctx, text, x, y, maxW, lineH, fill, halo) {
+  const words = text.split(' '); let line = ''; const lines = [];
+  for (const w of words) {
+    const t = line ? line + ' ' + w : w;
+    if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t;
+  }
+  if (line) lines.push(line);
+  lines.forEach((ln, k) => {
+    const yy = y + k * lineH;
+    ctx.lineWidth = 3; ctx.strokeStyle = halo; ctx.strokeText(ln, x, yy);
+    ctx.fillStyle = fill; ctx.fillText(ln, x, yy);
   });
-  GRAPH.centers = centers;
+  return lines.length;
 }
-function drawMap() {
-  const g = GRAPH, ctx = mapCtx, w = mapW, h = mapH, adj = g.adj;
-  ctx.clearRect(0, 0, w, h);
-  const focus = mapFocus != null ? mapFocus : (mapHover != null ? mapHover : -1);
+function fitLabel(ctx, text, maxW) {
+  if (ctx.measureText(text).width <= maxW) return text;
+  let t = text;
+  while (t.length > 1 && ctx.measureText(t + '…').width > maxW) t = t.slice(0, -1);
+  return t + '…';
+}
+function computeAreaLinks() {
+  const g = GRAPH, m = {};
   for (const e of g.edges) {
+    const ca = g.nodes[e.a].cat, cb = g.nodes[e.b].cat;
+    if (ca === cb) continue;
+    const key = ca < cb ? ca + '|' + cb : cb + '|' + ca;
+    m[key] = (m[key] || 0) + 1;
+  }
+  return m;
+}
+
+/* ---- Nivel 1: vista general de áreas (burbujas) ---- */
+function layoutAreas(w, h) {
+  const cols = w >= h ? 4 : 2;
+  const rows = Math.ceil(CAT_KEYS.length / cols);
+  const cw = w / cols, ch = h / rows;
+  const r = Math.min(cw, ch) * 0.31;
+  areaBubbles = CAT_KEYS.map((cat, i) => {
+    const cx = (i % cols + 0.5) * cw, cy = (Math.floor(i / cols) + 0.5) * ch;
+    const items = LIBRARY.filter(it => it.cat === cat);
+    const read = items.filter(it => statusOf(it.id) === 'leido').length;
+    return { cat, x: cx, y: cy, r, total: items.length, read, cellW: cw };
+  });
+  GRAPH.areaLinks = computeAreaLinks();
+}
+function bubbleAt(x, y) {
+  for (const b of areaBubbles) if ((b.x - x) ** 2 + (b.y - y) ** 2 < b.r * b.r) return b;
+  return null;
+}
+function drawAreas() {
+  const ctx = mapCtx, w = mapW, h = mapH; ctx.clearRect(0, 0, w, h);
+  const byCat = {}; areaBubbles.forEach(b => byCat[b.cat] = b);
+  let maxL = 1; for (const k in GRAPH.areaLinks) maxL = Math.max(maxL, GRAPH.areaLinks[k]);
+  for (const k in GRAPH.areaLinks) {
+    const parts = k.split('|'), A = byCat[parts[0]], B = byCat[parts[1]]; if (!A || !B) continue;
+    const wgt = GRAPH.areaLinks[k] / maxL;
+    const hov = mapHover && (mapHover.cat === parts[0] || mapHover.cat === parts[1]);
+    ctx.strokeStyle = 'rgba(127,240,224,' + Math.min(.5, (0.05 + wgt * 0.22) * (hov ? 2.2 : 1)) + ')';
+    ctx.lineWidth = 0.6 + wgt * 3.4;
+    ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+  }
+  const halo = isLight() ? 'rgba(255,255,255,.95)' : 'rgba(7,13,24,.95)';
+  for (const b of areaBubbles) {
+    const c = CATS[b.cat].color, rgb = CAT_RGB[b.cat], hov = mapHover === b;
+    if (hov) {
+      const gl = ctx.createRadialGradient(b.x, b.y, b.r * 0.3, b.x, b.y, b.r * 1.5);
+      gl.addColorStop(0, 'rgba(' + rgb + ',.25)'); gl.addColorStop(1, 'rgba(' + rgb + ',0)');
+      ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(b.x, b.y, b.r * 1.5, 0, 7); ctx.fill();
+    }
+    const grd = ctx.createRadialGradient(b.x, b.y, b.r * 0.2, b.x, b.y, b.r);
+    grd.addColorStop(0, 'rgba(' + rgb + ',' + (hov ? .36 : .26) + ')');
+    grd.addColorStop(1, 'rgba(' + rgb + ',.05)');
+    ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 7); ctx.fill();
+    ctx.lineWidth = hov ? 2.6 : 1.5; ctx.strokeStyle = c; ctx.stroke();
+    // aro de progreso (leídos)
+    const frac = b.total ? b.read / b.total : 0;
+    if (frac > 0) {
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r + 5, -Math.PI / 2, -Math.PI / 2 + frac * Math.PI * 2);
+      ctx.strokeStyle = '#ffd479'; ctx.lineWidth = 3.2; ctx.lineCap = 'round'; ctx.stroke(); ctx.lineCap = 'butt';
+    }
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle'; ctx.font = (b.r * 0.66) + 'px serif';
+    ctx.fillText(CATS[b.cat].emoji, b.x, b.y - b.r * 0.18);
+    ctx.textBaseline = 'top';
+    const nsz = Math.max(10, Math.min(14, b.r * 0.2));
+    ctx.font = '700 ' + nsz + 'px "Segoe UI", system-ui, sans-serif';
+    const nlines = wrapLabel(ctx, CATS[b.cat].name, b.x, b.y + b.r * 0.1, b.cellW * 0.92, nsz + 2, c, halo);
+    ctx.font = Math.max(9, b.r * 0.16) + 'px "Segoe UI", system-ui, sans-serif';
+    ctx.fillStyle = isLight() ? '#5e6880' : '#93a1bd';
+    ctx.fillText(b.read + ' / ' + b.total + ' leídos', b.x, b.y + b.r * 0.1 + nlines * (nsz + 2) + 3);
+  }
+}
+
+/* ---- Nivel 2: una sola área (cuadrícula legible) ---- */
+function layoutArea(cat, w, h) {
+  const arr = GRAPH.nodes.filter(n => n.cat === cat);
+  const n = arr.length;
+  const cols = Math.max(2, Math.round(Math.sqrt(n * (w / h))));
+  const rows = Math.ceil(n / cols);
+  const padX = Math.max(38, w * 0.06), padTop = h * 0.07, padBot = h * 0.06;
+  const cw = (w - 2 * padX) / cols, ch = (h - padTop - padBot) / rows;
+  arr.forEach((nn, i) => {
+    const r = Math.floor(i / cols), c = i % cols;
+    const inRow = (r === rows - 1) ? (n - cols * r) : cols;
+    const offset = (cols - inRow) * cw / 2;
+    nn.ax = padX + offset + (c + 0.5) * cw; nn.ay = padTop + (r + 0.5) * ch;
+  });
+  GRAPH.areaNodes = arr; GRAPH.areaCW = cw;
+}
+function drawArea() {
+  const ctx = mapCtx, w = mapW, h = mapH, g = GRAPH, arr = g.areaNodes, adj = g.adj;
+  ctx.clearRect(0, 0, w, h);
+  const focus = mapFocus, inArea = new Set(arr.map(n => g.idx[n.id]));
+  for (const e of g.edges) {
+    if (!inArea.has(e.a) || !inArea.has(e.b)) continue;
     const a = g.nodes[e.a], b = g.nodes[e.b];
     const both = statusOf(a.id) === 'leido' && statusOf(b.id) === 'leido';
     let alpha, col, lw = 1;
-    if (focus >= 0) {
-      if (e.a === focus || e.b === focus) { alpha = .85; col = '255,212,121'; lw = 1.6; }
-      else { alpha = .025; col = '147,161,189'; }
-    } else if (mapCatFilter) {
-      const inA = g.nodes[e.a].cat === mapCatFilter, inB = g.nodes[e.b].cat === mapCatFilter;
-      if (inA || inB) { alpha = both ? .6 : .28; col = both ? '255,212,121' : CAT_RGB[mapCatFilter]; lw = both ? 1.4 : 1; }
-      else { alpha = .02; col = '147,161,189'; }
-    } else {
-      alpha = both ? .5 : .07; col = both ? '255,212,121' : '147,161,189'; lw = both ? 1.3 : 1;
-    }
+    if (focus != null) { if (e.a === focus || e.b === focus) { alpha = .8; col = '255,212,121'; lw = 1.7; } else { alpha = .05; col = '147,161,189'; } }
+    else { alpha = both ? .55 : .16; col = both ? '255,212,121' : CAT_RGB[mapArea]; lw = both ? 1.5 : 1; }
     ctx.strokeStyle = 'rgba(' + col + ',' + alpha + ')'; ctx.lineWidth = lw;
-    ctx.beginPath(); ctx.moveTo(a.mx, a.my); ctx.lineTo(b.mx, b.my); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(a.ax, a.ay); ctx.lineTo(b.ax, b.ay); ctx.stroke();
   }
-  // etiquetas de área (medidas y ajustadas para que siempre quepan)
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.font = '700 ' + (w < 520 ? 11 : 13) + 'px "Segoe UI", system-ui, sans-serif';
-  const halo = isLight() ? 'rgba(255,255,255,.92)' : 'rgba(7,13,24,.92)';
-  for (const cat of CAT_KEYS) {
-    const c = GRAPH.centers[cat]; if (!c) continue;
-    const dim = (mapCatFilter && mapCatFilter !== cat) || focus >= 0;
-    ctx.globalAlpha = dim ? 0.28 : 1;
-    const label = CATS[cat].emoji + ' ' + CATS[cat].name;
-    const tw = ctx.measureText(label).width;
-    const lx = Math.max(tw / 2 + 6, Math.min(w - tw / 2 - 6, c.lx));
-    const ly = Math.max(12, Math.min(h - 12, c.ly));
-    ctx.lineWidth = 3.5; ctx.strokeStyle = halo; ctx.strokeText(label, lx, ly);
-    ctx.fillStyle = CATS[cat].color; ctx.fillText(label, lx, ly);
-    ctx.globalAlpha = 1;
-  }
-  // nodos
-  for (let i = 0; i < g.nodes.length; i++) {
-    const n = g.nodes[i], c = CATS[n.cat].color, st = statusOf(n.id), r = nodeRadius(n);
-    let dim = false;
-    if (focus >= 0) dim = !(i === focus || adj[focus].has(i));
-    else if (mapCatFilter) dim = n.cat !== mapCatFilter;
-    ctx.globalAlpha = dim ? 0.16 : 1;
+  const halo = isLight() ? 'rgba(255,255,255,.95)' : 'rgba(7,13,24,.95)';
+  const c = CATS[mapArea].color, lblFill = isLight() ? '#39425a' : '#cbd3e3';
+  ctx.textAlign = 'center';
+  for (const n of arr) {
+    const i = g.idx[n.id], st = statusOf(n.id);
+    const dim = focus != null && !(i === focus || adj[focus].has(i));
+    ctx.globalAlpha = dim ? 0.22 : 1;
+    const r = i === focus ? 8 : 6;
     if (st === 'leido') {
-      const grd = ctx.createRadialGradient(n.mx, n.my, 0, n.mx, n.my, r + 9);
+      const grd = ctx.createRadialGradient(n.ax, n.ay, 0, n.ax, n.ay, r + 10);
       grd.addColorStop(0, 'rgba(255,212,121,.5)'); grd.addColorStop(1, 'rgba(255,212,121,0)');
-      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(n.mx, n.my, r + 9, 0, 7); ctx.fill();
+      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(n.ax, n.ay, r + 10, 0, 7); ctx.fill();
     }
-    ctx.beginPath(); ctx.arc(n.mx, n.my, r, 0, 7); ctx.fillStyle = c; ctx.fill();
-    if (st === 'leido') { ctx.lineWidth = 1.6; ctx.strokeStyle = '#ffd479'; ctx.stroke(); }
-    else if (st === 'leyendo') { ctx.lineWidth = 1.6; ctx.strokeStyle = '#5b8def'; ctx.stroke(); }
-    if (i === focus) { ctx.lineWidth = 2.6; ctx.strokeStyle = '#fff'; ctx.beginPath(); ctx.arc(n.mx, n.my, r + 2.5, 0, 7); ctx.stroke(); }
+    ctx.beginPath(); ctx.arc(n.ax, n.ay, r, 0, 7); ctx.fillStyle = c; ctx.fill();
+    if (st === 'leido') { ctx.lineWidth = 1.7; ctx.strokeStyle = '#ffd479'; ctx.stroke(); }
+    else if (st === 'leyendo') { ctx.lineWidth = 1.7; ctx.strokeStyle = '#5b8def'; ctx.stroke(); }
+    if (i === focus) { ctx.lineWidth = 2.6; ctx.strokeStyle = '#fff'; ctx.beginPath(); ctx.arc(n.ax, n.ay, r + 3, 0, 7); ctx.stroke(); }
+    ctx.textBaseline = 'top';
+    ctx.font = '600 ' + (w < 520 ? 9.5 : 11) + 'px "Segoe UI", system-ui, sans-serif';
+    const label = fitLabel(ctx, n.item.title, g.areaCW * 0.98);
+    ctx.lineWidth = 3; ctx.strokeStyle = halo; ctx.strokeText(label, n.ax, n.ay + r + 3);
+    ctx.fillStyle = lblFill; ctx.fillText(label, n.ax, n.ay + r + 3);
     ctx.globalAlpha = 1;
   }
 }
-function buildLegend() {
-  const box = document.getElementById('mapLegend');
-  let h = '';
-  for (const k in CATS) h += '<span class="legend-item" data-cat="' + k + '"><span class="dot" style="background:' +
-    CATS[k].color + '"></span>' + CATS[k].emoji + ' ' + CATS[k].name + '</span>';
-  h += '<span class="legend-item legend-info"><span class="dot" style="background:var(--beam);box-shadow:0 0 7px var(--beam)"></span>Leído</span>';
-  box.innerHTML = h;
-}
-function updateLegendActive() {
-  document.querySelectorAll('#mapLegend .legend-item[data-cat]').forEach(el => {
-    el.classList.toggle('active', el.dataset.cat === mapCatFilter);
-    el.classList.toggle('dimmed', mapCatFilter && el.dataset.cat !== mapCatFilter);
-  });
+
+function drawMap() { if (mapLevel === 'areas') drawAreas(); else drawArea(); }
+
+function linkHTML(r) {
+  return '<button class="gf-link" data-go="' + r.id + '"><span class="gf-otherc" style="background:' +
+    CATS[r.cat].color + '"></span>' + r.emoji + ' ' + r.title + '</button>';
 }
 function showMapPanel(i) {
   const n = GRAPH.nodes[i], it = n.item, c = CATS[n.cat];
   const rel = (it.related || []).map(rid => LIBRARY.find(x => x.id === rid)).filter(Boolean);
-  let h = '<div class="gf-title">' + it.emoji + '&nbsp;' + it.title + '</div>' +
+  const here = rel.filter(r => r.cat === mapArea), other = rel.filter(r => r.cat !== mapArea);
+  let h = '<button class="gf-close" aria-label="Cerrar">×</button>' +
+    '<div class="gf-title">' + it.emoji + ' ' + it.title + '</div>' +
     '<div class="gf-cat" style="color:' + c.color + '">' + c.emoji + ' ' + c.name + ' · ' +
     (STATUS_LABEL[statusOf(it.id)] || 'Por leer') + '</div>';
-  if (rel.length) h += '<div class="gf-list">' + rel.map(r =>
-    '<button class="gf-link" data-go="' + r.id + '">' + r.emoji + ' ' + r.title + '</button>').join('') + '</div>';
-  else h += '<div class="gf-empty">Sin conexiones directas registradas.</div>';
+  if (here.length) h += '<div class="gf-sub">En esta área</div><div class="gf-list">' + here.map(linkHTML).join('') + '</div>';
+  if (other.length) h += '<div class="gf-sub">Conecta con otras áreas</div><div class="gf-list">' + other.map(linkHTML).join('') + '</div>';
+  if (!rel.length) h += '<div class="gf-empty">Sin conexiones directas registradas.</div>';
   h += '<button class="gf-open" data-open="' + it.id + '">Abrir ficha →</button>';
   const panel = document.getElementById('mapPanel');
   panel.innerHTML = h; panel.classList.add('show');
 }
 function hideMapPanel() { document.getElementById('mapPanel').classList.remove('show'); }
+function showAreaTip(tip, b, p, canvas) {
+  const it = CATS[b.cat];
+  tip.innerHTML = '<b>' + it.emoji + ' ' + it.name + '</b><small>' + b.read + ' de ' + b.total + ' leídos · toca para explorar</small>';
+  tip.style.left = p.x + 'px'; tip.style.top = p.y + 'px'; tip.hidden = false;
+}
+function updateMapBar() {
+  const back = document.getElementById('mapBack'), crumb = document.getElementById('mapCrumb'), hint = document.getElementById('mapHint');
+  if (mapLevel === 'area') {
+    back.hidden = false;
+    const it = CATS[mapArea], items = LIBRARY.filter(x => x.cat === mapArea);
+    const read = items.filter(x => statusOf(x.id) === 'leido').length;
+    crumb.innerHTML = '<span style="color:' + it.color + '">' + it.emoji + ' ' + it.name + '</span> · ' + read + '/' + items.length + ' leídos';
+    hint.textContent = 'Toca un recurso para iluminar sus conexiones; vuelve a tocarlo para abrir su ficha. Desde el panel puedes saltar a recursos de otras áreas.';
+  } else {
+    back.hidden = true; crumb.textContent = 'Todas las áreas';
+    hint.textContent = 'Las áreas más conectadas se unen con líneas; el aro dorado muestra cuánto has leído de cada una.';
+  }
+}
+function enterArea(cat) {
+  mapLevel = 'area'; mapArea = cat; mapFocus = null; mapHover = null;
+  layoutArea(cat, mapW, mapH); hideMapPanel(); updateMapBar(); drawMap();
+}
+function exitArea() {
+  mapLevel = 'areas'; mapArea = null; mapFocus = null; mapHover = null;
+  layoutAreas(mapW, mapH); hideMapPanel(); updateMapBar(); drawMap();
+}
 function initMap() {
-  ensureAdj(); buildLegend();
+  ensureAdj();
   const canvas = document.getElementById('mapCanvas');
   const dim = fitCanvas(canvas); mapCtx = dim.ctx; mapW = dim.w; mapH = dim.h;
-  clusterLayout(mapW, mapH);
+  if (mapLevel === 'area' && mapArea) layoutArea(mapArea, mapW, mapH);
+  else { mapLevel = 'areas'; layoutAreas(mapW, mapH); }
   if (!mapInited) { attachMapEvents(canvas); attachMapUI(); mapInited = true; }
-  drawMap();
+  updateMapBar(); drawMap();
 }
 function stopMap() {}
 function attachMapEvents(canvas) {
   const tip = document.getElementById('mapTip');
   canvas.addEventListener('pointermove', e => {
-    const p = evPos(e, canvas), n = pickAt(GRAPH.nodes, p.x, p.y, 'mx', 'my', 13);
-    const hi = n ? GRAPH.idx[n.id] : null;
-    if (hi !== mapHover) { mapHover = hi; if (mapFocus == null) drawMap(); }
-    if (n) { canvas.style.cursor = 'pointer'; showTip(tip, n, p, canvas); }
-    else { canvas.style.cursor = 'default'; tip.hidden = true; }
+    const p = evPos(e, canvas);
+    if (mapLevel === 'areas') {
+      const b = bubbleAt(p.x, p.y);
+      if (b !== mapHover) { mapHover = b; drawMap(); }
+      canvas.style.cursor = b ? 'pointer' : 'default';
+      if (b) showAreaTip(tip, b, p, canvas); else tip.hidden = true;
+    } else {
+      const n = pickAt(GRAPH.areaNodes, p.x, p.y, 'ax', 'ay', 16);
+      const hi = n ? GRAPH.idx[n.id] : null;
+      if (hi !== mapHover) { mapHover = hi; if (mapFocus == null) drawMap(); }
+      if (n) { canvas.style.cursor = 'pointer'; showTip(tip, n, p, canvas); }
+      else { canvas.style.cursor = 'default'; tip.hidden = true; }
+    }
   });
-  canvas.addEventListener('pointerleave', () => { mapHover = null; tip.hidden = true; if (mapFocus == null) drawMap(); });
+  canvas.addEventListener('pointerleave', () => {
+    const had = mapHover; mapHover = null; tip.hidden = true;
+    if (had != null && mapFocus == null) drawMap();
+  });
   canvas.addEventListener('click', e => {
-    const p = evPos(e, canvas), n = pickAt(GRAPH.nodes, p.x, p.y, 'mx', 'my', 13);
+    const p = evPos(e, canvas);
+    if (mapLevel === 'areas') {
+      const b = bubbleAt(p.x, p.y); if (b) enterArea(b.cat);
+      return;
+    }
+    const n = pickAt(GRAPH.areaNodes, p.x, p.y, 'ax', 'ay', 16);
     if (!n) { mapFocus = null; hideMapPanel(); drawMap(); return; }
     const i = GRAPH.idx[n.id];
     if (mapFocus === i) { location.hash = '#/r/' + n.id; return; }
-    mapFocus = i; mapCatFilter = null; updateLegendActive(); showMapPanel(i); drawMap();
+    mapFocus = i; showMapPanel(i); drawMap();
   });
 }
 function attachMapUI() {
-  document.getElementById('mapLegend').addEventListener('click', e => {
-    const item = e.target.closest('.legend-item[data-cat]'); if (!item) return;
-    const cat = item.dataset.cat;
-    mapCatFilter = mapCatFilter === cat ? null : cat;
-    mapFocus = null; hideMapPanel(); updateLegendActive(); drawMap();
-  });
-  document.getElementById('mapReset').addEventListener('click', () => {
-    mapFocus = null; mapCatFilter = null; mapHover = null;
-    hideMapPanel(); updateLegendActive(); drawMap();
-  });
+  document.getElementById('mapBack').addEventListener('click', exitArea);
   document.getElementById('mapPanel').addEventListener('click', e => {
+    if (e.target.closest('.gf-close')) { mapFocus = null; hideMapPanel(); drawMap(); return; }
     const open = e.target.closest('[data-open]'); if (open) { location.hash = '#/r/' + open.dataset.open; return; }
     const go = e.target.closest('[data-go]');
-    if (go) { const i = GRAPH.idx[go.dataset.go]; if (i != null) { mapFocus = i; showMapPanel(i); drawMap(); } }
+    if (go) {
+      const node = LIBRARY.find(x => x.id === go.dataset.go); if (!node) return;
+      const i = GRAPH.idx[node.id];
+      if (node.cat !== mapArea) enterArea(node.cat);
+      mapFocus = i; showMapPanel(i); drawMap();
+    }
   });
 }
 
@@ -6583,61 +6706,113 @@ function pointInPoly(poly, x, y) {
   }
   return inside;
 }
-function brainShape(w, h) {
+/* ---- Catálogo de formas (silueta como polígono cerrado) ---- */
+function shapeBrain(w, h) {
   const cx = w / 2, cy = h * 0.52, S = Math.min(w, h);
-  const rx = S * 0.43, ry = S * 0.34;
-  const outline = [], STEPS = 200;
+  const rx = S * 0.46, ry = S * 0.33;
+  const outline = [], STEPS = 240;
   for (let k = 0; k < STEPS; k++) {
     const t = k / STEPS * Math.PI * 2;
-    let f = 1 + 0.05 * Math.sin(9 * t) + 0.035 * Math.sin(15 * t + 1.3) + 0.028 * Math.sin(5 * t + 0.6);
-    f -= Math.exp(-Math.pow(angDiff(t, 3 * Math.PI / 2) / 0.30, 2)) * 0.17; // entrante frontal (dos lóbulos)
-    f -= Math.exp(-Math.pow(angDiff(t, Math.PI / 2) / 0.20, 2)) * 0.06;     // pequeña muesca posterior
+    let f = 1 + 0.045 * Math.sin(8 * t) + 0.03 * Math.sin(13 * t + 1) +
+            0.02 * Math.sin(19 * t + 0.5) + 0.03 * Math.sin(5 * t + 0.6);
+    f -= Math.exp(-Math.pow(angDiff(t, 3 * Math.PI / 2) / 0.24, 2)) * 0.22; // muesca frontal (dos lóbulos)
+    f += Math.exp(-Math.pow(angDiff(t, Math.PI * 0.62) / 0.13, 2)) * 0.07;  // bulto del cerebelo
+    f += Math.exp(-Math.pow(angDiff(t, Math.PI * 0.38) / 0.13, 2)) * 0.07;  // bulto simétrico
+    f -= Math.exp(-Math.pow(angDiff(t, Math.PI / 2) / 0.55, 2)) * 0.04;     // base algo plana
     outline.push([cx + Math.cos(t) * rx * f, cy + Math.sin(t) * ry * f]);
   }
   const fissure = [];
-  for (let s = 0; s <= 30; s++) {
-    const u = s / 30;
-    const y = cy - ry * 0.84 + u * ry * 1.54;
-    const x = cx + Math.sin(u * Math.PI) * S * 0.012 + Math.sin(u * Math.PI * 4) * S * 0.006;
+  for (let s = 0; s <= 32; s++) {
+    const u = s / 32, y = cy - ry * 0.80 + u * ry * 1.46;
+    const x = cx + Math.sin(u * Math.PI) * S * 0.01 + Math.sin(u * Math.PI * 5) * S * 0.007;
     fissure.push([x, y]);
   }
-  return { outline, fissure, cx, cy, rx, ry, S };
+  return { outline, accents: [fissure], cx, cy, S, gap: S * 0.013 };
 }
-function buildBrain(w, h) {
+function shapeFaro(w, h) {
+  const cx = w / 2, cy = h * 0.5, S = Math.min(w, h);
+  const H = S * 0.88, rx = S * 0.30, botY = cy + H / 2;
+  // perfil derecho (dx en fracción de rx, fy en fracción de H desde la base)
+  const prof = [
+    [0.95, 0.00], [0.95, 0.06], [0.62, 0.07], [0.54, 0.12],
+    [0.34, 0.68], [0.47, 0.72], [0.47, 0.77], [0.30, 0.79],
+    [0.30, 0.91], [0.43, 0.93], [0.0, 1.00]
+  ];
+  const right = prof.map(p => [cx + p[0] * rx, botY - p[1] * H]);
+  const left = prof.slice().reverse().map(p => [cx - p[0] * rx, botY - p[1] * H]);
+  const outline = right.concat(left);
+  const accents = [];
+  [0.22, 0.40, 0.58].forEach(fy => {       // franjas del faro
+    const dx = (0.54 - (0.54 - 0.34) * (fy - 0.12) / 0.56) * rx;
+    accents.push([[cx - dx, botY - fy * H], [cx + dx, botY - fy * H]]);
+  });
+  const lampY = botY - 0.85 * H;            // rayos de luz
+  accents.push([[cx, lampY], [cx - rx * 1.5, lampY - H * 0.12]]);
+  accents.push([[cx, lampY], [cx + rx * 1.5, lampY - H * 0.12]]);
+  return { outline, accents, cx, cy, S, gap: 0 };
+}
+function shapeEstrella(w, h) {
+  const cx = w / 2, cy = h * 0.5, S = Math.min(w, h);
+  const R = S * 0.47, r = R * 0.4, P = 8, outline = [];
+  for (let k = 0; k < P * 2; k++) {
+    const ang = k / (P * 2) * Math.PI * 2 - Math.PI / 2;
+    const rad = k % 2 === 0 ? R : r;
+    outline.push([cx + Math.cos(ang) * rad, cy + Math.sin(ang) * rad]);
+  }
+  return { outline, accents: [], cx, cy, S, gap: 0 };
+}
+function shapeCorazon(w, h) {
+  const cx = w / 2, S = Math.min(w, h), sc = S * 0.027, cy = h * 0.46;
+  const outline = [], STEPS = 140;
+  for (let k = 0; k < STEPS; k++) {
+    const t = k / STEPS * Math.PI * 2;
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+    outline.push([cx + x * sc, cy - y * sc]);
+  }
+  return { outline, accents: [], cx, cy: cy - sc * 2, S, gap: 0 };
+}
+const SHAPES = [
+  { id: 'cerebro', label: '🧠 Cerebro', title: '🧠 Tu cerebro de conocimiento', build: shapeBrain },
+  { id: 'faro', label: '🗼 Faro', title: '🗼 Tu faro de conocimiento', build: shapeFaro },
+  { id: 'estrella', label: '✨ Estrella', title: '✨ Tu estrella de conocimiento', build: shapeEstrella },
+  { id: 'corazon', label: '❤️ Corazón', title: '❤️ Tu corazón de conocimiento', build: shapeCorazon }
+];
+const SHAPES_MAP = {}; SHAPES.forEach((s, i) => { SHAPES_MAP[s.id] = s; s.idx = i; });
+let currentShape = 'cerebro';
+
+function buildShape(w, h) {
   const g = ensureAdj();
-  const shape = brainShape(w, h);
-  const { outline, cx, cy, rx, ry, S } = shape;
-  const rng = mulberry32(20240617);
-  const N = g.nodes.length, minD = S * 0.026, gap = S * 0.014;
+  const shape = SHAPES_MAP[currentShape].build(w, h);
+  const outline = shape.outline, gap = shape.gap || 0, S = shape.S;
+  let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
+  for (const p of outline) { if (p[0] < minX) minX = p[0]; if (p[0] > maxX) maxX = p[0]; if (p[1] < minY) minY = p[1]; if (p[1] > maxY) maxY = p[1]; }
+  const cxBox = (minX + maxX) / 2, cyBox = (minY + maxY) / 2;
+  const rng = mulberry32(20240617 + shape.idx * 911);
+  const N = g.nodes.length, minD = S * 0.023;
   const pts = []; let tries = 0;
-  while (pts.length < N && tries < N * 500) {
+  while (pts.length < N && tries < N * 700) {
     tries++;
-    const x = cx + (rng() * 2 - 1) * rx * 1.04;
-    const y = cy + (rng() * 2 - 1) * ry * 1.12;
-    if (Math.abs(x - cx) < gap) continue;           // fisura central (separa hemisferios)
+    const x = minX + rng() * (maxX - minX), y = minY + rng() * (maxY - minY);
+    if (gap && Math.abs(x - cxBox) < gap) continue;
     if (!pointInPoly(outline, x, y)) continue;
     let ok = true;
     for (const p of pts) { if ((p[0] - x) ** 2 + (p[1] - y) ** 2 < minD * minD) { ok = false; break; } }
     if (ok) pts.push([x, y]);
   }
-  // si faltan puntos por densidad, rellena sin la restricción de distancia
-  while (pts.length < N && tries < N * 1200) {
+  while (pts.length < N && tries < N * 1800) {
     tries++;
-    const x = cx + (rng() * 2 - 1) * rx * 1.04, y = cy + (rng() * 2 - 1) * ry * 1.12;
-    if (Math.abs(x - cx) < gap || !pointInPoly(outline, x, y)) continue;
+    const x = minX + rng() * (maxX - minX), y = minY + rng() * (maxY - minY);
+    if (gap && Math.abs(x - cxBox) < gap) continue;
+    if (!pointInPoly(outline, x, y)) continue;
     pts.push([x, y]);
   }
-  // ordena por posición para que vecinos en el array estén cerca (estético)
   pts.sort((a, b) => (a[1] - b[1]) || (a[0] - b[0]));
-  g.nodes.forEach((n, i) => {
-    const p = pts[i] || [cx, cy];
-    n.bx = p[0]; n.by = p[1]; if (!n.tw) n.tw = rng() * 6.28;
-  });
+  g.nodes.forEach((n, i) => { const p = pts[i] || [cxBox, cyBox]; n.bx = p[0]; n.by = p[1]; if (!n.tw) n.tw = rng() * 6.28; });
   // aristas: k vecinos más cercanos (red neuronal que une TODOS los puntos)
   const K = 3, seen = {}, bedges = [];
   for (let i = 0; i < g.nodes.length; i++) {
-    const a = g.nodes[i];
-    const d = [];
+    const a = g.nodes[i], d = [];
     for (let j = 0; j < g.nodes.length; j++) {
       if (i === j) continue;
       const b = g.nodes[j];
@@ -6649,25 +6824,26 @@ function buildBrain(w, h) {
       if (seen[key]) continue; seen[key] = 1; bedges.push({ a: i, b: j });
     }
   }
-  GRAPH.brain = shape; GRAPH.brainEdges = bedges;
+  GRAPH.shape = shape; GRAPH.shapeEdges = bedges;
 }
-function drawBrain(t) {
-  const g = GRAPH, ctx = constelCtx, w = constelW, h = constelH, sh = g.brain;
+function drawShape(t) {
+  const g = GRAPH, ctx = constelCtx, w = constelW, h = constelH, sh = g.shape;
   ctx.clearRect(0, 0, w, h);
   // silueta y relleno sutil
   ctx.beginPath();
   sh.outline.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
   ctx.closePath();
-  const fill = ctx.createRadialGradient(sh.cx, sh.cy, 0, sh.cx, sh.cy, sh.rx);
-  fill.addColorStop(0, 'rgba(79,214,192,.05)'); fill.addColorStop(1, 'rgba(79,214,192,.01)');
+  const fill = ctx.createRadialGradient(sh.cx, sh.cy, 0, sh.cx, sh.cy, sh.S * 0.5);
+  fill.addColorStop(0, 'rgba(79,214,192,.05)'); fill.addColorStop(1, 'rgba(79,214,192,.012)');
   ctx.fillStyle = fill; ctx.fill();
   ctx.strokeStyle = 'rgba(127,240,224,.18)'; ctx.lineWidth = 1.4; ctx.stroke();
-  // fisura central
-  ctx.beginPath();
-  sh.fissure.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
-  ctx.strokeStyle = 'rgba(127,240,224,.12)'; ctx.lineWidth = 1.2; ctx.stroke();
+  // adornos de la forma (fisura, franjas, rayos…)
+  (sh.accents || []).forEach(line => {
+    ctx.beginPath(); line.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
+    ctx.strokeStyle = 'rgba(127,240,224,.13)'; ctx.lineWidth = 1.2; ctx.stroke();
+  });
   // aristas neuronales
-  for (const e of g.brainEdges) {
+  for (const e of g.shapeEdges) {
     const a = g.nodes[e.a], b = g.nodes[e.b];
     const ra = statusOf(a.id) === 'leido', rb = statusOf(b.id) === 'leido';
     if (ra && rb) { ctx.strokeStyle = 'rgba(255,212,121,.55)'; ctx.lineWidth = 1.2; }
@@ -6697,19 +6873,33 @@ function drawBrain(t) {
     if (hovered) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(n.bx, n.by, 7, 0, 7); ctx.stroke(); }
   }
 }
-function constelLoop(t) { drawBrain(t || 0); constelRAF = requestAnimationFrame(constelLoop); }
+function constelLoop(t) { drawShape(t || 0); constelRAF = requestAnimationFrame(constelLoop); }
 function renderConstelStats() {
   const read = LIBRARY.filter(it => statusOf(it.id) === 'leido').length;
   const pct = Math.round(read / LIBRARY.length * 100);
   document.getElementById('constelStats').innerHTML =
-    '<span class="constel-stat">🧠 <b>' + read + '</b> de ' + LIBRARY.length + ' neuronas encendidas</span>' +
-    '<span class="constel-stat">⚡ <b>' + pct + '%</b> del cerebro activo</span>';
+    '<span class="constel-stat">🔆 <b>' + read + '</b> de ' + LIBRARY.length + ' puntos encendidos</span>' +
+    '<span class="constel-stat">⚡ <b>' + pct + '%</b> de la figura iluminada</span>';
 }
+function renderShapePicker() {
+  document.getElementById('shapePicker').innerHTML = SHAPES.map(s =>
+    '<button class="shape-btn' + (s.id === currentShape ? ' active' : '') + '" data-shape="' + s.id + '">' + s.label + '</button>').join('');
+}
+function updateConstelTexts() {
+  const s = SHAPES_MAP[currentShape];
+  document.getElementById('constelTitle').textContent = s.title;
+}
+document.getElementById('shapePicker').addEventListener('click', e => {
+  const btn = e.target.closest('.shape-btn'); if (!btn || btn.dataset.shape === currentShape) return;
+  currentShape = btn.dataset.shape;
+  renderShapePicker(); updateConstelTexts();
+  if (constelCtx) buildShape(constelW, constelH);
+});
 function initConstel() {
-  ensureAdj(); renderConstelStats();
+  ensureAdj(); renderShapePicker(); updateConstelTexts(); renderConstelStats();
   const canvas = document.getElementById('constelCanvas');
   const dim = fitCanvas(canvas); constelCtx = dim.ctx; constelW = dim.w; constelH = dim.h;
-  buildBrain(constelW, constelH);
+  buildShape(constelW, constelH);
   if (!constelInited) { attachConstelEvents(canvas); constelInited = true; }
   cancelAnimationFrame(constelRAF); constelLoop(0);
 }
@@ -6751,9 +6941,6 @@ function setView(name) {
 document.getElementById('viewSwitcher').addEventListener('click', e => {
   const t = e.target.closest('.view-tab');
   if (t) setView(t.dataset.view);
-});
-document.getElementById('bymcylBadge').addEventListener('click', e => {
-  e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 /* Reanuda la vista dinámica activa al cerrar una ficha */
