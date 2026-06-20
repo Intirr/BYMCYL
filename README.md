@@ -73,7 +73,7 @@ Pensado para no agobiar (también en móvil): en vez de mostrar 200 recursos a l
 - **Dentro de un área**: solo los recursos de esa categoría, en una **cuadrícula legible con sus títulos**. Toca un recurso para **iluminar sus conexiones** y abrir un **panel** que separa lo que conecta *en esta área* y *en otras áreas* (puedes saltar a ellas); vuelve a tocarlo —o usa «Abrir ficha»— para ver su resumen. El botón **«← Áreas»** vuelve a la vista general. En móvil el panel aparece como hoja inferior.
 
 ### ✨ Constelación = figura de conocimiento (con formas a elegir)
-Las 200 lecturas se distribuyen formando una **figura** y se enlazan entre sí como una **red neuronal** (cada punto unido a sus vecinos más cercanos, conectando *todos* los puntos). Cada punto se **enciende y titila** al marcar su lectura como leída, y las conexiones entre puntos encendidos se iluminan en dorado: la figura «cobra vida» a medida que avanzas. Pulsa cualquier punto para abrir su ficha. Con el **selector de formas** eliges la silueta: **🧠 Cerebro** (dos hemisferios con su fisura), **🗼 Faro**, **✨ Estrella** o **❤️ Corazón**.
+Las 200 lecturas se distribuyen formando una **figura** y se enlazan entre sí como una **red neuronal** (cada punto unido a sus vecinos más cercanos, conectando *todos* los puntos). Cada punto se **enciende y titila** al marcar su lectura como leída, y las conexiones entre puntos encendidos se iluminan en dorado: la figura «cobra vida» a medida que avanzas. Pulsa cualquier punto para abrir su ficha. Con el **selector de formas** eliges la silueta: **📖 Libro** (páginas abiertas con su lomo), **🗼 Faro**, **✨ Estrella** o **❤️ Corazón**.
 
 ## 🧪 Funciones interactivas
 

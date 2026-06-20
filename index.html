@@ -861,7 +861,7 @@
 
     <section id="view-constelacion" class="view" hidden>
       <div class="view-head">
-        <h2 id="constelTitle">✨ Tu cerebro de conocimiento</h2>
+        <h2 id="constelTitle">📖 Tu libro de conocimiento</h2>
         <p id="constelIntro">Las 200 lecturas dibujan una figura y se enlazan como una red neuronal. Cada punto se enciende cuando marcas su lectura como leída, y las conexiones entre lecturas encendidas se iluminan: la figura cobra vida conforme avanzas.</p>
       </div>
       <div class="shape-picker" id="shapePicker"></div>
@@ -6707,27 +6707,35 @@ function pointInPoly(poly, x, y) {
   return inside;
 }
 /* ---- Catálogo de formas (silueta como polígono cerrado) ---- */
-function shapeBrain(w, h) {
-  const cx = w / 2, cy = h * 0.52, S = Math.min(w, h);
-  const rx = S * 0.46, ry = S * 0.33;
-  const outline = [], STEPS = 240;
-  for (let k = 0; k < STEPS; k++) {
-    const t = k / STEPS * Math.PI * 2;
-    let f = 1 + 0.045 * Math.sin(8 * t) + 0.03 * Math.sin(13 * t + 1) +
-            0.02 * Math.sin(19 * t + 0.5) + 0.03 * Math.sin(5 * t + 0.6);
-    f -= Math.exp(-Math.pow(angDiff(t, 3 * Math.PI / 2) / 0.24, 2)) * 0.22; // muesca frontal (dos lóbulos)
-    f += Math.exp(-Math.pow(angDiff(t, Math.PI * 0.62) / 0.13, 2)) * 0.07;  // bulto del cerebelo
-    f += Math.exp(-Math.pow(angDiff(t, Math.PI * 0.38) / 0.13, 2)) * 0.07;  // bulto simétrico
-    f -= Math.exp(-Math.pow(angDiff(t, Math.PI / 2) / 0.55, 2)) * 0.04;     // base algo plana
-    outline.push([cx + Math.cos(t) * rx * f, cy + Math.sin(t) * ry * f]);
+function shapeLibro(w, h) {
+  const cx = w / 2, cy = h * 0.5, S = Math.min(w, h), HW = S * 0.47;
+  const edgeY = u => {
+    const au = Math.abs(u), arch = Math.sin(au * Math.PI), spine = Math.exp(-Math.pow(u / 0.13, 2));
+    return {
+      ty: cy - S * 0.04 - S * 0.13 * arch + S * 0.055 * spine,  // borde superior: dos páginas con valle del lomo
+      by: cy + S * 0.16 - S * 0.02 * arch + S * 0.035 * spine   // borde inferior casi plano, lomo al centro
+    };
+  };
+  const top = [], bot = [], N = 48;
+  for (let k = 0; k <= N; k++) {
+    const u = -1 + 2 * k / N, e = edgeY(u);
+    top.push([cx + u * HW, e.ty]); bot.push([cx + u * HW, e.by]);
   }
-  const fissure = [];
-  for (let s = 0; s <= 32; s++) {
-    const u = s / 32, y = cy - ry * 0.80 + u * ry * 1.46;
-    const x = cx + Math.sin(u * Math.PI) * S * 0.01 + Math.sin(u * Math.PI * 5) * S * 0.007;
-    fissure.push([x, y]);
+  const outline = top.concat(bot.reverse());
+  const accents = [];
+  const e0 = edgeY(0);
+  accents.push([[cx, e0.ty], [cx, e0.by]]);            // lomo / pliegue central
+  for (const side of [-1, 1]) {                          // renglones de las páginas
+    for (let li = 1; li <= 3; li++) {
+      const fy = li / 4, line = [];
+      for (let k = 0; k <= 8; k++) {
+        const u = side * (0.16 + (0.92 - 0.16) * k / 8), e = edgeY(u);
+        line.push([cx + u * HW, e.ty + (e.by - e.ty) * fy]);
+      }
+      accents.push(line);
+    }
   }
-  return { outline, accents: [fissure], cx, cy, S, gap: S * 0.013 };
+  return { outline, accents, cx, cy, S, gap: 0 };
 }
 function shapeFaro(w, h) {
   const cx = w / 2, cy = h * 0.5, S = Math.min(w, h);
@@ -6773,13 +6781,13 @@ function shapeCorazon(w, h) {
   return { outline, accents: [], cx, cy: cy - sc * 2, S, gap: 0 };
 }
 const SHAPES = [
-  { id: 'cerebro', label: '🧠 Cerebro', title: '🧠 Tu cerebro de conocimiento', build: shapeBrain },
+  { id: 'libro', label: '📖 Libro', title: '📖 Tu libro de conocimiento', build: shapeLibro },
   { id: 'faro', label: '🗼 Faro', title: '🗼 Tu faro de conocimiento', build: shapeFaro },
   { id: 'estrella', label: '✨ Estrella', title: '✨ Tu estrella de conocimiento', build: shapeEstrella },
   { id: 'corazon', label: '❤️ Corazón', title: '❤️ Tu corazón de conocimiento', build: shapeCorazon }
 ];
 const SHAPES_MAP = {}; SHAPES.forEach((s, i) => { SHAPES_MAP[s.id] = s; s.idx = i; });
-let currentShape = 'cerebro';
+let currentShape = 'libro';
 
 function buildShape(w, h) {
   const g = ensureAdj();
