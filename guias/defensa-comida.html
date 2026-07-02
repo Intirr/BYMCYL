@@ -40,6 +40,9 @@
   .tag{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:.72rem;border-radius:99px;padding:.18rem .7rem}
   .one-liner{background:linear-gradient(135deg,rgba(245,185,66,.10),rgba(79,192,141,.08));border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.4rem;margin:1.4rem 0;font-size:1.05rem;color:var(--text)}
   .one-liner .lbl{display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:.3rem}
+  .express{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent-3);border-radius:var(--radius);padding:.9rem 1.2rem;margin:0 0 1.4rem;font-size:.94rem;color:var(--text-2)}
+  .express .lbl{display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent-3);margin-bottom:.35rem}
+  .express p{margin:.3rem 0}.express .more{color:var(--muted);font-size:.85em}
   .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.3rem;margin:1rem 0}
   ol.ideas li{margin-bottom:.75rem}
   .checklist{display:flex;flex-direction:column;gap:.55rem;margin:1rem 0}
@@ -97,6 +100,7 @@ window.__RELLINKS = [{"href":"./glucosa.html","label":"🩸 La revolución de la
 
   var MOD = [
     { id: 'intro', icon: '🏁', label: 'Introducción' },
+    { id: 'resumen', icon: '⚡', label: 'Resumen exprés' },
     { id: 'ideas', icon: '💡', label: 'Ideas clave' },
     { id: 'plan', icon: '🛠️', label: 'Plan de acción' },
     { id: 'cita', icon: '❝', label: 'Cita' },
@@ -125,6 +129,13 @@ window.__RELLINKS = [{"href":"./glucosa.html","label":"🩸 La revolución de la
         '<div class="meta-row">' + metaTags + '</div>' +
         '<div class="one-liner"><span class="lbl">En una frase</span>' + it.one + '</div>' +
         '<p>Esta guía práctica recorre las <strong>ideas clave</strong>, un <strong>plan de acción</strong> con checklist que se guarda en tu navegador, la <strong>cita</strong> y la <strong>evidencia</strong> detrás del recurso. Marca «Completar» en cada módulo para seguir tu avance.</p>';
+    } else if (m.id === 'resumen') {
+      var heads = it.ideas.map(function (i) { var mm = i.match(/<strong>(.*?)<\/strong>/); return (mm ? mm[1] : i.replace(/<[^>]+>/g, '')).replace(/[.…]\s*$/, ''); });
+      var extra = it.actions.length - 1;
+      body = '<span class="kicker">En 30 segundos</span><h2>⚡ Resumen exprés</h2>' +
+        '<div class="one-liner"><span class="lbl">Tesis</span>' + it.one + '</div>' +
+        '<div class="express"><span class="lbl">Claves</span><p>' + heads.join(' · ') + '.</p>' +
+        '<p><strong>Primer paso:</strong> ' + it.actions[0] + (extra > 0 ? ' <span class="more">(+' + extra + ' pasos en el plan de acción)</span>' : '') + '</p></div>';
     } else if (m.id === 'ideas') {
       body = '<span class="kicker">Núcleo</span><h2>💡 Ideas clave</h2><ol class="ideas">' + it.ideas.map(function (i) { return '<li>' + i + '</li>'; }).join('') + '</ol>';
     } else if (m.id === 'plan') {

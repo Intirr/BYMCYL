@@ -260,6 +260,16 @@
     display: block; font-size: .7rem; font-weight: 700; text-transform: uppercase;
     letter-spacing: 1.5px; color: var(--accent); margin-bottom: .3rem;
   }
+  .express {
+    background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent-3);
+    border-radius: var(--radius); padding: .9rem 1.2rem; margin: 0 0 1.4rem; font-size: .92rem; color: var(--text-2);
+  }
+  .express .lbl {
+    display: block; font-size: .7rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--accent-3); margin-bottom: .35rem;
+  }
+  .express p { margin: .3rem 0; }
+  .express .more { color: var(--muted); font-size: .85em; }
   ol.ideas { margin: 0 0 1rem 1.4rem; color: var(--text-2); }
   ol.ideas li { margin-bottom: .75rem; }
 
@@ -5515,6 +5525,23 @@ let currentId = null;
 const BESPOKE_GUIDES = { 'habitos-atomicos': 'habitos-atomicos.html', 'por-que-dormimos': 'por-que-dormimos.html', 'meditaciones': 'meditaciones.html' };
 function guideHref(id) { return BESPOKE_GUIDES[id] || ('guias/' + id + '.html'); }
 
+/* Resumen exprés: derivado de los datos curados de cada recurso (tesis + claves + primer paso).
+   Mismo formato para los 200 → calidad y longitud uniformes, sin duplicar contenido. */
+function ideaHeads(item) {
+  return item.ideas.map(i => {
+    const m = i.match(/<strong>(.*?)<\/strong>/);
+    return (m ? m[1] : i.replace(/<[^>]+>/g, '')).replace(/[.…]\s*$/, '');
+  });
+}
+function expressHTML(item) {
+  const heads = ideaHeads(item);
+  const extra = item.actions.length - 1;
+  return '<div class="express"><span class="lbl">⚡ Resumen exprés</span>' +
+    '<p><strong>Claves:</strong> ' + heads.join(' · ') + '.</p>' +
+    '<p><strong>Primer paso:</strong> ' + item.actions[0] +
+    (extra > 0 ? ' <span class="more">(+' + extra + ' pasos en el plan de acción)</span>' : '') + '</p></div>';
+}
+
 function detailHTML(item) {
   const c = CATS[item.cat];
   const st = statusOf(item.id);
@@ -5549,6 +5576,8 @@ function detailHTML(item) {
   '</div>';
 
   h += '<div class="one-liner"><span class="tag">En una frase</span>' + item.one + '</div>';
+
+  h += expressHTML(item);
 
   h += '<h3>💡 Ideas clave</h3><ol class="ideas">' +
     item.ideas.map(i => '<li>' + i + '</li>').join('') + '</ol>';

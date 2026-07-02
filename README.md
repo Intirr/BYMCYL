@@ -54,6 +54,7 @@ Desde los clásicos (la curva del olvido de Ebbinghaus 1885, intenciones de impl
 - **Pantalla de bienvenida** que deja elegir entre **Modo Móvil** (una columna en tarjetas de lista, controles grandes, chips deslizables) y **Modo Escritorio** (rejilla amplia de varias columnas, ficha más ancha), con opción de autodetección; la elección se recuerda y se cambia con el botón 🖥️/📱 de la barra
 - **Búsqueda** por título, autor o ideas, insensible a tildes y mayúsculas (atajo: tecla `/`)
 - **Filtros** por categoría (8, con contador), tipo (libro/estudio) y estado de lectura
+- **⚡ Resumen exprés en cada recurso** (los 200): tesis, claves y primer paso, derivado de los datos curados con formato idéntico — visible en la ficha y como módulo propio en cada guía
 - **Orden por defecto «Destacados primero»**: las primeras filas muestran los recursos más conocidos de cada área (intercalados por categoría). También se puede ordenar por título, autor o año, y hay botón 🎲 **recurso al azar**
 - **Tema claro/oscuro** 🌗 con preferencia recordada
 - **Estados de lectura** (por leer / leyendo / leído) y **favoritos** ⭐
